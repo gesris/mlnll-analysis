@@ -29,8 +29,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def main():
     # Define histograms
-    binning = np.linspace(0, 300, 30)
-    hists = [Histogram('m_vis', 'm_vis', binning)]
+    hists = [Histogram('m_vis', 'm_vis', np.linspace(20, 160, 21))]
 
     # Define nominal units
     units = {}

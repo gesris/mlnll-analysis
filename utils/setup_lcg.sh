@@ -6,3 +6,4 @@ source /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/setup
 source /home/wunsch/workspace/root/build_/bin/thisroot.sh
 
 export PYTHONPATH=$PWD:$PYTHONPATH
+export PYTHONPATH=$PWD/Dumbledraw:$PYTHONPATH

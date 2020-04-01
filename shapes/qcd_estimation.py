@@ -19,7 +19,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 
 def main():
-    r = Reader('shapes.root')
+    r = Reader(['shapes.root'])
     variable = 'm_vis'
 
     data = r.get('data', 'same_sign', variable)

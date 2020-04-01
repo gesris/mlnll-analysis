@@ -1,3 +1,6 @@
 [submodule "ntuple_processor"]
 	path = ntuple_processor
 	url = ssh://git@github.com/KIT-CMS/ntuple_processor
+[submodule "Dumbledraw"]
+	path = Dumbledraw
+	url = ssh://git@github.com/KIT-CMS/Dumbledraw
