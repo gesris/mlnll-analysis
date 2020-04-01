@@ -62,7 +62,6 @@ def main():
     for i in [0,2] if linear else [1,2]:
         ggH = hists["ggh"].Clone()
         qqH = hists["qqh"].Clone()
-        """
         if ggH.Integral() > 0:
             ggH_scale = 0.5*data_norm/ggH.Integral()
         else:
@@ -71,9 +70,6 @@ def main():
             qqH_scale = 0.5*data_norm/qqH.Integral()
         else:
             qqH_scale = 0.0
-        """
-        ggH_scale = 100
-        qqH_scale = 1000
         if i in [0,1]:
             ggH.Scale(ggH_scale)
             qqH.Scale(qqH_scale)
@@ -87,6 +83,7 @@ def main():
     plot.subplot(0 if linear else 1).setGraphStyle("ggH_top", "hist", linecolor=0)
     plot.subplot(0 if linear else 1).setGraphStyle("qqH", "hist",
             linecolor=styles.color_dict["qqH"], linewidth=3)
+    plot.subplot(0 if linear else 1).setGraphStyle("qqH_top", "hist", linecolor=0)
 
     # Make ratio
     bkg_ggH = plot.subplot(2).get_hist("ggH")
@@ -131,10 +128,12 @@ def main():
 
     # Wraw subplots
     # Argument contains names of objects to be drawn in corresponding order
-    plot.subplot(0).Draw(["stack", "total_bkg", "data_obs"])
+    plot.subplot(0).Draw(
+            ["stack", "total_bkg", "ggH", "ggH_top", "qqH", "qqH_top", "data_obs"])
     if not linear:
-        plot.subplot(1).Draw(["stack", "total_bkg","data_obs"])
-    plot.subplot(2).Draw(["total_bkg", "data_obs"])
+        plot.subplot(1).Draw(["stack", "total_bkg", "data_obs"])
+    plot.subplot(2).Draw(
+            ["total_bkg", "bkg_ggH", "bkg_ggH_top", "bkg_qqH", "bkg_qqH_top", "data_obs"])
 
     # Create legends
     suffix = ["", "_top"]
