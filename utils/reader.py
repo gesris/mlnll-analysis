@@ -11,7 +11,7 @@ class Reader:
         self._files = []
         for filename in self._filenames:
             f = ROOT.TFile(filename)
-            if not f:
+            if f == None:
                 logger.fatal("Failed to open file {}".format(filename))
                 raise Exception
             self._read_all(f)
@@ -21,7 +21,7 @@ class Reader:
         for key in file_.GetListOfKeys():
             name = key.GetName()
             h = file_.Get(name)
-            if not h:
+            if h == None:
                 logger.fatal("Failed to get {}".format(name))
                 raise Exception
             if name in self._objs:

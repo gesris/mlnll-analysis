@@ -1,14 +1,14 @@
 from itertools import product
 import numpy as np
 
-from ntuple_processor import Histogram
 from ntuple_processor import dataset_from_artusoutput
 from ntuple_processor import Unit
 from ntuple_processor import UnitManager
 from ntuple_processor import GraphManager
 from ntuple_processor import RunManager
+from ntuple_processor import Histogram
 
-import config as cfg
+import utils.config as cfg
 
 import logging
 logger = logging.getLogger("")
@@ -29,7 +29,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def main():
     # Define histograms
-    hists = [Histogram('m_vis', 'm_vis', np.linspace(20, 160, 21))]
+    hists = [Histogram(var, var, cfg.binning[var]) for var in cfg.variables]
 
     # Define nominal units
     units = {}

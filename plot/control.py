@@ -1,6 +1,8 @@
 import Dumbledraw.dumbledraw as dd
 import Dumbledraw.styles as styles
+
 from utils import Reader
+from utils.config import variables
 
 import logging
 logger = logging.getLogger("")
@@ -19,9 +21,8 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def main():
+def main(variable):
     # Config
-    variable = "m_vis"
     linear = True
     bkg_processes = ["qcd", "vvt", "vvl", "vvj", "w", "ttt", "ttl", "ttj", "zj", "zl", "ztt"]
 
@@ -172,4 +173,5 @@ def main():
 
 if __name__ == "__main__":
     setup_logging("plot.log", logging.INFO)
-    main()
+    for variable in variables:
+        main(variable)

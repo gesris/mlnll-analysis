@@ -1,5 +1,6 @@
 import ROOT
 from utils import Reader
+from utils.config import variables
 
 import logging
 logger = logging.getLogger("")
@@ -20,18 +21,16 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def main():
     r = Reader(['shapes.root'])
-    variable = 'm_vis'
-
-    data = r.get('data', 'same_sign', variable)
-    for process in ['zl', 'zj', 'w', 'ttt', 'ttj', 'ttl', 'vvt', 'vvj', 'vvl']:
-        h = r.get(process, 'same_sign', variable)
-        data.Add(h, -1)
-
-    name = str(data.GetName()).replace('data', 'qcd').replace('same_sign', 'Nominal')
-    data.SetNameTitle(name, name)
-
     f = ROOT.TFile('shapes_qcd.root', 'RECREATE')
-    data.Write()
+    for variable in variables:
+        data = r.get('data', 'same_sign', variable)
+        for process in ['zl', 'zj', 'w', 'ttt', 'ttj', 'ttl', 'vvt', 'vvj', 'vvl']:
+            h = r.get(process, 'same_sign', variable)
+            data.Add(h, -1)
+
+        name = str(data.GetName()).replace('data', 'qcd').replace('same_sign', 'Nominal')
+        data.SetNameTitle(name, name)
+        data.Write()
     f.Close()
 
 
