@@ -84,6 +84,7 @@ channel = Selection(name = "mt",
                        ("((pt_2>30) && ((trg_singlemuon_27 == 1) || (trg_singlemuon_24 == 1))) || ((pt_1<25) && (trg_crossmuon_mu20tau27_hps == 1 || trg_crossmuon_mu20tau27 == 1))", "trg_selection")
                ])
 
+# TODO: Add the correct trigger weight string (see below)
 #triggerweight = "((trg_singlemuon_27 || trg_singlemuon_24)*((((pt_1>=25)&&(pt_1<28))*trigger_24_Weight_1)+((pt_1>=28)*(trigger_24_27_Weight_1)))+(pt_1 > 21 && pt_1 < 25 && trg_crossmuon_mu20tau27_hps)*(crossTriggerDataEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_tight_DeepTau_2))/(crossTriggerMCEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_tight_DeepTau_2)))"
 triggerweight = "(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))"
 
@@ -135,7 +136,7 @@ zj = Selection(name = "zj",
 tt = Selection(name = "tt",
         weights = [
             ("numberGeneratedEventsWeight", "numberGeneratedEventsWeight"),
-            ("(abs(crossSectionPerEventWeight - 380.1) < 0.1)*377.96 + (abs(crossSectionPerEventWeight - 87.31) < 0.1)*88.29 + (abs(crossSectionPerEventWeight - 364.4) < 0.1)*365.35", "crossSectionPerEventWeight"),
+            ("crossSectionPerEventWeight", "crossSectionPerEventWeight"),
             ("topPtReweightWeightRun2", "topPtReweightWeight"),
             ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
             ]

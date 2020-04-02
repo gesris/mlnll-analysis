@@ -113,7 +113,7 @@ def main(args, variable):
 
     # Set axes limits and labels
     plot.subplot(0).setYlims(0, 1.8 * plot.subplot(0).get_hist("data_obs").GetMaximum())
-    plot.subplot(2).setYlims(0.45, 2.05)
+    plot.subplot(2).setYlims(0.75, 1.35)
 
     if not linear:
         plot.subplot(1).setYlims(0.1, 0)
