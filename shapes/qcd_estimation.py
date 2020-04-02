@@ -27,7 +27,7 @@ def main(args):
     f = ROOT.TFile(os.path.join(args.workdir, 'shapes_qcd.root'), 'RECREATE')
     for variable in variables:
         data = r.get('data', 'same_sign', variable)
-        for process in ['zl', 'zj', 'w', 'ttt', 'ttj', 'ttl', 'vvt', 'vvj', 'vvl']:
+        for process in ['w', 'ztt', 'zl', 'zj', 'ttt', 'ttl', 'ttj', 'vvt', 'vvl', 'vvj']:
             h = r.get(process, 'same_sign', variable)
             data.Add(h, -1)
 

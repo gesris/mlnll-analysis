@@ -82,35 +82,30 @@ channel = Selection(name = "mt",
                        ("pt_2>30 && ((trg_singlemuon_27 == 1) || (trg_singlemuon_24 == 1) || (pt_1 < 25 && trg_crossmuon_mu20tau27 == 1))", "trg_selection")
                ])
 
-lumi_weight = ("59.7 * 1000.0", "lumi")
-
-w = Selection(name = "w",
+mc = Selection(name = "mc",
         weights = [
             ("generatorWeight", "generatorWeight"),
-            ("((0.00092600048*((npartons <= 0 || npartons >= 5)*1.0 + (npartons == 1)*0.1647043928 + (npartons == 2)*0.128547226623 + (npartons == 3)*0.0767138313139 + (npartons == 4)*0.0631529545476)) * (genbosonmass>=0.0) + numberGeneratedEventsWeight * crossSectionPerEventWeight * (genbosonmass<0.0))", "wj_stitching_weight"),
             ("puweight", "puweight"),
             ("idWeight_1*idWeight_2", "idweight"),
             ("isoWeight_1*isoWeight_2", "isoweight"),
             ("trackWeight_1*trackWeight_2", "trackweight"),
             ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight"),
             ("((gen_match_2 == 5)*0.90 + (gen_match_2 != 5))", "taubyIsoIdWeight"),
-            lumi_weight
+            ("59.7 * 1000.0", "lumi")
+            ]
+        )
+
+w = Selection(name = "w",
+        weights = [
+            ("((0.00092600048*((npartons <= 0 || npartons >= 5)*1.0 + (npartons == 1)*0.1647043928 + (npartons == 2)*0.128547226623 + (npartons == 3)*0.0767138313139 + (npartons == 4)*0.0631529545476)) * (genbosonmass>=0.0) + numberGeneratedEventsWeight * crossSectionPerEventWeight * (genbosonmass<0.0))", "wj_stitching_weight"),
+            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
             ]
         )
 
 dy = Selection(name = "dy",
         weights = [
-            ("generatorWeight", "generatorWeight"),
             ("((genbosonmass >= 50.0)*0.00005754202*((npartons == 0 || npartons >= 5)*1.0 + (npartons == 1)*0.194267667208 + (npartons == 2)*0.21727746547 + (npartons == 3)*0.26760465744 + (npartons == 4)*0.294078683662) + (genbosonmass < 50.0)*numberGeneratedEventsWeight*crossSectionPerEventWeight)", "z_stitching_weight"),
-            ("puweight", "puweight"),
-            ("idWeight_1*idWeight_2", "idweight"),
-            ("isoWeight_1*isoWeight_2", "isoweight"),
-            ("trackWeight_1*trackWeight_2", "trackweight"),
-            ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
-            ("((gen_match_2 == 5)*0.90 + (gen_match_2 != 5))", "taubyIsoIdWeight"),
-            ("zPtReweightWeight", "zPtReweightWeight"),
-            lumi_weight
+            ("zPtReweightWeight", "zPtReweightWeight")
             ]
         )
 
@@ -134,18 +129,10 @@ zj = Selection(name = "zj",
 
 tt = Selection(name = "tt",
         weights = [
-            ("generatorWeight", "generatorWeight"),
             ("numberGeneratedEventsWeight", "numberGeneratedEventsWeight"),
             ("(abs(crossSectionPerEventWeight - 380.1) < 0.1)*377.96 + (abs(crossSectionPerEventWeight - 87.31) < 0.1)*88.29 + (abs(crossSectionPerEventWeight - 364.4) < 0.1)*365.35", "crossSectionPerEventWeight"),
-            ("puweight", "puweight"),
-            ("idWeight_1*idWeight_2", "idweight"),
-            ("isoWeight_1*isoWeight_2", "isoweight"),
-            ("trackWeight_1*trackWeight_2", "trackweight"),
             ("topPtReweightWeight", "topPtReweightWeight"),
-            ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight"),
-            ("((gen_match_2 == 5)*0.90 + (gen_match_2 != 5))", "taubyIsoIdWeight"),
-            lumi_weight
+            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
             ]
         )
 
@@ -169,17 +156,9 @@ ttj = Selection(name = "ttj",
 
 vv = Selection(name = "vv",
         weights = [
-            ("generatorWeight", "generatorWeight"),
             ("numberGeneratedEventsWeight", "numberGeneratedEventsWeight"),
-            ("puweight", "puweight"),
-            ("idWeight_1*idWeight_2", "idweight"),
-            ("isoWeight_1*isoWeight_2", "isoweight"),
-            ("trackWeight_1*trackWeight_2", "trackweight"),
-            ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
             ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight"),
-            ("((gen_match_2 == 5)*0.90 + (gen_match_2 != 5))", "taubyIsoIdWeight"),
-            ("crossSectionPerEventWeight", "crossSectionPerEventWeight"),
-            lumi_weight
+            ("crossSectionPerEventWeight", "crossSectionPerEventWeight")
             ]
         )
 
@@ -202,15 +181,7 @@ vvj = Selection(name = "vvj",
 
 htt = Selection(name = "htt",
         weights = [
-            ("generatorWeight", "generatorWeight"),
-            ("puweight", "puweight"),
-            ("idWeight_1*idWeight_2", "idweight"),
-            ("isoWeight_1*isoWeight_2", "isoweight"),
-            ("trackWeight_1*trackWeight_2", "trackweight"),
-            ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight"),
-            ("((gen_match_2 == 5)*0.90 + (gen_match_2 != 5))", "taubyIsoIdWeight"),
-            lumi_weight
+            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
             ]
         )
 
@@ -255,8 +226,12 @@ binning = {
     'm_vis': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'pt_1': [0,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'pt_2': [0,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
+    'eta_1': [-2.5, -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+    'eta_2': [-2.5, -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
     'jpt_1': [0,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'jpt_2': [0,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
+    'jeta_1': [-4.8, -4.6, -4.4, -4.2, -4.0, -3.8, -3.6, -3.4, -3.2, -3.0, -2.8, -2.6, -2.4, -2.2, -2.0, -1.8, -1.6, -1.4, -1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8],
+    'jeta_2': [-4.8, -4.6, -4.4, -4.2, -4.0, -3.8, -3.6, -3.4, -3.2, -3.0, -2.8, -2.6, -2.4, -2.2, -2.0, -1.8, -1.6, -1.4, -1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8],
     'njets': [0,1,2,3,4,5],
     'nbtag': [0,1,2,3,4,5],
     'mt_1': [0,2.5,5,7.5,10,12.5,15,17.5,20,22.5,25,27.5,30,32.5,35,37.5,40,42.5,45,47.5,50,55],
@@ -264,6 +239,7 @@ binning = {
     'ptvis': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'pt_tt': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'mjj': [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300],
+    'jdeta': [0.0,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,3.2,3.4,3.6,3.8,4.0,4.2,4.4,4.6,4.8,5.0,5.2,5.4,5.6,5.8,6.0],
     'dijetpt': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'met': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     }
