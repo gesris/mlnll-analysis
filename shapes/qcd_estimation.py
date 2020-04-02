@@ -1,3 +1,6 @@
+import os
+import argparse
+
 import ROOT
 from utils import Reader
 from utils.config import variables
@@ -19,9 +22,9 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def main():
-    r = Reader(['shapes.root'])
-    f = ROOT.TFile('shapes_qcd.root', 'RECREATE')
+def main(args):
+    r = Reader([os.path.join(args.workdir, 'shapes_main.root')])
+    f = ROOT.TFile(os.path.join(args.workdir, 'shapes_qcd.root'), 'RECREATE')
     for variable in variables:
         data = r.get('data', 'same_sign', variable)
         for process in ['zl', 'zj', 'w', 'ttt', 'ttj', 'ttl', 'vvt', 'vvj', 'vvl']:
@@ -35,5 +38,8 @@ def main():
 
 
 if __name__ == "__main__":
-    setup_logging('qcd_estimation.log', logging.INFO)
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("workdir", help="Working directory for outputs")
+    args = parser.parse_args()
+    setup_logging(os.path.join(args.workdir, 'qcd_estimation.log'), logging.INFO)
+    main(args)

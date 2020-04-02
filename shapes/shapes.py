@@ -1,5 +1,7 @@
 from itertools import product
+import argparse
 import numpy as np
+import os
 
 from ntuple_processor import dataset_from_artusoutput
 from ntuple_processor import Unit
@@ -27,7 +29,7 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def main():
+def main(args):
     # Define histograms
     hists = [Histogram(var, var, cfg.binning[var]) for var in cfg.variables]
 
@@ -78,9 +80,12 @@ def main():
 
     # Run computations
     r_manager = RunManager(graphs)
-    r_manager.run_locally('shapes.root', nworkers=8, nthreads=2)
+    r_manager.run_locally(os.path.join(args.workdir, 'shapes_main.root'), nworkers=8, nthreads=2)
 
 
 if __name__ == "__main__":
-    setup_logging('shapes.log', logging.INFO)
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("workdir", help="Working directory for outputs")
+    args = parser.parse_args()
+    setup_logging(os.path.join(args.workdir, 'shapes.log'), logging.INFO)
+    main(args)

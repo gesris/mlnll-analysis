@@ -1,3 +1,6 @@
+import os
+import argparse
+
 import Dumbledraw.dumbledraw as dd
 import Dumbledraw.styles as styles
 
@@ -21,14 +24,14 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def main(variable):
+def main(args, variable):
     # Config
     linear = True
     bkg_processes = ["qcd", "vvt", "vvl", "vvj", "w", "ttt", "ttl", "ttj", "zj", "zl", "ztt"]
 
     # Read histograms
     hists = {}
-    reader = Reader(["shapes.root", "shapes_qcd.root"])
+    reader = Reader([os.path.join(args.workdir, f) for f in ["shapes_main.root", "shapes_qcd.root"]])
     total_bkg = None
     for process in bkg_processes:
         h = reader.get(process, "Nominal", variable)
@@ -167,11 +170,14 @@ def main(variable):
     plot.DrawLumi("59.7 fb^{-1} (2018, 13 TeV)")
     plot.DrawChannelCategoryLabel("%s, %s" % ("#mu#tau_{h}", "inclusive"), begin_left=None)
 
-    plot.save("%s.%s" % (variable, "pdf"))
-    plot.save("%s.%s" % (variable, "png"))
+    plot.save(os.path.join(args.workdir, "%s.%s" % (variable, "png")))
+    plot.save(os.path.join(args.workdir, "%s.%s" % (variable, "pdf")))
 
 
 if __name__ == "__main__":
-    setup_logging("plot.log", logging.INFO)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("workdir", help="Working directory for outputs")
+    args = parser.parse_args()
+    setup_logging(os.path.join(args.workdir, "plot.log"), logging.INFO)
     for variable in variables:
-        main(variable)
+        main(args, variable)

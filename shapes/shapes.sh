@@ -2,4 +2,6 @@
 
 source utils/setup_lcg.sh
 
-python shapes/shapes.py
+WORKDIR=$1
+
+python shapes/shapes.py $WORKDIR

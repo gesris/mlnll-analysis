@@ -2,4 +2,6 @@
 
 source utils/setup_lcg.sh
 
-python plot/control.py
+WORKDIR=$1
+
+python plot/control.py $WORKDIR

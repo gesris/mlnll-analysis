@@ -2,4 +2,6 @@
 
 source utils/setup_lcg.sh
 
-python shapes/qcd_estimation.py
+WORKDIR=$1
+
+python shapes/qcd_estimation.py $WORKDIR
