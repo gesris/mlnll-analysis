@@ -90,7 +90,7 @@ mc = Selection(name = "mc",
             ("isoWeight_1*isoWeight_2", "isoweight"),
             ("trackWeight_1*trackWeight_2", "trackweight"),
             ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
-            ("((gen_match_2 == 5)*0.90 + (gen_match_2 != 5))", "taubyIsoIdWeight"),
+            ("((gen_match_2 == 5)*tauIDScaleFactorWeight_tight_DeepTau2017v2p1VSjet_2+ (gen_match_2 != 5))", "taubyIsoIdWeight"),
             ("59.7 * 1000.0", "lumi")
             ]
         )
@@ -104,7 +104,7 @@ w = Selection(name = "w",
 
 dy = Selection(name = "dy",
         weights = [
-            ("((genbosonmass >= 50.0)*0.00005754202*((npartons == 0 || npartons >= 5)*1.0 + (npartons == 1)*0.194267667208 + (npartons == 2)*0.21727746547 + (npartons == 3)*0.26760465744 + (npartons == 4)*0.294078683662) + (genbosonmass < 50.0)*numberGeneratedEventsWeight*crossSectionPerEventWeight)", "z_stitching_weight"),
+            ("((genbosonmass >= 50.0)*0.0000606542*((npartons == 0 || npartons >= 5)*1.0 + (npartons == 1)*0.194267667208 + (npartons == 2)*0.21727746547 + (npartons == 3)*0.26760465744 + (npartons == 4)*0.294078683662) + (genbosonmass < 50.0)*numberGeneratedEventsWeight*crossSectionPerEventWeight)", "z_stitching_weight"),
             ("zPtReweightWeight", "zPtReweightWeight")
             ]
         )
@@ -131,7 +131,7 @@ tt = Selection(name = "tt",
         weights = [
             ("numberGeneratedEventsWeight", "numberGeneratedEventsWeight"),
             ("(abs(crossSectionPerEventWeight - 380.1) < 0.1)*377.96 + (abs(crossSectionPerEventWeight - 87.31) < 0.1)*88.29 + (abs(crossSectionPerEventWeight - 364.4) < 0.1)*365.35", "crossSectionPerEventWeight"),
-            ("topPtReweightWeight", "topPtReweightWeight"),
+            ("topPtReweightWeightRun2", "topPtReweightWeight"),
             ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
             ]
         )
@@ -144,7 +144,7 @@ ttt = Selection(name = "ttt",
 
 ttl = Selection(name = "ttl",
         cuts = [
-            ("!(gen_match_1==4 && gen_match_2==5) & !(gen_match_2 == 6)", "ttl_cut")
+            ("!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)", "ttl_cut")
             ]
         )
 
@@ -169,7 +169,7 @@ vvt = Selection(name = "vvt",
         )
 vvl = Selection(name = "vvl",
         cuts = [
-            ("!(gen_match_1==4 && gen_match_2==5) & !(gen_match_2 == 6)", "vvl_cut")
+            ("!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)", "vvl_cut")
             ]
         )
 
