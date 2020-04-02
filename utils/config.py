@@ -1,13 +1,16 @@
+from os import path
+
 from ntuple_processor.utils import Selection
 from ntuple_processor.utils import Cut
 from ntuple_processor.utils import Weight
 from ntuple_processor.variations import ReplaceCut
 
 # Base path to main ntuples
-ntuples_base = "/ceph/htautau/deeptau_02-20/2018/ntuples/"
+basepath = "/ceph/htautau/deeptau_02-20/2018/"
+ntuples_base = path.join(basepath, "ntuples")
 
 # No friend trees
-friends_base = []
+friends_base = [path.join(basepath, "friends", f) for f in ["TauTriggers", "SVFit"]]
 
 # File list
 files = {
@@ -73,14 +76,16 @@ channel = Selection(name = "mt",
                        ("extraelec_veto<0.5", "extraelec_veto"),
                        ("extramuon_veto<0.5", "extramuon_veto"),
                        ("dilepton_veto<0.5", "dilepton_veto"),
-                       ("againstMuonTight3_2>0.5", "againstMuonDiscriminator"),
-                       ("againstElectronVLooseMVA6_2>0.5", "againstElectronDiscriminator"),
-                       ("byTightIsolationMVArun2017v2DBoldDMwLT2017_2>0.5", "tau_iso"),
+                       ("byTightDeepTau2017v2p1VSmu_2>0.5", "againstMuonDiscriminator"),
+                       ("byVVLooseDeepTau2017v2p1VSe_2>0.5", "againstElectronDiscriminator"),
+                       ("byTightDeepTau2017v2p1VSjet_2>0.5", "tau_iso"),
                        ("iso_1<0.15", "muon_iso"),
                        ("q_1*q_2<0", "os"),
-                       ("mt_1<50", "m_t"),
-                       ("pt_2>30 && ((trg_singlemuon_27 == 1) || (trg_singlemuon_24 == 1) || (pt_1 < 25 && trg_crossmuon_mu20tau27 == 1))", "trg_selection")
+                       ("((pt_2>30) && ((trg_singlemuon_27 == 1) || (trg_singlemuon_24 == 1))) || ((pt_1<25) && (trg_crossmuon_mu20tau27_hps == 1 || trg_crossmuon_mu20tau27 == 1))", "trg_selection")
                ])
+
+#triggerweight = "((trg_singlemuon_27 || trg_singlemuon_24)*((((pt_1>=25)&&(pt_1<28))*trigger_24_Weight_1)+((pt_1>=28)*(trigger_24_27_Weight_1)))+(pt_1 > 21 && pt_1 < 25 && trg_crossmuon_mu20tau27_hps)*(crossTriggerDataEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_tight_DeepTau_2))/(crossTriggerMCEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_tight_DeepTau_2)))"
+triggerweight = "(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))"
 
 mc = Selection(name = "mc",
         weights = [
@@ -89,7 +94,7 @@ mc = Selection(name = "mc",
             ("idWeight_1*idWeight_2", "idweight"),
             ("isoWeight_1*isoWeight_2", "isoweight"),
             ("trackWeight_1*trackWeight_2", "trackweight"),
-            ("(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))", "triggerweight"),
+            (triggerweight, "triggerweight"),
             ("((gen_match_2 == 5)*tauIDScaleFactorWeight_tight_DeepTau2017v2p1VSjet_2+ (gen_match_2 != 5))", "taubyIsoIdWeight"),
             ("59.7 * 1000.0", "lumi")
             ]
@@ -150,7 +155,7 @@ ttl = Selection(name = "ttl",
 
 ttj = Selection(name = "ttj",
         cuts = [
-            ("(gen_match_2 == 6 && gen_match_2 == 6)", "ttj_cut")
+            ("gen_match_2 == 6", "ttj_cut")
             ]
         )
 
@@ -175,7 +180,7 @@ vvl = Selection(name = "vvl",
 
 vvj = Selection(name = "vvj",
         cuts = [
-            ("(gen_match_2 == 6 && gen_match_2 == 6)", "vvj_cut")
+            ("gen_match_2 == 6", "vvj_cut")
             ]
         )
 
@@ -242,6 +247,9 @@ binning = {
     'jdeta': [0.0,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,3.2,3.4,3.6,3.8,4.0,4.2,4.4,4.6,4.8,5.0,5.2,5.4,5.6,5.8,6.0],
     'dijetpt': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'met': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
+    'm_sv_puppi': [0,7.5,15,22.5,30,37.5,45,52.5,60,67.5,75,82.5,90,97.5,105,112.5,120,127.5,135,142.5,150,157.5,165,172.5,180,187.5,195,202.5,210,217.5,225],
+    'pt_sv_puppi': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
+    'eta_sv_puppi': [-2.5, -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
     }
 
 variables = list(binning.keys())
