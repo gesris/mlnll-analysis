@@ -6,11 +6,11 @@ from ntuple_processor.utils import Weight
 from ntuple_processor.variations import ReplaceCut
 
 # Base path to main ntuples
-basepath = "/ceph/htautau/deeptau_02-20/2018/"
-ntuples_base = path.join(basepath, "ntuples")
+basepath = '/ceph/htautau/deeptau_02-20/2018/'
+ntuples_base = path.join(basepath, 'ntuples')
 
 # No friend trees
-friends_base = [path.join(basepath, "friends", f) for f in ["TauTriggers", "SVFit"]]
+friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
 
 # File list
 files = {
@@ -70,160 +70,160 @@ files = {
 
 # Selections
 
-channel = Selection(name = "mt",
+channel = Selection(name = 'mt',
                cuts = [
-                       ("flagMETFilter == 1", "METFilter"),
-                       ("extraelec_veto<0.5", "extraelec_veto"),
-                       ("extramuon_veto<0.5", "extramuon_veto"),
-                       ("dilepton_veto<0.5", "dilepton_veto"),
-                       ("byTightDeepTau2017v2p1VSmu_2>0.5", "againstMuonDiscriminator"),
-                       ("byVVLooseDeepTau2017v2p1VSe_2>0.5", "againstElectronDiscriminator"),
-                       ("byTightDeepTau2017v2p1VSjet_2>0.5", "tau_iso"),
-                       ("iso_1<0.15", "muon_iso"),
-                       ("q_1*q_2<0", "os"),
-                       ("((pt_2>30) && ((trg_singlemuon_27 == 1) || (trg_singlemuon_24 == 1))) || ((pt_1<25) && (trg_crossmuon_mu20tau27_hps == 1 || trg_crossmuon_mu20tau27 == 1))", "trg_selection")
+                       ('flagMETFilter == 1', 'METFilter'),
+                       ('extraelec_veto<0.5', 'extraelec_veto'),
+                       ('extramuon_veto<0.5', 'extramuon_veto'),
+                       ('dilepton_veto<0.5', 'dilepton_veto'),
+                       ('byTightDeepTau2017v2p1VSmu_2>0.5', 'againstMuonDiscriminator'),
+                       ('byVVLooseDeepTau2017v2p1VSe_2>0.5', 'againstElectronDiscriminator'),
+                       ('byTightDeepTau2017v2p1VSjet_2>0.5', 'tau_iso'),
+                       ('iso_1<0.15', 'muon_iso'),
+                       ('q_1*q_2<0', 'os'),
+                       ('((pt_2>30) && ((trg_singlemuon_27 == 1) || (trg_singlemuon_24 == 1))) || ((pt_1<25) && (trg_crossmuon_mu20tau27_hps == 1 || trg_crossmuon_mu20tau27 == 1))', 'trg_selection')
                ])
 
 # TODO: Add the correct trigger weight string (see below)
-#triggerweight = "((trg_singlemuon_27 || trg_singlemuon_24)*((((pt_1>=25)&&(pt_1<28))*trigger_24_Weight_1)+((pt_1>=28)*(trigger_24_27_Weight_1)))+(pt_1 > 21 && pt_1 < 25 && trg_crossmuon_mu20tau27_hps)*(crossTriggerDataEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_tight_DeepTau_2))/(crossTriggerMCEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_tight_DeepTau_2)))"
-triggerweight = "(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))"
+#triggerweight = '((trg_singlemuon_27 || trg_singlemuon_24)*((((pt_1>=25)&&(pt_1<28))*trigger_24_Weight_1)+((pt_1>=28)*(trigger_24_27_Weight_1)))+(pt_1 > 21 && pt_1 < 25 && trg_crossmuon_mu20tau27_hps)*(crossTriggerDataEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedDataEfficiencyWeight_tight_DeepTau_2))/(crossTriggerMCEfficiencyWeight_1*((byTightDeepTau2017v2p1VSjet_2<0.5 && byVLooseDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_vloose_DeepTau_2 + (byTightDeepTau2017v2p1VSjet_2>0.5)*crossTriggerCorrectedMCEfficiencyWeight_tight_DeepTau_2)))'
+triggerweight = '(crossTriggerMCWeight_1*(crossTriggerMCWeight_1<10 && crossTriggerMCWeight_1>0.1)+(crossTriggerMCWeight_1>10 || crossTriggerMCWeight_1<0.1))*(pt_1<25) + (trigger_24_27_Weight_1*(pt_1>25))'
 
-mc = Selection(name = "mc",
+mc = Selection(name = 'mc',
         weights = [
-            ("generatorWeight", "generatorWeight"),
-            ("puweight", "puweight"),
-            ("idWeight_1*idWeight_2", "idweight"),
-            ("isoWeight_1*isoWeight_2", "isoweight"),
-            ("trackWeight_1*trackWeight_2", "trackweight"),
-            (triggerweight, "triggerweight"),
-            ("((gen_match_2 == 5)*tauIDScaleFactorWeight_tight_DeepTau2017v2p1VSjet_2+ (gen_match_2 != 5))", "taubyIsoIdWeight"),
-            ("59.7 * 1000.0", "lumi")
+            ('generatorWeight', 'generatorWeight'),
+            ('puweight', 'puweight'),
+            ('idWeight_1*idWeight_2', 'idweight'),
+            ('isoWeight_1*isoWeight_2', 'isoweight'),
+            ('trackWeight_1*trackWeight_2', 'trackweight'),
+            (triggerweight, 'triggerweight'),
+            ('((gen_match_2 == 5)*tauIDScaleFactorWeight_tight_DeepTau2017v2p1VSjet_2+ (gen_match_2 != 5))', 'taubyIsoIdWeight'),
+            ('59.7 * 1000.0', 'lumi')
             ]
         )
 
-w = Selection(name = "w",
+w = Selection(name = 'w',
         weights = [
-            ("((0.00092600048*((npartons <= 0 || npartons >= 5)*1.0 + (npartons == 1)*0.1647043928 + (npartons == 2)*0.128547226623 + (npartons == 3)*0.0767138313139 + (npartons == 4)*0.0631529545476)) * (genbosonmass>=0.0) + numberGeneratedEventsWeight * crossSectionPerEventWeight * (genbosonmass<0.0))", "wj_stitching_weight"),
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
+            ('((0.00092600048*((npartons <= 0 || npartons >= 5)*1.0 + (npartons == 1)*0.1647043928 + (npartons == 2)*0.128547226623 + (npartons == 3)*0.0767138313139 + (npartons == 4)*0.0631529545476)) * (genbosonmass>=0.0) + numberGeneratedEventsWeight * crossSectionPerEventWeight * (genbosonmass<0.0))', 'wj_stitching_weight'),
+            ('eleTauFakeRateWeight*muTauFakeRateWeight', 'leptonTauFakeRateWeight')
             ]
         )
 
-dy = Selection(name = "dy",
+dy = Selection(name = 'dy',
         weights = [
-            ("((genbosonmass >= 50.0)*0.0000606542*((npartons == 0 || npartons >= 5)*1.0 + (npartons == 1)*0.194267667208 + (npartons == 2)*0.21727746547 + (npartons == 3)*0.26760465744 + (npartons == 4)*0.294078683662) + (genbosonmass < 50.0)*numberGeneratedEventsWeight*crossSectionPerEventWeight)", "z_stitching_weight"),
-            ("zPtReweightWeight", "zPtReweightWeight")
+            ('((genbosonmass >= 50.0)*0.0000606542*((npartons == 0 || npartons >= 5)*1.0 + (npartons == 1)*0.194267667208 + (npartons == 2)*0.21727746547 + (npartons == 3)*0.26760465744 + (npartons == 4)*0.294078683662) + (genbosonmass < 50.0)*numberGeneratedEventsWeight*crossSectionPerEventWeight)', 'z_stitching_weight'),
+            ('zPtReweightWeight', 'zPtReweightWeight')
             ]
         )
 
-ztt = Selection(name = "ztt",
+ztt = Selection(name = 'ztt',
         cuts = [
-            ("gen_match_1==4 && gen_match_2==5", "ztt_cut")
+            ('gen_match_1==4 && gen_match_2==5', 'ztt_cut')
             ]
         )
 
-zl = Selection(name = "zl",
+zl = Selection(name = 'zl',
         cuts = [
-            ("!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)", "zl_cut")
+            ('!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)', 'zl_cut')
             ]
         )
 
-zj = Selection(name = "zj",
+zj = Selection(name = 'zj',
         cuts = [
-            ("gen_match_2 == 6", "zj_cut")
+            ('gen_match_2 == 6', 'zj_cut')
             ]
         )
 
-tt = Selection(name = "tt",
+tt = Selection(name = 'tt',
         weights = [
-            ("numberGeneratedEventsWeight", "numberGeneratedEventsWeight"),
-            ("crossSectionPerEventWeight", "crossSectionPerEventWeight"),
-            ("topPtReweightWeightRun2", "topPtReweightWeight"),
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
+            ('numberGeneratedEventsWeight', 'numberGeneratedEventsWeight'),
+            ('crossSectionPerEventWeight', 'crossSectionPerEventWeight'),
+            ('topPtReweightWeightRun2', 'topPtReweightWeight'),
+            ('eleTauFakeRateWeight*muTauFakeRateWeight', 'leptonTauFakeRateWeight')
             ]
         )
 
-ttt = Selection(name = "ttt",
+ttt = Selection(name = 'ttt',
         cuts = [
-            ("gen_match_1==4 && gen_match_2==5", "ttt_cut")
+            ('gen_match_1==4 && gen_match_2==5', 'ttt_cut')
             ]
         )
 
-ttl = Selection(name = "ttl",
+ttl = Selection(name = 'ttl',
         cuts = [
-            ("!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)", "ttl_cut")
+            ('!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)', 'ttl_cut')
             ]
         )
 
-ttj = Selection(name = "ttj",
+ttj = Selection(name = 'ttj',
         cuts = [
-            ("gen_match_2 == 6", "ttj_cut")
+            ('gen_match_2 == 6', 'ttj_cut')
             ]
         )
 
-vv = Selection(name = "vv",
+vv = Selection(name = 'vv',
         weights = [
-            ("numberGeneratedEventsWeight", "numberGeneratedEventsWeight"),
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight"),
-            ("crossSectionPerEventWeight", "crossSectionPerEventWeight")
+            ('numberGeneratedEventsWeight', 'numberGeneratedEventsWeight'),
+            ('eleTauFakeRateWeight*muTauFakeRateWeight', 'leptonTauFakeRateWeight'),
+            ('crossSectionPerEventWeight', 'crossSectionPerEventWeight')
             ]
         )
 
-vvt = Selection(name = "vvt",
+vvt = Selection(name = 'vvt',
         cuts = [
-            ("gen_match_1==4 && gen_match_2==5", "vvt_cut")
+            ('gen_match_1==4 && gen_match_2==5', 'vvt_cut')
             ]
         )
-vvl = Selection(name = "vvl",
+vvl = Selection(name = 'vvl',
         cuts = [
-            ("!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)", "vvl_cut")
-            ]
-        )
-
-vvj = Selection(name = "vvj",
-        cuts = [
-            ("gen_match_2 == 6", "vvj_cut")
+            ('!(gen_match_1==4 && gen_match_2==5) && !(gen_match_2 == 6)', 'vvl_cut')
             ]
         )
 
-htt = Selection(name = "htt",
+vvj = Selection(name = 'vvj',
+        cuts = [
+            ('gen_match_2 == 6', 'vvj_cut')
+            ]
+        )
+
+htt = Selection(name = 'htt',
         weights = [
-            ("eleTauFakeRateWeight*muTauFakeRateWeight", "leptonTauFakeRateWeight")
+            ('eleTauFakeRateWeight*muTauFakeRateWeight', 'leptonTauFakeRateWeight')
             ]
         )
 
-ggh = Selection(name = "ggh",
+ggh = Selection(name = 'ggh',
         weights = [
-            ("ggh_NNLO_weight", "gghNNLO"),
-            ("1.01", "bbh_inclusion_weight"),
-            ("(((htxs_stage1p1cat==100||htxs_stage1p1cat==102||htxs_stage1p1cat==103)*crossSectionPerEventWeight*numberGeneratedEventsWeight+"
-             "(htxs_stage1p1cat==101)*2.09e-8+"
-             "(htxs_stage1p1cat==104||htxs_stage1p1cat==105)*4.28e-8+"
-             "(htxs_stage1p1cat==106)*1.39e-8+"
-             "(htxs_stage1p1cat>=107&&htxs_stage1p1cat<=109)*4.90e-8+"
-             "(htxs_stage1p1cat>=110&&htxs_stage1p1cat<=113)*9.69e-9"
-             ")*(abs(crossSectionPerEventWeight - 0.00538017) > 1e-5) + numberGeneratedEventsWeight*crossSectionPerEventWeight*(abs(crossSectionPerEventWeight - 0.00538017) < 1e-5))", "ggh_stitching_weight")
+            ('ggh_NNLO_weight', 'gghNNLO'),
+            ('1.01', 'bbh_inclusion_weight'),
+            ('(((htxs_stage1p1cat==100||htxs_stage1p1cat==102||htxs_stage1p1cat==103)*crossSectionPerEventWeight*numberGeneratedEventsWeight+'
+             '(htxs_stage1p1cat==101)*2.09e-8+'
+             '(htxs_stage1p1cat==104||htxs_stage1p1cat==105)*4.28e-8+'
+             '(htxs_stage1p1cat==106)*1.39e-8+'
+             '(htxs_stage1p1cat>=107&&htxs_stage1p1cat<=109)*4.90e-8+'
+             '(htxs_stage1p1cat>=110&&htxs_stage1p1cat<=113)*9.69e-9'
+             ')*(abs(crossSectionPerEventWeight - 0.00538017) > 1e-5) + numberGeneratedEventsWeight*crossSectionPerEventWeight*(abs(crossSectionPerEventWeight - 0.00538017) < 1e-5))', 'ggh_stitching_weight')
             ],
         cuts = [
-            ("(htxs_stage1p1cat>=100)&&(htxs_stage1p1cat<=113)", "htxs_cut")
+            ('(htxs_stage1p1cat>=100)&&(htxs_stage1p1cat<=113)', 'htxs_cut')
             ]
         )
 
-qqh = Selection(name = "qqh",
+qqh = Selection(name = 'qqh',
         weights = [
-            ("((htxs_stage1p1cat>=200&&htxs_stage1p1cat<=202)||abs(crossSectionPerEventWeight-0.04774)<0.001||abs(crossSectionPerEventWeight-0.052685)<0.001||abs(crossSectionPerEventWeight-0.03342)<0.001)*crossSectionPerEventWeight*numberGeneratedEventsWeight+(abs(crossSectionPerEventWeight-0.04774)>=0.001&&abs(crossSectionPerEventWeight-0.052685)>=0.001&&abs(crossSectionPerEventWeight-0.03342)>=0.001)*("
-             "(htxs_stage1p1cat>=203&&htxs_stage1p1cat<=205)*9.41e-9+"
-             "(htxs_stage1p1cat==206)*8.52e-9+"
-             "(htxs_stage1p1cat>=207&&htxs_stage1p1cat<=210)*1.79e-8"
-             ")", "qqh_stitching_weight")
+            ('((htxs_stage1p1cat>=200&&htxs_stage1p1cat<=202)||abs(crossSectionPerEventWeight-0.04774)<0.001||abs(crossSectionPerEventWeight-0.052685)<0.001||abs(crossSectionPerEventWeight-0.03342)<0.001)*crossSectionPerEventWeight*numberGeneratedEventsWeight+(abs(crossSectionPerEventWeight-0.04774)>=0.001&&abs(crossSectionPerEventWeight-0.052685)>=0.001&&abs(crossSectionPerEventWeight-0.03342)>=0.001)*('
+             '(htxs_stage1p1cat>=203&&htxs_stage1p1cat<=205)*9.41e-9+'
+             '(htxs_stage1p1cat==206)*8.52e-9+'
+             '(htxs_stage1p1cat>=207&&htxs_stage1p1cat<=210)*1.79e-8'
+             ')', 'qqh_stitching_weight')
             ],
         cuts = [
-            ("(htxs_stage1p1cat>=200)&&(htxs_stage1p1cat<=210)", "htxs_cut")
+            ('(htxs_stage1p1cat>=200)&&(htxs_stage1p1cat<=210)', 'htxs_cut')
             ]
         )
 
 # Variations
 
-same_sign = ReplaceCut("same_sign", "os", Cut("q_1*q_2>0", "ss"))
+same_sign = ReplaceCut('same_sign', 'os', Cut('q_1*q_2>0', 'ss'))
 
 # Binnings
 
@@ -253,4 +253,15 @@ binning = {
     'eta_sv_puppi': [-2.5, -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
     }
 
-variables = list(binning.keys())
+control_variables = list(binning.keys())
+
+analysis_binning = [100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150]
+analysis_variable = 'm_sv_puppi'
+
+# Analysis categories
+
+jet0 = Selection(name = '0jet', cuts = [('njets == 0', '0jet_category')])
+jet1 = Selection(name = '1jet', cuts = [('njets == 1', '1jet_category')])
+jet2 = Selection(name = '2jet', cuts = [('njets >= 2', '2jet_category')])
+
+analysis_categories = {'0jet': jet0, '1jet': jet1, '2jet': jet2}
