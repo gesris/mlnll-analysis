@@ -97,5 +97,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('workdir', help='Working directory for outputs')
     args = parser.parse_args()
-    setup_logging(os.path.join(args.workdir, 'convert2ch.log'), logging.DEBUG)
+    setup_logging(os.path.join(args.workdir, 'convert2ch.log'), logging.INFO)
     main(args)
