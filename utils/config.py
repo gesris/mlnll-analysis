@@ -255,7 +255,7 @@ binning = {
 
 control_variables = list(binning.keys())
 
-analysis_binning = [100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150]
+analysis_binning = range(100, 152, 2)
 analysis_variable = 'm_sv_puppi'
 
 # Analysis categories

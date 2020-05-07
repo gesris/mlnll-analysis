@@ -6,7 +6,7 @@ WORKDIR=$1
 
 ${CMSSW_BASE}/bin/slc7_amd64_gcc700/MorphingSMRun2Legacy \
     --base_path=$PWD \
-    --input_folder_mt="output/" \
+    --input_folder_mt=$WORKDIR"/" \
     --real_data=false \
     --classic_bbb=true \
     --jetfakes=false \
@@ -19,6 +19,6 @@ ${CMSSW_BASE}/bin/slc7_amd64_gcc700/MorphingSMRun2Legacy \
     --categories="mlnll" \
     --era=2018 \
     --rebin_categories=false \
-    --output="output/" | tee ${WORKDIR}/datacards.log
+    --output=$WORKDIR"/" | tee ${WORKDIR}/datacards.log
 
 exit
