@@ -13,9 +13,13 @@ shapes/postproc.sh $WORKDIR
 # Control plots
 plot/control.sh $WORKDIR
 
-# Create datacards
+# Create datacards and workspacd
 fit/convert2ch.sh $WORKDIR
 fit/datacards.sh $WORKDIR
 fit/workspace.sh $WORKDIR
+
+# Prefit plots
+fit/workspace2shapes.sh $WORKDIR
+plot/analysis.sh $WORKDIR
 
 # Fit

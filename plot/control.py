@@ -190,7 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('workdir', help='Working directory for outputs')
     parser.add_argument('--blinding', default=True, help='Apply blinding for all categories except inclusive')
     args = parser.parse_args()
-    setup_logging(os.path.join(args.workdir, 'plot.log'), logging.INFO)
+    setup_logging(os.path.join(args.workdir, 'plot_control.log'), logging.INFO)
     for name in [v + '_inclusive' for v in control_variables] + \
                     [analysis_variable + '_' + c for c in analysis_categories]:
         main(args, name)
