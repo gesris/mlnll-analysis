@@ -16,5 +16,6 @@ plot/control.sh $WORKDIR
 # Create datacards
 fit/convert2ch.sh $WORKDIR
 fit/datacards.sh $WORKDIR
+fit/workspace.sh $WORKDIR
 
 # Fit
