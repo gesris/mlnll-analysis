@@ -24,3 +24,5 @@ plot/analysis.sh $WORKDIR
 
 # Fit
 fit/signal_strength.sh $WORKDIR
+fit/scan.sh $WORKDIR
+plot/scan.sh $WORKDIR
