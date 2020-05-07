@@ -8,8 +8,7 @@ ${CMSSW_BASE}/bin/slc7_amd64_gcc700/MorphingSMRun2Legacy \
     --base_path=$PWD \
     --input_folder_mt="output/" \
     --real_data=false \
-    --classic_bbb=false \
-    --binomial_bbb=true \
+    --classic_bbb=true \
     --jetfakes=false \
     --embedding=false \
     --postfix="-ML" \
@@ -23,11 +22,3 @@ ${CMSSW_BASE}/bin/slc7_amd64_gcc700/MorphingSMRun2Legacy \
     --output="output/" | tee ${WORKDIR}/datacards.log
 
 exit
-
-# Use Barlow-Beeston-lite approach for bin-by-bin systematics
-pushd ${OUTPUTDIR}/cmb/125/
-for FILE in *.txt
-do
-    sed -i '$s/$/\n * autoMCStats 0.0/' ${FILE}
-done
-popd
