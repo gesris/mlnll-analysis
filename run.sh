@@ -22,7 +22,12 @@ fit/workspace.sh $WORKDIR
 fit/workspace2shapes.sh $WORKDIR
 plot/analysis.sh $WORKDIR
 
-# Fit
+# Signal strenght
 fit/signal_strength.sh $WORKDIR
+
+# NLL scan
 fit/scan.sh $WORKDIR
 plot/scan.sh $WORKDIR
+
+# Significance
+fit/significance.sh $WORKDIR

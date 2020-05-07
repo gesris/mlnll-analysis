@@ -7,4 +7,4 @@ WORKDIR=$1
 pushd $WORKDIR
 combine -M Significance \
         -m 125 \
-        -d workspace.root
+        -d workspace.root | tee significance.log

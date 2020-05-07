@@ -9,4 +9,4 @@ combine -M FitDiagnostics \
         -n .MLNLL \
         -m 125 \
         -d workspace.root \
-        --robustFit 1
+        --robustFit 1 | tee signal_strength.log

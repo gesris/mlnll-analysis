@@ -9,4 +9,4 @@ pushd $WORKDIR
 PostFitShapesFromWorkspace -m 125 \
     -w workspace.root \
     -d cmb/125/combined.txt.cmb \
-    -o shapes_prefit.root
+    -o shapes_prefit.root | tee workspace2shapes.log
