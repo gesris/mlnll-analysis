@@ -23,3 +23,4 @@ fit/workspace2shapes.sh $WORKDIR
 plot/analysis.sh $WORKDIR
 
 # Fit
+fit/signal_strength.sh $WORKDIR
