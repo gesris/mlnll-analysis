@@ -33,6 +33,7 @@ process_map = {
         'vvl': 'VVL',
         'vvj': 'VVJ',
         'w': 'W',
+        'qcd': 'QCD',
         'ggh': 'ggH125',
         'qqh': 'qqH125',
         }
@@ -42,16 +43,15 @@ def main(args):
     outfile = ROOT.TFile(os.path.join(args.workdir, 'shapes_ch.root'), 'RECREATE')
 
     # Make folder structure
-    outfile.mkdir('2018')
     for category in analysis_categories:
-        outfile.mkdir('2018/mt_' + category)
+        outfile.mkdir('mt_' + category)
 
     # Convert shapes
-    for filename in ['shapes_main.root']:
+    for filename in ['shapes_main.root', 'shapes_qcd.root']:
         f = ROOT.TFile(os.path.join(args.workdir, filename), 'READ')
         for category in analysis_categories:
             # Get folder of this category
-            outdirname = '2018/mt_' + category
+            outdirname = 'mt_' + category
             outdir = outfile.Get(outdirname)
             # Find shapes related to this category, convert and write to output file
             for key in f.GetListOfKeys():
@@ -73,6 +73,8 @@ def main(args):
                 process = None
                 if dataset == 'data':
                     process = 'data'
+                elif dataset == 'qcd':
+                    process = 'qcd'
                 else:
                     for p in process_map:
                         if '-' + p + '-' in selections:
