@@ -265,3 +265,7 @@ jet1 = Selection(name = '1jet', cuts = [('njets == 1', '1jet_category')])
 jet2 = Selection(name = '2jet', cuts = [('njets >= 2', '2jet_category')])
 
 analysis_categories = {'0jet': jet0, '1jet': jet1, '2jet': jet2}
+
+# Variables used for ML training
+ml_variables = ['m_sv_puppi', 'ptvis', 'mjj']
+ml_weight = 'training_weight'
