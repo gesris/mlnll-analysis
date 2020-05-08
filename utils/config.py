@@ -269,3 +269,4 @@ analysis_categories = {'0jet': jet0, '1jet': jet1, '2jet': jet2}
 # Variables used for ML training
 ml_variables = ['m_sv_puppi', 'ptvis', 'mjj']
 ml_weight = 'training_weight'
+ml_classes = ['htt', 'ztt', 'w']
