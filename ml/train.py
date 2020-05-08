@@ -14,10 +14,6 @@ import logging
 logger = logging.getLogger('')
 
 
-# Global lsit of chains to keep everything alive
-chains = []
-
-
 def setup_logging(output_file, level=logging.DEBUG):
     logger.setLevel(level)
     formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
@@ -36,7 +32,7 @@ def tree2numpy(path, tree, columns):
     return df.AsNumpy(columns)
 
 
-def build_dataset(path, classes, fold):
+def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True):
     columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
@@ -61,15 +57,17 @@ def build_dataset(path, classes, fold):
     logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
     # Multiply class weights to event weights
-    sum_all = np.sum(ws)
-    for i in range(len(classes)):
-        mask = ys == i
-        ws[mask] = ws[mask] / np.sum(ws[mask]) * sum_all
-    logger.debug('Weights, with class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
+    if use_class_weights:
+        sum_all = np.sum(ws)
+        for i in range(len(classes)):
+            mask = ys == i
+            ws[mask] = ws[mask] / np.sum(ws[mask]) * sum_all
+        logger.debug('Weights, with class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
     # Convert targets to categorical
-    ys = tf.keras.utils.to_categorical(ys)
-    logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
+    if make_categorical:
+        ys = tf.keras.utils.to_categorical(ys)
+        logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
 
     return xs, ys, ws
 
@@ -107,5 +105,5 @@ if __name__ == '__main__':
     parser.add_argument('workdir', help='Working directory for outputs')
     parser.add_argument('fold', type=int, help='Training fold')
     args = parser.parse_args()
-    setup_logging(os.path.join(args.workdir, 'ml_train.log'), logging.DEBUG)
+    setup_logging(os.path.join(args.workdir, 'ml_train_fold{}.log'.format(args.fold)), logging.INFO)
     main(args)
