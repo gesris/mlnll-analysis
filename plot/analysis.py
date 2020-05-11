@@ -44,17 +44,6 @@ def main(args):
         "tt": "#tau_{h}#tau_{h}"
     }
     category_dict = {str(i): c for i, c in enumerate(cfg.ml_classes)}
-    linear = False
-    normalize_by_bin_width = False
-    if linear:
-        split_value = 0
-    else:
-        if normalize_by_bin_width:
-            split_value = 10001
-        else:
-            split_value = 101
-
-    split_dict = {c: split_value for c in ["et", "mt", "tt", "em"]}
 
     bkg_processes = [
         "QCD",
@@ -76,6 +65,13 @@ def main(args):
     plots = []
     channel = "mt"
     for category in channel_categories[channel]:
+        linear = False if category == "0" else True
+        normalize_by_bin_width = False
+        if linear:
+            split_value = 0
+        else:
+            split_value = 101
+
         rootfile = rootfile_parser.Rootfile_parser(os.path.join(args.workdir, "shapes_prefit.root"))
         bkg_processes = [b for b in all_bkg_processes]
         legend_bkg_processes = copy.deepcopy(bkg_processes)
@@ -200,13 +196,13 @@ def main(args):
 
         # set axes limits and labels
         plot.subplot(0).setYlims(
-            split_dict[channel],
+            split_value,
             max(2 * plot.subplot(0).get_hist("total_bkg").GetMaximum(),
-                split_dict[channel] * 2))
+                split_value * 2))
 
         plot.subplot(2).setYlims(0.75, 1.35)
         if not linear:
-            plot.subplot(1).setYlims(0.1, split_dict[channel])
+            plot.subplot(1).setYlims(0.1, split_value)
             plot.subplot(1).setLogY()
             plot.subplot(1).setYlabel(
                 "")  # otherwise number labels are not drawn on axis

@@ -75,6 +75,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
 def model_simple():
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.Dense(100, activation='relu', input_shape=(len(cfg.ml_variables),)))
+    model.add(tf.keras.layers.Dense(100, activation='relu'))
     model.add(tf.keras.layers.Dense(len(cfg.ml_classes), activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy')
     return model
@@ -89,11 +90,11 @@ def main(args):
             x=x_train,
             y=y_train,
             sample_weight=w_train,
-            batch_size=10000,
-            epochs=1000,
+            batch_size=100,
+            epochs=10000,
             validation_data=(x_val, y_val, w_val),
             callbacks=[
-                tf.keras.callbacks.EarlyStopping(patience=5, verbose=2),
+                tf.keras.callbacks.EarlyStopping(patience=10, verbose=2),
                 tf.keras.callbacks.ModelCheckpoint(
                     os.path.join(args.workdir, 'model_fold{}.h5'.format(args.fold)), verbose=2, save_best_only=True)
                 ]
