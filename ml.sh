@@ -11,5 +11,6 @@ ml/dataset.sh $WORKDIR
 ml/train.sh $WORKDIR
 
 # Validate model
+ml/test.sh $WORKDIR
 
 # Create friends with model application
