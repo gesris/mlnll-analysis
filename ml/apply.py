@@ -77,7 +77,7 @@ def main(args):
             b = t.Branch('ml_score', val, 'ml_score/F')
             for x in scores:
                 val[0] = x
-                b.Fill()
+                t.Fill()
             t.Write()
             f.Close()
 
