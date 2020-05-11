@@ -24,12 +24,11 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def main(args, variable):
+def main(args, variable, category):
     # Config
     linear = True
     bkg_processes = ['qcd', 'vvt', 'vvl', 'vvj', 'w', 'ttt', 'ttl', 'ttj', 'zj', 'zl', 'ztt']
-    category = name.split('_')[-1]
-    variable = name.replace('_' + category, '')
+    name = '{}_{}'.format(variable, category)
 
     # Read histograms
     hists = {}
@@ -178,7 +177,7 @@ def main(args, variable):
 
     # Draw additional labels
     plot.DrawLumi('59.7 fb^{-1} (2018, 13 TeV)')
-    tag = category + ' (blinded)' if is_blinded else category
+    tag = category.replace('_cat', '') + ' (blinded)' if is_blinded else category
     plot.DrawChannelCategoryLabel('%s, %s' % ('#mu#tau_{h}', tag), begin_left=None)
 
     plot.save(os.path.join(args.workdir, '%s_%s.%s' % (variable, category, 'png')))
@@ -191,6 +190,6 @@ if __name__ == '__main__':
     parser.add_argument('--blinding', default=True, help='Apply blinding for all categories except inclusive')
     args = parser.parse_args()
     setup_logging(os.path.join(args.workdir, 'plot_control.log'), logging.INFO)
-    for name in [v + '_inclusive' for v in control_variables] + \
-                    [analysis_variable + '_' + c for c in analysis_categories]:
-        main(args, name)
+    for variable, category in [(v, 'inclusive') for v in control_variables] + \
+                    [(analysis_variable, c) for c in analysis_categories]:
+        main(args, variable, category)
