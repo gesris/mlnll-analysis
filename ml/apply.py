@@ -56,14 +56,20 @@ def main(args):
 
             outputs_fold0 = model_fold1.predict(inputs[mask_fold0])
             scores_fold0 = np.max(outputs_fold0, axis=1)
+            indices_fold0 = np.argmax(outputs_fold0, axis=1)
 
             outputs_fold1 = model_fold0.predict(inputs[mask_fold1])
             scores_fold1 = np.max(outputs_fold1, axis=1)
+            indices_fold1 = np.argmax(outputs_fold1, axis=1)
 
             # Merge scores back together
             scores = np.zeros(npy['event'].shape, dtype=np.float32)
             scores[mask_fold0] = scores_fold0
             scores[mask_fold1] = scores_fold1
+
+            indices = np.zeros(npy['event'].shape, dtype=np.float32)
+            indices[mask_fold0] = indices_fold0
+            indices[mask_fold1] = indices_fold1
 
             # Make output folder
             os.mkdir(os.path.join(args.workdir, 'MLScores', filename))
@@ -74,9 +80,12 @@ def main(args):
             dir_.cd()
             t = ROOT.TTree('ntuple', 'ntuple')
             val = array('f', [-999])
-            b = t.Branch('ml_score', val, 'ml_score/F')
-            for x in scores:
-                val[0] = x
+            idx = array('f', [-999])
+            bval = t.Branch('ml_score', val, 'ml_score/F')
+            bidx = t.Branch('ml_index', idx, 'ml_index/F')
+            for i in range(scores.shape[0]):
+                val[0] = scores[i]
+                idx[0] = indices[i]
                 t.Fill()
             t.Write()
             f.Close()

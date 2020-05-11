@@ -14,3 +14,4 @@ ml/train.sh $WORKDIR
 ml/test.sh $WORKDIR
 
 # Create friends with model application
+ml/apply.sh $WORKDIR
