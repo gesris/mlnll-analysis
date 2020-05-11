@@ -15,7 +15,7 @@ import os
 
 logger = logging.getLogger("")
 
-from utils.config import analysis_variable
+from utils import config as cfg
 
 
 def setup_logging(output_file, level=logging.DEBUG):
@@ -33,7 +33,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def main(args):
     channel_categories = {
-        "mt": ["11", "12", "13"],
+        "mt": [str(i) for i in range(len(cfg.ml_classes))],
     }
     channel_dict = {
         "ee": "ee",
@@ -43,11 +43,7 @@ def main(args):
         "mt": "#mu#tau_{h}",
         "tt": "#tau_{h}#tau_{h}"
     }
-    category_dict = {
-        "11": "0jet",
-        "12": "1jet",
-        "13": "2jet",
-    }
+    category_dict = {str(i): c for i, c in enumerate(cfg.ml_classes)}
     linear = False
     normalize_by_bin_width = False
     if linear:
@@ -214,7 +210,7 @@ def main(args):
             plot.subplot(1).setLogY()
             plot.subplot(1).setYlabel(
                 "")  # otherwise number labels are not drawn on axis
-        plot.subplot(2).setXlabel(styles.x_label_dict[channel][analysis_variable])
+        plot.subplot(2).setXlabel(styles.x_label_dict[channel][cfg.analysis_variable])
         if normalize_by_bin_width:
             plot.subplot(0).setYlabel("dN/d(NN output)")
         else:

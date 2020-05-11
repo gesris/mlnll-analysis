@@ -9,8 +9,9 @@ from ntuple_processor.variations import ReplaceCut
 basepath = '/ceph/htautau/deeptau_02-20/2018/'
 ntuples_base = path.join(basepath, 'ntuples')
 
-# No friend trees
+# Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
+ml_score_base = ['/home/wunsch/workspace/mlnll-analysis/output_ml/MLScores']
 
 # File list
 files = {
@@ -250,23 +251,20 @@ binning = {
     'met': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
     'm_sv_puppi': [0,7.5,15,22.5,30,37.5,45,52.5,60,67.5,75,82.5,90,97.5,105,112.5,120,127.5,135,142.5,150,157.5,165,172.5,180,187.5,195,202.5,210,217.5,225],
     'pt_sv_puppi': [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160],
-    'eta_sv_puppi': [-2.5, -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+    'eta_sv_puppi': [-2.5, -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5, -1.4, -1.3, -1.2, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]
     }
 
 control_variables = list(binning.keys())
 
-analysis_binning = range(100, 152, 2)
-analysis_variable = 'm_sv_puppi'
-
-# Analysis categories
-
-jet0 = Selection(name = '0jet', cuts = [('njets == 0', '0jet_category')])
-jet1 = Selection(name = '1jet', cuts = [('njets == 1', '1jet_category')])
-jet2 = Selection(name = '2jet', cuts = [('njets >= 2', '2jet_category')])
-
-analysis_categories = {'0jet': jet0, '1jet': jet1, '2jet': jet2}
-
 # Variables used for ML training
+
 ml_variables = ['m_sv_puppi', 'ptvis', 'mjj']
 ml_weight = 'training_weight'
 ml_classes = ['htt', 'ztt', 'w']
+
+# Analysis categories
+
+analysis_categories = {c + '_cat': Selection(name = c + '_cat', cuts=[('ml_index == ' + str(i), 'ml_index')]) \
+                      for i, c in enumerate(ml_classes)}
+analysis_binning = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+analysis_variable = 'ml_score'

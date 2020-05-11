@@ -33,37 +33,38 @@ def main(args):
     # Define nominal units
     def define_units(name, category_selections, hists):
         units = {}
+        friends = cfg.friends_base + cfg.ml_score_base
 
         units['data'] = Unit(
-                dataset_from_artusoutput('data', cfg.files['singlemuon'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base),
+                dataset_from_artusoutput('data', cfg.files['singlemuon'], 'mt_nominal', cfg.ntuples_base, friends),
                 [cfg.channel] + category_selections, hists)
 
         units['w'] = Unit(
-                dataset_from_artusoutput('w', cfg.files['wjets'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base),
+                dataset_from_artusoutput('w', cfg.files['wjets'], 'mt_nominal', cfg.ntuples_base, friends),
                 [cfg.channel, cfg.mc, cfg.w] + category_selections, hists)
 
-        dy_dataset = dataset_from_artusoutput('dy', cfg.files['dy'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base)
+        dy_dataset = dataset_from_artusoutput('dy', cfg.files['dy'], 'mt_nominal', cfg.ntuples_base, friends)
         units['ztt'] = Unit(dy_dataset, [cfg.channel, cfg.mc, cfg.dy, cfg.ztt] + category_selections, hists)
         units['zl'] = Unit(dy_dataset, [cfg.channel, cfg.mc, cfg.dy, cfg.zl] + category_selections, hists)
         units['zj'] = Unit(dy_dataset, [cfg.channel, cfg.mc, cfg.dy, cfg.zj] + category_selections, hists)
 
-        tt_dataset = dataset_from_artusoutput('tt', cfg.files['tt'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base)
+        tt_dataset = dataset_from_artusoutput('tt', cfg.files['tt'], 'mt_nominal', cfg.ntuples_base, friends)
         units['ttt'] = Unit(tt_dataset, [cfg.channel, cfg.mc, cfg.tt, cfg.ttt] + category_selections, hists)
         units['ttl'] = Unit(tt_dataset, [cfg.channel, cfg.mc, cfg.tt, cfg.ttl] + category_selections, hists)
         units['ttj'] = Unit(tt_dataset, [cfg.channel, cfg.mc, cfg.tt, cfg.ttj] + category_selections, hists)
 
 
-        vv_dataset = dataset_from_artusoutput('vv', cfg.files['vv'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base)
+        vv_dataset = dataset_from_artusoutput('vv', cfg.files['vv'], 'mt_nominal', cfg.ntuples_base, friends)
         units['vvt'] = Unit(vv_dataset, [cfg.channel, cfg.mc, cfg.vv, cfg.vvt] + category_selections, hists)
         units['vvl'] = Unit(vv_dataset, [cfg.channel, cfg.mc, cfg.vv, cfg.vvl] + category_selections, hists)
         units['vvj'] = Unit(vv_dataset, [cfg.channel, cfg.mc, cfg.vv, cfg.vvj] + category_selections, hists)
 
         units['ggh'] = Unit(
-                dataset_from_artusoutput('ggh', cfg.files['ggh'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base),
+                dataset_from_artusoutput('ggh', cfg.files['ggh'], 'mt_nominal', cfg.ntuples_base, friends),
                 [cfg.channel, cfg.mc, cfg.htt, cfg.ggh] + category_selections, hists)
 
         units['qqh'] = Unit(
-                dataset_from_artusoutput('qqh', cfg.files['qqh'], 'mt_nominal', cfg.ntuples_base, cfg.friends_base),
+                dataset_from_artusoutput('qqh', cfg.files['qqh'], 'mt_nominal', cfg.ntuples_base, friends),
                 [cfg.channel, cfg.mc, cfg.htt, cfg.qqh] + category_selections, hists)
 
         return units
