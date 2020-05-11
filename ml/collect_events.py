@@ -83,22 +83,34 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
 def ggh():
     return cfg.files['ggh'], [cfg.channel, cfg.mc, cfg.htt, cfg.ggh], 'ggh', 'htt'
 
-
 def qqh():
     return cfg.files['qqh'], [cfg.channel, cfg.mc, cfg.htt, cfg.qqh], 'qqh', 'htt'
-
 
 def ztt():
     return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.ztt], 'ztt', 'ztt'
 
+def zj():
+    return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.zj], 'zj', 'ztt'
+
+def zl():
+    return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.zl], 'zl', 'ztt'
 
 def w():
     return cfg.files['wjets'], [cfg.channel, cfg.mc, cfg.w], 'w', 'w'
 
+def ttt():
+    return cfg.files['tt'], [cfg.channel, cfg.mc, cfg.tt, cfg.ttt], 'ttt', 'tt'
+
+def ttl():
+    return cfg.files['tt'], [cfg.channel, cfg.mc, cfg.tt, cfg.ttl], 'ttl', 'tt'
+
+def ttj():
+    return cfg.files['tt'], [cfg.channel, cfg.mc, cfg.tt, cfg.ttj], 'ttj', 'tt'
+
 
 def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
-    for process in [ggh, qqh, ztt, w]:
+    for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base)
