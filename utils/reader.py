@@ -37,7 +37,7 @@ class Reader:
             selections_ = selections.split('-')
             variation_ = key.split('#')[2]
             variable_ = key.split('#')[3]
-            if variable_ == variable and variation_ == variation and (process in selections or dataset == process):
+            if variable_ == variable and variation_ == variation and (process in selections_ or dataset == process):
                 keys.append(key)
         if len(keys) == 0:
             logger.fatal("Failed to find object for process {} with variation {} and variable {}".format(
@@ -46,4 +46,5 @@ class Reader:
         elif len(keys) != 1:
             logger.fatal("Found more than one object for process {} with variation {} and variable {}".format(
                 process, variation, variable))
+            raise Exception
         return self._objs[keys[0]]
