@@ -72,7 +72,7 @@ def main(args):
         else:
             split_value = 101
 
-        rootfile = rootfile_parser.Rootfile_parser(os.path.join(args.workdir, "shapes_prefit.root"))
+        rootfile = rootfile_parser.Rootfile_parser(os.path.join(args.workdir, "shapes_{}.root".format(args.fittype)))
         bkg_processes = [b for b in all_bkg_processes]
         legend_bkg_processes = copy.deepcopy(bkg_processes)
         legend_bkg_processes.reverse()
@@ -311,7 +311,6 @@ def main(args):
             begin_left=None)
 
         # save plot
-        postfix = "prefit"
         for filetype in ["png", "pdf"]:
             plot.save(
                 "%s/%s_%s_%s_%s.%s" %
@@ -319,7 +318,7 @@ def main(args):
                  "2018",
                  channel,
                  category,
-                 postfix,
+                 args.fittype,
                  filetype))
         # work around to have clean up seg faults only at the end of the
         # script
@@ -329,6 +328,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('workdir', help='Working directory for outputs')
+    parser.add_argument('fittype', help='prefit or postfit')
     args = parser.parse_args()
     setup_logging(os.path.join(args.workdir, 'plot_analysis.log'), logging.INFO)
     main(args)

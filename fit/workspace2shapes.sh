@@ -6,10 +6,10 @@ WORKDIR=$1
 pushd $WORKDIR
 
 # Prefit shapes
-#PostFitShapesFromWorkspace -m 125 \
-#    -w workspace.root \
-#    -d cmb/125/combined.txt.cmb \
-#    -o shapes_prefit.root | tee workspace2shapes_prefit.log
+PostFitShapesFromWorkspace -m 125 \
+    -w workspace.root \
+    -d cmb/125/combined.txt.cmb \
+    -o shapes_prefit.root | tee workspace2shapes_prefit.log
 
 # ML fit for the postfit
 combine -M FitDiagnostics \
