@@ -90,8 +90,9 @@ def main(args):
         ['data', 'w', 'ztt', 'zl', 'zj', 'ttt', 'ttl', 'ttj', 'vvt', 'vvl', 'vvj'], categories)],
         [cfg.same_sign])
 
-    # ggH uncertainties
+    # qqH and ggH theory uncertainties
     um.book([units[category][name] for name, category in product(['ggh'], cfg.analysis_categories)], [*cfg.ggh_wg1])
+    um.book([units[category][name] for name, category in product(['qqh'], cfg.analysis_categories)], [*cfg.qqh_wg1])
 
     # Optimize graphs
     g_manager = GraphManager(um.booked_units)
