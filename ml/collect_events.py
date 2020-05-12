@@ -48,8 +48,8 @@ def collect_cuts_weights(selections):
     return cutstr, weightstr
 
 
-def make_chain(files, basepath):
-    c = ROOT.TChain('mt_nominal/ntuple')
+def make_chain(files, basepath, foldername):
+    c = ROOT.TChain('{}/ntuple'.format(foldername))
     for f in files:
         path = os.path.join(basepath, f, f + '.root')
         if not os.path.exists(path):
@@ -60,10 +60,10 @@ def make_chain(files, basepath):
     return c
 
 
-def make_dataset(files, ntuples_base, friends_base):
-    n = make_chain(files, ntuples_base)
+def make_dataset(files, ntuples_base, friends_base, foldername):
+    n = make_chain(files, ntuples_base, foldername)
     for f in friends_base:
-        c = make_chain(files, f)
+        c = make_chain(files, f, foldername)
         n.AddFriend(c)
     return n
 
@@ -113,7 +113,7 @@ def main(args):
     for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
-        d = make_dataset(files, cfg.ntuples_base, cfg.friends_base)
+        d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
         logger.info('Create dataset for %s with label %s, group %s and %u events', process, name, group, d.GetEntries())
         logger.debug('Weight string: %s', weightstr)
         logger.debug('Cut string: %s', cutstr)

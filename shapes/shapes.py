@@ -94,6 +94,16 @@ def main(args):
     um.book([units[category][name] for name, category in product(['ggh'], cfg.analysis_categories)], [*cfg.ggh_wg1])
     um.book([units[category][name] for name, category in product(['qqh'], cfg.analysis_categories)], [*cfg.qqh_wg1])
 
+    # Jet energy scale uncertainties
+    um.book([units[category][name] for name, category in product(
+        ['ztt', 'zl', 'zj', 'ttl', 'ttt', 'ttj', 'vvl', 'vvj', 'vvt', 'w', 'ggh', 'qqh'], cfg.analysis_categories)],
+        [*cfg.jet_es])
+
+    # Tau energy scale uncertainties
+    um.book([units[category][name] for name, category in product(
+        ['ztt', 'ttt', 'ttl', 'vvl', 'vvt', 'ggh', 'qqh'], cfg.analysis_categories)],
+        [*cfg.tau_es])
+
     # Optimize graphs
     g_manager = GraphManager(um.booked_units)
     g_manager.optimize(2)
