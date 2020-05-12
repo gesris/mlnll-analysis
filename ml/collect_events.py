@@ -2,6 +2,7 @@ import os
 import argparse
 
 import ROOT
+ROOT.DisableImplicitMT()
 from utils import config as cfg
 
 import logging
