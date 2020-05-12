@@ -3,7 +3,7 @@ from os import path
 from ntuple_processor.utils import Selection
 from ntuple_processor.utils import Cut
 from ntuple_processor.utils import Weight
-from ntuple_processor.variations import ReplaceCut
+from ntuple_processor.variations import ReplaceCut, AddWeight
 
 # Base path to main ntuples
 basepath = '/ceph/htautau/deeptau_02-20/2018/'
@@ -226,6 +226,12 @@ qqh = Selection(name = 'qqh',
 
 same_sign = ReplaceCut('same_sign', 'os', Cut('q_1*q_2>0', 'ss'))
 
+ggh_wg1 = []
+for unc in ["THU_ggH_Mig01", "THU_ggH_Mig12", "THU_ggH_Mu", "THU_ggH_PT120", "THU_ggH_PT60",
+            "THU_ggH_Res", "THU_ggH_VBF2j", "THU_ggH_VBF3j", "THU_ggH_qmtop"]:
+    ggh_wg1.append(AddWeight(unc + "Up", Weight("({})".format(unc), "{}_wg1".format(unc))))
+    ggh_wg1.append(AddWeight(unc + "Down", Weight("(1.0/{})".format(unc), "{}_wg1".format(unc))))
+
 # Binnings
 
 binning = {
@@ -266,5 +272,5 @@ ml_classes = ['htt', 'ztt', 'w', 'tt']
 
 analysis_categories = {c + '_cat': Selection(name = c + '_cat', cuts=[('ml_index == ' + str(i), 'ml_index')]) \
                       for i, c in enumerate(ml_classes)}
-analysis_binning = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+analysis_binning = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
 analysis_variable = 'ml_score'

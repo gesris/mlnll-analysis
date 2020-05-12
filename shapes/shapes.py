@@ -85,10 +85,13 @@ def main(args):
     um.book([units[category][name] for name, category in product(
         ['data', 'w', 'ztt', 'zl', 'zj', 'ttt', 'ttl', 'ttj', 'vvt', 'vvl', 'vvj', 'ggh', 'qqh'], categories)])
 
-    # Same-sign region for the QCD estimation
+    # Same-sign region for the QCD estimation (inclusive and analysis categories)
     um.book([units[category][name] for name, category in product(
         ['data', 'w', 'ztt', 'zl', 'zj', 'ttt', 'ttl', 'ttj', 'vvt', 'vvl', 'vvj'], categories)],
         [cfg.same_sign])
+
+    # ggH uncertainties
+    um.book([units[category][name] for name, category in product(['ggh'], cfg.analysis_categories)], [*cfg.ggh_wg1])
 
     # Optimize graphs
     g_manager = GraphManager(um.booked_units)
