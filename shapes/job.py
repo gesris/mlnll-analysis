@@ -24,4 +24,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('workdir', help='Working directory for outputs')
     parser.add_argument('jobid', type=int, help='Job ID corresponding to index of the graph')
+    args = parser.parse_args()
     job(args.workdir, args.jobid)
