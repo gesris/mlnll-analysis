@@ -1,5 +1,7 @@
 #!/bin/bash
 
+WORKDIR=$1
+
 # Postprocess shapes for process estimations
 shapes/postproc.sh $WORKDIR
 
