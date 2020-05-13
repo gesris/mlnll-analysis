@@ -13,5 +13,11 @@ ml/train.sh $WORKDIR
 # Validate model
 ml/test.sh $WORKDIR
 
-# Create friends with model application
-ml/apply.sh $WORKDIR
+# Create jobs with model application
+#ml/create_jobs.sh $WORKDIR
+
+# Check model application and eventually run remaining jobs locally
+#ml/check.sh $WORKDIR
+
+# Merge application files
+#ml/merge.sh $WORKDIR

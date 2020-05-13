@@ -125,11 +125,11 @@ output = out/$(cluster).$(Process).out
 error = err/$(cluster).$(Process).err
 log = log/$(cluster).$(Process).log
 Requirements = ( (Target.ProvidesIO == False) && (TARGET.ProvidesEKPResources == True) )
-+RequestWalltime = 1200
++RequestWalltime = 1800
 +ExperimentalJob = True
 RequestMemory = 2000
 RequestCpus = 1
-max_retries = 3
+max_retries = 5
 accounting_group = cms.higgs
 queue arguments from arguments.txt
 '''.format(os.path.join(os.getcwd(), 'ml/job.sh')))
