@@ -240,30 +240,30 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
 
 jet_es = []
 for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
-    jet_es += [ChangeDataset('CMS_scale_j_{}_Run2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
-               ChangeDataset('CMS_scale_j_{}_Run2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
+    jet_es += [ChangeDataset('CMS_scale_j_{}_2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
+               ChangeDataset('CMS_scale_j_{}_2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
                ChangeDataset('CMS_scale_j_{}Up'.format(name), 'jecUnc{}Up'.format(name)),
                ChangeDataset('CMS_scale_j_{}Down'.format(name), 'jecUnc{}Down'.format(name))]
 jet_es += [
-        ChangeDataset('CMS_scale_j_RelativeBal_Up', 'jecUncRelativeBalUp'),
-        ChangeDataset('CMS_scale_j_RelativeBal_Down', 'jecUncRelativeBalDown'),
-        ChangeDataset('CMS_scale_j_RelativeSample_Run2018Up', 'jecUncRelativeSampleYearUp'),
-        ChangeDataset('CMS_scale_j_RelativeSample_Run2018Down', 'jecUncRelativeSampleYearDown'),
-        ChangeDataset('CMS_scale_j_FlavorQCD_Up', 'jecUncFlavorQCDUp'),
-        ChangeDataset('CMS_scale_j_FlavorQCD_Down', 'jecUncFlavorQCDDown'),
-        ChangeDataset('CMS_res_j_Run2018Up', 'jerUncUp'),
-        ChangeDataset('CMS_res_j_Run2018Down', 'jerUncDown'),
+        ChangeDataset('CMS_scale_j_RelativeBalUp', 'jecUncRelativeBalUp'),
+        ChangeDataset('CMS_scale_j_RelativeBalDown', 'jecUncRelativeBalDown'),
+        ChangeDataset('CMS_scale_j_RelativeSample_2018Up', 'jecUncRelativeSampleYearUp'),
+        ChangeDataset('CMS_scale_j_RelativeSample_2018Down', 'jecUncRelativeSampleYearDown'),
+        ChangeDataset('CMS_scale_j_FlavorQCDUp', 'jecUncFlavorQCDUp'),
+        ChangeDataset('CMS_scale_j_FlavorQCDDown', 'jecUncFlavorQCDDown'),
+        ChangeDataset('CMS_res_j_2018Up', 'jerUncUp'),
+        ChangeDataset('CMS_res_j_2018Down', 'jerUncDown'),
         ]
 
 tau_es = [
-        ChangeDataset('CMS_scale_t_3prong_Run2018Up', 'tauEsThreeProngUp'),
-        ChangeDataset('CMS_scale_t_3prong_Run2018Down', 'tauEsThreeProngDown'),
-        ChangeDataset('CMS_scale_t_3prong1pizero_Run2018Up', 'tauEsThreeProngOnePiZeroUp'),
-        ChangeDataset('CMS_scale_t_3prong1pizero_Run2018Down', 'tauEsThreeProngOnePiZeroDown'),
-        ChangeDataset('CMS_scale_t_1prong_Run2018Up', 'tauEsOneProngUp'),
-        ChangeDataset('CMS_scale_t_1prong_Run2018Down', 'tauEsOneProngDown'),
-        ChangeDataset('CMS_scale_t_1prong1pizero_Run2018Up', 'tauEsOneProngOnePiZeroUp'),
-        ChangeDataset('CMS_scale_t_1prong1pizero_Run2018Down', 'tauEsOneProngOnePiZeroDown')
+        ChangeDataset('CMS_scale_t_3prong_2018Up', 'tauEsThreeProngUp'),
+        ChangeDataset('CMS_scale_t_3prong_2018Down', 'tauEsThreeProngDown'),
+        ChangeDataset('CMS_scale_t_3prong1pizero_2018Up', 'tauEsThreeProngOnePiZeroUp'),
+        ChangeDataset('CMS_scale_t_3prong1pizero_2018Down', 'tauEsThreeProngOnePiZeroDown'),
+        ChangeDataset('CMS_scale_t_1prong_2018Up', 'tauEsOneProngUp'),
+        ChangeDataset('CMS_scale_t_1prong_2018Down', 'tauEsOneProngDown'),
+        ChangeDataset('CMS_scale_t_1prong1pizero_2018Up', 'tauEsOneProngOnePiZeroUp'),
+        ChangeDataset('CMS_scale_t_1prong1pizero_2018Down', 'tauEsOneProngOnePiZeroDown')
         ]
 
 # Binnings
