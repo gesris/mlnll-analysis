@@ -5,7 +5,6 @@ import ROOT
 ROOT.DisableImplicitMT() # Otherwise the friends would be not ordered
 import numpy as np
 np.random.seed(1234)
-from sklearn.metrics import confusion_matrix
 from utils import config as cfg
 import tensorflow as tf
 tf.set_random_seed(1234)
@@ -79,7 +78,7 @@ def main(args):
     modelpath_fold0 = os.path.join(args.workdir, 'model_fold0.h5')
     modelpath_fold1 = os.path.join(args.workdir, 'model_fold1.h5')
     arguments = []
-    for process in ['ggh']:#cfg.files:
+    for process in cfg.files:
         for filename in cfg.files[process]:
             for folder in foldernames:
                 # Check whether the input file and folder exist
@@ -125,7 +124,7 @@ executable = {}
 output = out/$(cluster).$(Process).out
 error = err/$(cluster).$(Process).err
 log = log/$(cluster).$(Process).log
-Requirements = ( (Target.ProvidesIO == True) && (TARGET.ProvidesEKPResources == True ) )
+Requirements = ( (Target.ProvidesIO == False) && (TARGET.ProvidesEKPResources == True) )
 +RequestWalltime = 1200
 +ExperimentalJob = True
 RequestMemory = 2000

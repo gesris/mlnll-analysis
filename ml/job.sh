@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit on error
+set -e
+
 echo ">>> Begin job"
 
 JOBID=$1
@@ -17,11 +20,15 @@ echo "FOLDER:" $FOLDER
 FILENAME=$5
 echo "FILENAME:" $FILENAME
 
+echo ">>> Start working"
+
+echo "Trigger auto mount of CVMFS"
+ls /cvmfs
+ls /cvmfs/sft.cern.ch
+
 cd $SRCDIR
 echo "PWD:" $PWD
 source utils/setup_lcg.sh
-
-echo ">>> Start working"
 
 python ml/job.py $WORKDIR $FOLDER $FILENAME
 

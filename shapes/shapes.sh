@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # TODO: Use LCG here
-source utils/setup_ownroot.sh
+source utils/setup_lcg.sh
 
 WORKDIR=$1
 
