@@ -1,7 +1,7 @@
 from itertools import product
 import argparse
-import numpy as np
 import os
+import pickle
 
 from ntuple_processor import dataset_from_artusoutput
 from ntuple_processor import Unit
@@ -109,9 +109,13 @@ def main(args):
     g_manager.optimize(2)
     graphs = g_manager.graphs
 
-    # Run computations
-    r_manager = RunManager(graphs)
-    r_manager.run_locally(os.path.join(args.workdir, 'shapes_main.root'), nworkers=8, nthreads=2)
+    # Write graphs to workdir
+    pickle.dump(graphs, open(os.path.join(args.workdir, 'graphs.pickle'), 'wb'))
+
+    # Example: Run computations
+    #graphs = pickle.load(open(os.path.join(args.workdir, 'graphs.pickle'), 'rb'))
+    #r_manager = RunManager([graphs[-1]])
+    #r_manager.run_locally(os.path.join(args.workdir, 'shapes_main.root'), nworkers=1, nthreads=1)
 
 
 if __name__ == '__main__':

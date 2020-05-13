@@ -259,7 +259,7 @@ tau_es = [
         ChangeDataset('CMS_scale_t_3prong_Run2018Up', 'tauEsThreeProngUp'),
         ChangeDataset('CMS_scale_t_3prong_Run2018Down', 'tauEsThreeProngDown'),
         ChangeDataset('CMS_scale_t_3prong1pizero_Run2018Up', 'tauEsThreeProngOnePiZeroUp'),
-        ChangeDataset('CMS_scale_t_3prong1pizero_Run2018Down', 'tauEsThreeProngOnPiZeroDown'),
+        ChangeDataset('CMS_scale_t_3prong1pizero_Run2018Down', 'tauEsThreeProngOnePiZeroDown'),
         ChangeDataset('CMS_scale_t_1prong_Run2018Up', 'tauEsOneProngUp'),
         ChangeDataset('CMS_scale_t_1prong_Run2018Down', 'tauEsOneProngDown'),
         ChangeDataset('CMS_scale_t_1prong1pizero_Run2018Up', 'tauEsOneProngOnePiZeroUp'),
