@@ -26,3 +26,9 @@ plot/scan.sh $WORKDIR
 
 # Significance
 fit/significance.sh $WORKDIR
+
+# Pulls
+fit/pulls.sh $WORKDIR
+
+# Impacts
+fit/impacts.sh $WORKDIR
