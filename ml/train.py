@@ -129,9 +129,9 @@ def main(args):
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
-            logger.info('Train loss: {:.3f}'.format(loss_train))
+            logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val})
-            logger.info('Validation loss: {:.3f}'.format(loss_val))
+            logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
