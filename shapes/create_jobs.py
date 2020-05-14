@@ -43,9 +43,8 @@ executable = {}
 output = out/$(cluster).$(Process).out
 error = err/$(cluster).$(Process).err
 log = log/$(cluster).$(Process).log
-Requirements = ( (Target.ProvidesIO == False) && (TARGET.ProvidesEKPResources == True) )
+Requirements = ( (TARGET.Cloudsite =!= "blade") && (TARGET.ProvidesEKPResources == True) )
 +RequestWalltime = 1800
-+ExperimentalJob = True
 RequestMemory = 2000
 RequestCpus = 1
 max_retries = 5

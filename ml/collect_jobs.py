@@ -125,9 +125,8 @@ executable = {}
 output = out/$(cluster).$(Process).out
 error = err/$(cluster).$(Process).err
 log = log/$(cluster).$(Process).log
-Requirements = ( (Target.ProvidesIO == False) && (TARGET.ProvidesEKPResources == True) )
+Requirements = ( (TARGET.Cloudsite =!= "blade") && (TARGET.ProvidesEKPResources == True) )
 +RequestWalltime = 1800
-+ExperimentalJob = True
 RequestMemory = 2000
 RequestCpus = 1
 max_retries = 5
@@ -147,8 +146,8 @@ def application(workdir, folder, filename):
     model_fold1 = tf.keras.models.load_model(os.path.join(workdir, 'model_fold1.h5'))
 
     # Load preprocessing
-    preproc_fold0 = pickle.load(open(os.path.join(args.workdir, 'preproc_fold0.pickle'), 'rb'))
-    preproc_fold1 = pickle.load(open(os.path.join(args.workdir, 'preproc_fold1.pickle'), 'rb'))
+    preproc_fold0 = pickle.load(open(os.path.join(workdir, 'preproc_fold0.pickle'), 'rb'))
+    preproc_fold1 = pickle.load(open(os.path.join(workdir, 'preproc_fold1.pickle'), 'rb'))
 
     # Create chain with friends
     d = make_dataset([filename], cfg.ntuples_base, cfg.friends_base, folder)
