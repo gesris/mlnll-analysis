@@ -1,7 +1,7 @@
 import os
 import argparse
 
-from collect_jobs import application
+from create_jobs import application
 
 import logging
 logger = logging.getLogger('')
