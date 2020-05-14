@@ -1,5 +1,6 @@
 import os
 import argparse
+import pickle
 
 import ROOT
 ROOT.DisableImplicitMT() # Otherwise the friends would be not ordered
@@ -145,6 +146,10 @@ def application(workdir, folder, filename):
     model_fold0 = tf.keras.models.load_model(os.path.join(workdir, 'model_fold0.h5'))
     model_fold1 = tf.keras.models.load_model(os.path.join(workdir, 'model_fold1.h5'))
 
+    # Load preprocessing
+    preproc_fold0 = pickle.load(open(os.path.join(args.workdir, 'preproc_fold0.pickle'), 'rb'))
+    preproc_fold1 = pickle.load(open(os.path.join(args.workdir, 'preproc_fold1.pickle'), 'rb'))
+
     # Create chain with friends
     d = make_dataset([filename], cfg.ntuples_base, cfg.friends_base, folder)
     num_entries = d.GetEntries()
@@ -159,11 +164,13 @@ def application(workdir, folder, filename):
     if np.sum(mask_fold0) + np.sum(mask_fold1) != num_entries:
         raise Exception('Events in folds dont add up to expected total')
 
-    outputs_fold0 = model_fold1.predict(inputs[mask_fold0])
+    outputs_fold0 = model_fold1.predict(
+            preproc_fold0.transform(inputs[mask_fold0]))
     scores_fold0 = np.max(outputs_fold0, axis=1)
     indices_fold0 = np.argmax(outputs_fold0, axis=1)
 
-    outputs_fold1 = model_fold0.predict(inputs[mask_fold1])
+    outputs_fold1 = model_fold1.predict(
+            preproc_fold1.transform(inputs[mask_fold1]))
     scores_fold1 = np.max(outputs_fold1, axis=1)
     indices_fold1 = np.argmax(outputs_fold1, axis=1)
 

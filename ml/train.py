@@ -1,10 +1,12 @@
 import os
 import argparse
+import pickle
 
 import ROOT
 import numpy as np
 np.random.seed(1234)
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from utils import config as cfg
 import tensorflow as tf
 tf.set_random_seed(1234)
@@ -74,8 +76,8 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
 
 def model_simple():
     model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Dense(100, activation='relu', input_shape=(len(cfg.ml_variables),)))
-    model.add(tf.keras.layers.Dense(100, activation='relu'))
+    model.add(tf.keras.layers.Dense(100, activation='tanh', input_shape=(len(cfg.ml_variables),)))
+    model.add(tf.keras.layers.Dense(100, activation='tanh'))
     model.add(tf.keras.layers.Dense(len(cfg.ml_classes), activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy')
     return model
@@ -85,14 +87,20 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.5, random_state=1234)
 
+    preproc = StandardScaler()
+    preproc.fit(x_train)
+    pickle.dump(preproc, open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'wb'))
+    x_train_preproc = preproc.transform(x_train)
+    x_val_preproc = preproc.transform(x_val)
+
     model = model_simple()
     model.fit(
-            x=x_train,
+            x=x_train_preproc,
             y=y_train,
             sample_weight=w_train,
             batch_size=100,
             epochs=10000,
-            validation_data=(x_val, y_val, w_val),
+            validation_data=(x_val_preproc, y_val, w_val),
             callbacks=[
                 tf.keras.callbacks.EarlyStopping(patience=10, verbose=2),
                 tf.keras.callbacks.ModelCheckpoint(

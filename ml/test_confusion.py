@@ -1,5 +1,6 @@
 import os
 import argparse
+import pickle
 
 import ROOT
 import numpy as np
@@ -61,8 +62,11 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
                             make_categorical=False, use_class_weights=True)
 
+    preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
+    x_preproc = preproc.transform(x)
+
     model = tf.keras.models.load_model(os.path.join(args.workdir, 'model_fold{}.h5'.format(args.fold)))
-    p = model.predict(x)
+    p = model.predict(x_preproc)
     p = np.argmax(p, axis=1)
 
     c = confusion_matrix(y, p, sample_weight=w)
