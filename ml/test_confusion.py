@@ -7,10 +7,12 @@ import numpy as np
 np.random.seed(1234)
 from sklearn.metrics import confusion_matrix
 from utils import config as cfg
-import tensorflow as tf
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 
-from train import build_dataset
+from train import build_dataset, model
 
 import matplotlib as mpl
 mpl.use('Agg')
@@ -65,8 +67,15 @@ def main(args):
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
 
-    model = tf.keras.models.load_model(os.path.join(args.workdir, 'model_fold{}.h5'.format(args.fold)))
-    p = model.predict(x_preproc)
+    x_ph = tf.placeholder(tf.float32)
+    _, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes))
+    path = tf.train.latest_checkpoint(os.path.join(args.workdir, 'model_fold{}'.format(args.fold)))
+    logger.debug('Load model {}'.format(path))
+    config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
+    session = tf.Session()
+    saver = tf.train.Saver()
+    saver.restore(session, path)
+    p = session.run(f, feed_dict={x_ph: x_preproc})
     p = np.argmax(p, axis=1)
 
     c = confusion_matrix(y, p, sample_weight=w)
