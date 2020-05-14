@@ -138,7 +138,7 @@ def application(workdir, folder, filename):
     print('Start application')
 
     # Create session
-    config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
+    config = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
     session = tf.Session(config=config)
 
     # Load models
