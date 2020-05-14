@@ -298,7 +298,7 @@ control_variables = list(binning.keys())
 
 # Variables used for ML training
 
-ml_variables = ['npv', 'm_vis', 'njets', 'nbtag', 'ptvis', 'pt_tt', 'mjj', 'jdeta', 'dijetpt', 'met', 'm_sv_puppi']
+ml_variables = ['njets', 'nbtag', 'ptvis', 'pt_tt', 'mjj', 'jdeta', 'dijetpt', 'met', 'm_vis', 'm_sv_puppi']
 ml_weight = 'training_weight'
 ml_classes = ['htt', 'ztt', 'w', 'tt']
 
