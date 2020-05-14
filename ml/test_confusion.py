@@ -69,6 +69,18 @@ def main(args):
     logger.debug('Confusion matrix (plain): {}'.format(c))
     plot(c, 'plain')
 
+    c_norm_rows = c.copy()
+    c_norm_cols = c.copy()
+    for i in range(c.shape[0]):
+        c_norm_rows[:, i] = c_norm_rows[:, i] / np.sum(c_norm_rows[:, i])
+        c_norm_cols[i, :] = c_norm_cols[i, :] / np.sum(c_norm_cols[i, :])
+
+    logger.debug('Confusion matrix (norm rows): {}'.format(c_norm_rows))
+    plot(c_norm_rows, 'norm_rows')
+
+    logger.debug('Confusion matrix (norm cols): {}'.format(c_norm_cols))
+    plot(c_norm_cols, 'norm_cols')
+
     c_norm_all = c / np.sum(w)
     logger.debug('Confusion matrix (norm all): {}'.format(c_norm_all))
     plot(c_norm_all, 'norm_all')
