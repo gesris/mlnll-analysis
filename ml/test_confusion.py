@@ -68,11 +68,11 @@ def main(args):
     x_preproc = preproc.transform(x)
 
     x_ph = tf.placeholder(tf.float32)
-    _, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes))
+    _, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
     path = tf.train.latest_checkpoint(os.path.join(args.workdir, 'model_fold{}'.format(args.fold)))
     logger.debug('Load model {}'.format(path))
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
-    session = tf.Session()
+    session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
     p = session.run(f, feed_dict={x_ph: x_preproc})

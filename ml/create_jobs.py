@@ -7,19 +7,15 @@ ROOT.DisableImplicitMT() # Otherwise the friends would be not ordered
 import numpy as np
 np.random.seed(1234)
 from utils import config as cfg
-import tensorflow as tf
-tf.set_random_seed(1234)
 
-config = tf.ConfigProto(
-        intra_op_parallelism_threads=1,
-        inter_op_parallelism_threads=1
-        )
-session = tf.Session()
-tf.keras.backend.set_session(session)
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+tf.set_random_seed(1234)
 
 from array import array
 
 from collect_events import make_dataset
+from train import model
 
 import logging
 logger = logging.getLogger('')
@@ -141,9 +137,23 @@ queue arguments from arguments.txt
 def application(workdir, folder, filename):
     print('Start application')
 
+    # Create session
+    config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
+    session = tf.Session(config=config)
+
     # Load models
-    model_fold0 = tf.keras.models.load_model(os.path.join(workdir, 'model_fold0.h5'))
-    model_fold1 = tf.keras.models.load_model(os.path.join(workdir, 'model_fold1.h5'))
+    def load_model(x, fold):
+        _, f = model(x, len(cfg.ml_variables), len(cfg.ml_classes), fold)
+        variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='model_fold{}'.format(fold))
+        path = tf.train.latest_checkpoint(os.path.join(workdir, 'model_fold{}'.format(fold)))
+        print('Load variables for fold {} from {}'.format(fold, path))
+        saver = tf.train.Saver(variables)
+        saver.restore(session, path)
+        return f
+
+    x_ph = tf.placeholder(tf.float32)
+    model_fold0 = load_model(x_ph, 0)
+    model_fold1 = load_model(x_ph, 1)
 
     # Load preprocessing
     preproc_fold0 = pickle.load(open(os.path.join(workdir, 'preproc_fold0.pickle'), 'rb'))
@@ -163,13 +173,13 @@ def application(workdir, folder, filename):
     if np.sum(mask_fold0) + np.sum(mask_fold1) != num_entries:
         raise Exception('Events in folds dont add up to expected total')
 
-    outputs_fold0 = model_fold1.predict(
-            preproc_fold0.transform(inputs[mask_fold0]))
+    outputs_fold0 = session.run(model_fold0,
+            feed_dict={x_ph: preproc_fold0.transform(inputs[mask_fold0])})
     scores_fold0 = np.max(outputs_fold0, axis=1)
     indices_fold0 = np.argmax(outputs_fold0, axis=1)
 
-    outputs_fold1 = model_fold1.predict(
-            preproc_fold1.transform(inputs[mask_fold1]))
+    outputs_fold1 = session.run(model_fold1,
+            feed_dict={x_ph: preproc_fold1.transform(inputs[mask_fold1])})
     scores_fold1 = np.max(outputs_fold1, axis=1)
     indices_fold1 = np.argmax(outputs_fold1, axis=1)
 

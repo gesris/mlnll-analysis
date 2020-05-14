@@ -75,14 +75,15 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     return xs, ys, ws
 
 
-def model(x, num_variables, num_classes):
+def model(x, num_variables, num_classes, fold):
     hidden_nodes = 100
-    w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
-    b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
-    w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
-    b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-    w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
-    b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
+    with tf.variable_scope('model_fold{}'.format(fold)):
+        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
+        b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
+        w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
+        b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
+        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
+        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
@@ -104,7 +105,7 @@ def main(args):
     x_val_preproc = preproc.transform(x_val)
 
     x_ph = tf.placeholder(tf.float32)
-    logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes))
+    logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
 
     y_ph = tf.placeholder(tf.float32)
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits))
@@ -112,7 +113,7 @@ def main(args):
     minimize = optimizer.minimize(loss)
 
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
-    session = tf.Session()
+    session = tf.Session(config=config)
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 

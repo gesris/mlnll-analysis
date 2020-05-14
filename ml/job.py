@@ -1,5 +1,5 @@
 import argparse
-from collect_jobs import application
+from create_jobs import application
 
 
 if __name__ == '__main__':
