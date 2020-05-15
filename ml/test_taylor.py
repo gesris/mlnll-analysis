@@ -100,7 +100,7 @@ def main(args):
     for i in range(len(cfg.ml_classes)):
         tmp = []
         for j in range(len(cfg.ml_variables)):
-            tmp.append(tf.reduce_mean(tf.abs(tf.gradients(grad1d_ops[i][j], x_ph)[0]), axis=0))
+            tmp.append(tf.reduce_mean(tf.abs(tf.gradients(grad1d_ops[i][:, j], x_ph)[0]), axis=0))
         grad2d_ops.append(tmp)
     grads2d = session.run(grad2d_ops, feed_dict={x_ph: x_preproc})
 
