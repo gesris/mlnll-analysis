@@ -37,7 +37,7 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def plot(grad_matrix, tag):
+def plot1d(grad_matrix, tag):
     plt.figure(figsize=(len(cfg.ml_variables), len(cfg.ml_classes)))
     for i in range(grad_matrix.shape[0]):
         for j in range(grad_matrix.shape[1]):
@@ -48,6 +48,20 @@ def plot(grad_matrix, tag):
     plt.xlim(0, len(cfg.ml_variables))
     plt.ylim(0, len(cfg.ml_classes))
     plt.savefig(os.path.join(args.workdir, 'taylor1d_{}_fold{}.png'.format(tag, args.fold)), bbox_inches='tight')
+
+
+def plot2d(grad_matrix, name, tag):
+    plt.figure(figsize=(len(cfg.ml_variables), len(cfg.ml_variables)))
+    for i in range(grad_matrix.shape[0]):
+        for j in range(grad_matrix.shape[1]):
+            plt.gca().text(j + 0.5, i + 0.5, '{:.2f}'.format(grad_matrix[i, j]), ha='center', va='center')
+    q = plt.pcolormesh(grad_matrix, cmap='Wistia')
+    plt.xticks(np.array(range(len(cfg.ml_variables))) + 0.5, cfg.ml_variables, rotation='vertical')
+    plt.yticks(np.array(range(len(cfg.ml_variables))) + 0.5, cfg.ml_variables, rotation='horizontal')
+    plt.xlim(0, len(cfg.ml_variables))
+    plt.ylim(0, len(cfg.ml_variables))
+    plt.savefig(os.path.join(args.workdir, 'taylor2d_{}_{}_fold{}.png'.format(name, tag, args.fold)), bbox_inches='tight')
+
 
 def main(args):
     inv_fold = [1, 0][args.fold]
@@ -66,19 +80,37 @@ def main(args):
     saver = tf.train.Saver()
     saver.restore(session, path)
 
-    grad_ops = []
+    # 1D coeffs
+    grad1d_ops = []
     for i in range(len(cfg.ml_classes)):
-        grad_ops.append(tf.gradients(f[:, i], x_ph)[0])
-    grads = session.run(grad_ops, feed_dict={x_ph: x_preproc})
+        grad1d_ops.append(tf.gradients(f[:, i], x_ph)[0])
+    grads1d = session.run(grad1d_ops, feed_dict={x_ph: x_preproc})
     grad_matrix = np.zeros((len(cfg.ml_classes), len(cfg.ml_variables)), dtype=np.float32)
-    for i, g in enumerate(grads):
+    for i, g in enumerate(grads1d):
         grad_matrix[i, :] = np.mean(np.abs(g), axis=0)
 
-    plot(grad_matrix, 'plain')
+    plot1d(grad_matrix, 'plain')
     grad_matrix_norm = grad_matrix.copy()
     for i in range(grad_matrix.shape[0]):
         grad_matrix_norm[i, :] = grad_matrix_norm[i, :] / np.sum(grad_matrix_norm[i, :])
-    plot(grad_matrix_norm, 'normrows')
+    plot1d(grad_matrix_norm, 'normrows')
+
+    # 2D coeffs
+    grad2d_ops = []
+    for i in range(len(cfg.ml_classes)):
+        tmp = []
+        for j in range(len(cfg.ml_variables)):
+            tmp.append(tf.reduce_mean(tf.abs(tf.gradients(grad1d_ops[i][j], x_ph)[0]), axis=0))
+        grad2d_ops.append(tmp)
+    grads2d = session.run(grad2d_ops, feed_dict={x_ph: x_preproc})
+
+    for i, name in enumerate(cfg.ml_classes):
+        # NOTE: not the coefficients, only the gradients!
+        grad2d_matrix = np.vstack(grads2d[i])
+        plot2d(grad2d_matrix, name, 'plain')
+
+        grad2d_matrix = grad2d_matrix / np.sum(grad2d_matrix)
+        plot2d(grad2d_matrix, name, 'normed')
 
 
 if __name__ == '__main__':
