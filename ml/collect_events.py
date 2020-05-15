@@ -111,6 +111,8 @@ def ttj():
 
 def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
+
+    # Collect nominal events
     for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
@@ -120,6 +122,15 @@ def main(args):
         logger.debug('Cut string: %s', cutstr)
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
+
+    # Collect systematic shifts
+    for sys in ['jecUncRelativeSampleYearUp', 'jecUncRelativeSampleYearDown']:
+        for process in [ggh, qqh]:
+            files, selections, name, group = process()
+            cutstr, weightstr = collect_cuts_weights(selections)
+            d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_' + sys)
+            for fold in [0, 1]:
+                write_dataset(d, args.workdir, name + '_' + sys, group + '_' + sys, fold, weightstr, cutstr)
 
 
 if __name__ == '__main__':

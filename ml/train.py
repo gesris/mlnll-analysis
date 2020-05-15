@@ -17,6 +17,25 @@ import logging
 logger = logging.getLogger('')
 
 
+@tf.custom_gradient
+def count_masking(x, up, down):
+    mask = tf.cast(
+            tf.cast(x > down, tf.float32) * tf.cast(x <= up, tf.float32),
+            tf.float32)
+    mask = tf.squeeze(mask)
+
+    def grad(dy):
+        width = up - down
+        mid = down + 0.5 * width
+        sigma = 0.5 * width
+        gauss = tf.exp(-1.0 * (x - mid)**2 / 2.0 / sigma**2)
+        g = -1.0 * gauss * (x - mid) / sigma**2
+        g = tf.squeeze(g) * tf.squeeze(dy)
+        return (g, None, None)
+
+    return mask, grad
+
+
 def setup_logging(output_file, level=logging.DEBUG):
     logger.setLevel(level)
     formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
@@ -75,9 +94,9 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     return xs, ys, ws
 
 
-def model(x, num_variables, num_classes, fold):
+def model(x, num_variables, num_classes, fold, reuse=False):
     hidden_nodes = 100
-    with tf.variable_scope('model_fold{}'.format(fold)):
+    with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
         w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
         b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
         w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
@@ -94,10 +113,21 @@ def model(x, num_variables, num_classes, fold):
 
 
 def main(args):
+    # Build nominal dataset
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
-    logger.info('Number of train/val events: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
+    logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
+    # Build dataset for systematic shifts
+    x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
+            ['htt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
+            make_categorical=False, use_class_weights=True)
+    x_sys_train, x_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, w_sys, test_size=0.25, random_state=1234)
+    logger.info('Number of train/val events in varied datasets: {} / {}'.format(x_sys_train.shape[0], x_sys_val.shape[0]))
+    logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
+        np.sum(w_sys[y_sys == 0]), np.sum(w_sys[y_sys == 1]), np.sum(w_sys[y_sys == 2])))
+
+    # Preprocessing
     preproc = StandardScaler()
     preproc.fit(x_train)
     pickle.dump(preproc, open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'wb'))
@@ -108,14 +138,29 @@ def main(args):
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
 
+    # Create model
     x_ph = tf.placeholder(tf.float32)
     logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
 
+    # Add CE loss
     y_ph = tf.placeholder(tf.float32)
-    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits))
+    w_ph = tf.placeholder(tf.float32)
+    ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
+
+    # Add decorr loss
+    bins = [0.2, 0.4, 0.6, 0.8, 1.0]
+    for i, up, down in zip(range(len(bins) - 1), bins[1:], bins[:-1]):
+        # TODO
+        pass
+
+    # Combine losses
+    loss = ce_loss
+
+    # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
     minimize = optimizer.minimize(loss)
 
+    # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
     session = tf.Session(config=config)
     session.run([tf.global_variables_initializer()])
@@ -130,12 +175,13 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _ = session.run([loss, minimize], feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx]})
+        loss_train, _ = session.run([loss, minimize],
+                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
@@ -158,5 +204,5 @@ if __name__ == '__main__':
     parser.add_argument('workdir', help='Working directory for outputs')
     parser.add_argument('fold', type=int, help='Training fold')
     args = parser.parse_args()
-    setup_logging(os.path.join(args.workdir, 'ml_train_fold{}.log'.format(args.fold)), logging.INFO)
+    setup_logging(os.path.join(args.workdir, 'ml_train_fold{}.log'.format(args.fold)), logging.DEBUG)
     main(args)
