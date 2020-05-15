@@ -105,8 +105,9 @@ def main(args):
     grads2d = session.run(grad2d_ops, feed_dict={x_ph: x_preproc})
 
     for i, name in enumerate(cfg.ml_classes):
-        # NOTE: not the coefficients, only the gradients!
         grad2d_matrix = np.vstack(grads2d[i])
+        for j in range(grad2d_matrix.shape[0]):
+            grad2d_matrix[j, j] = grad2d_matrix[j, j] * 0.5 # see 2D Taylor expansion
         plot2d(grad2d_matrix, name, 'plain')
 
         grad2d_matrix = grad2d_matrix / np.sum(grad2d_matrix)
