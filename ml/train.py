@@ -119,7 +119,6 @@ def main(args):
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     # Build dataset for systematic shifts
-    """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
             ['htt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
             make_categorical=False, use_class_weights=True)
@@ -127,7 +126,6 @@ def main(args):
     logger.info('Number of train/val events in varied datasets: {} / {}'.format(x_sys_train.shape[0], x_sys_val.shape[0]))
     logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
         np.sum(w_sys[y_sys == 0]), np.sum(w_sys[y_sys == 1]), np.sum(w_sys[y_sys == 2])))
-    """
 
     # Preprocessing
     preproc = StandardScaler()
@@ -149,8 +147,11 @@ def main(args):
     w_ph = tf.placeholder(tf.float32)
     ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
 
-    # Add loss treating systematics
-    # TODO
+    # Add decorr loss
+    bins = [0.2, 0.4, 0.6, 0.8, 1.0]
+    for i, up, down in zip(range(len(bins) - 1), bins[1:], bins[:-1]):
+        # TODO
+        pass
 
     # Combine losses
     loss = ce_loss
