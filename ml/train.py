@@ -118,15 +118,6 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
-    # Build dataset for systematic shifts
-    x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
-            ['htt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
-            make_categorical=False, use_class_weights=True)
-    x_sys_train, x_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, w_sys, test_size=0.25, random_state=1234)
-    logger.info('Number of train/val events in varied datasets: {} / {}'.format(x_sys_train.shape[0], x_sys_val.shape[0]))
-    logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
-        np.sum(w_sys[y_sys == 0]), np.sum(w_sys[y_sys == 1]), np.sum(w_sys[y_sys == 2])))
-
     # Preprocessing
     preproc = StandardScaler()
     preproc.fit(x_train)
@@ -148,13 +139,38 @@ def main(args):
     ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
 
     # Add decorr loss
-    bins = [0.2, 0.4, 0.6, 0.8, 1.0]
-    for i, up, down in zip(range(len(bins) - 1), bins[1:], bins[:-1]):
-        # TODO
-        pass
+    bins_f = [0.2, 0.4, 0.6, 0.8, 1.0]
+    bins_var = [-3, -2, -1, 0, 1, 2, 3]
+    idx_var = cfg.ml_variables.index('m_sv_puppi')
+    decorr_loss = 0.0
+    decorr_loss_components = 0.0
+    for up, down in zip(bins_f[1:], bins_f[:-1]):
+        up_ = tf.constant(up, tf.float32)
+        down_ = tf.constant(down, tf.float32)
+        mask_f = count_masking(f[:, 0], up_, down_)
+        masks_var = []
+        for up, down in zip(bins_var[1:], bins_var[:-1]):
+            up_ = tf.constant(up, tf.float32)
+            down_ = tf.constant(down, tf.float32)
+            masks_var.append(count_masking(x_ph[:, idx_var], up_, down_))
+        counts = []
+        for mask in masks_var:
+            counts.append(tf.reduce_sum(mask_f * mask * w_ph))
+        mean = 0.0
+        for c in counts:
+            mean += c
+        mean = tf.clip_by_value(mean / tf.constant(len(counts), tf.float32), 1e-9, 1e12)
+
+        # NOTE: The loss is different than in the paper because we use shift^2 / nominal rather
+        # than shift / nominal. This makes the loss portable between samples with different
+        # statistics similar to s / sqrt(b).
+        for c in counts:
+            decorr_loss += tf.square(c - mean) / mean
+            decorr_loss_components += 1.0
+    decorr_loss = decorr_loss / tf.constant(decorr_loss_components, tf.float32)
 
     # Combine losses
-    loss = ce_loss
+    loss = ce_loss + 1e-3 * decorr_loss
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
@@ -166,23 +182,34 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 30
+    patience = 50
     patience_count = patience
     min_loss = 1e9
     tolerance = 0.001
     step = 0
-    batch_size = 1000
+    batch_size = 10000
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
-        idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
+        idx_ce = np.random.choice(x_train_preproc.shape[0], batch_size)
+        loss_train, loss_ce_train, loss_decorr_train, _ = session.run([loss, ce_loss, decorr_loss, minimize],
+                feed_dict={
+                    x_ph: x_train_preproc[idx_ce],
+                    y_ph: y_train[idx_ce],
+                    w_ph: w_train[idx_ce],
+                    }
+                )
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
-            logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
-            logger.info('Validation loss: {:.5f}'.format(loss_val))
+            logger.info('Train loss: {:.5f} / {:.5f} / {:.5f}'.format(loss_train, loss_ce_train, loss_decorr_train))
+            loss_val, loss_ce_val, loss_decorr_val = session.run([loss, ce_loss, decorr_loss],
+                    feed_dict={
+                        x_ph: x_val_preproc,
+                        y_ph: y_val,
+                        w_ph: w_val,
+                        }
+                    )
+            logger.info('Validation loss: {:.5f} / {:.5f} / {:.5f}'.format(loss_val, loss_ce_val, loss_decorr_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
