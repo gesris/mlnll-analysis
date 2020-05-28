@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from utils import config as cfg
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
+import tensorflow_probability as tfp
 tf.set_random_seed(1234)
 
 
@@ -148,9 +149,67 @@ def main(args):
     y_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
     ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
-
+    
     # Add loss treating systematics
-    # TODO
+
+    ####                ####
+    ####    NLL LOSS    ####
+    ####                ####
+
+    batch_scale = tf.placeholder(tf.float32, shape=[])
+    batch_len = None
+    bins = np.linspace(0, 1, 3)
+    upper_edges = bins[1:]
+    lower_edges = bins[:-1]
+    mask_algo = count_masking
+
+    theta = tf.constant(0.0, tf.float32)
+    mu = tf.constant(1.0, tf.float32)
+
+    one = tf.constant(1, tf.float32)
+    zero = tf.constant(0, tf.float32)
+    epsilon = tf.constant(1e-9, tf.float32)
+
+    nll = zero
+    nll_statsonly = zero
+    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
+        # Bin edges
+        print("Bin (up, down, mid): {:g} / {:g} / {:g}".format(
+            up, down, down + 0.5 * (up - down)))
+        up_ = tf.constant(up, tf.float32)
+        down_ = tf.constant(down, tf.float32)
+
+        # Signals
+        mask = mask_algo(f, up_, down_)
+        Htt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        Ztt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+
+        # Likelihood
+        exp = mu * Htt + Ztt + W + ttbar
+        sys = zero  # systematic has to be added later
+        obs = Htt + Ztt + W + ttbar
+        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+    
+    # Nuisance constraint 
+    #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+
+
+    ####                ####
+    ####    SD LOSS     ####
+    ####                ####
+
+    # POI constraint (full NLL)
+    def get_constraint(nll, params):
+        hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
+        inverse = tf.matrix_inverse(hessian)
+        covariance_poi = inverse[0][0]
+        constraint = tf.sqrt(covariance_poi)
+        return constraint
+
+    sd_loss = get_constraint(nll, [mu, theta])
+
 
     # Combine losses
     loss = ce_loss
