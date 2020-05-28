@@ -146,6 +146,7 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
+    print("F = ", f)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
