@@ -118,7 +118,8 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    print("\n\n{}\n\n".format(y))
+    print("\n\nX-TRAIN: {}\n\n".format(x_train))
+    print("\n\nW TRAIN: {}\n\n".format(w_train))
     # Build dataset for systematic shifts
     """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
@@ -155,11 +156,18 @@ def main(args):
     ####                ####
     ####    NLL LOSS    ####
     ####                ####
-    y_temp = np.array(y)
-    y_Htt = y_temp[:, 0]
-    y_Ztt = y_temp[:, 1]
-    y_W = y_temp[:, 2]
-    y_ttbar = y_temp[:, 3]
+    
+    y_temp = np.array(y_train)
+    y_Htt_ = y_temp[:, 0]
+    y_Ztt_ = y_temp[:, 1]
+    y_W_ = y_temp[:, 2]
+    y_ttbar_ = y_temp[:, 3]
+
+    y_Htt = tf.placeholder(tf.float32)
+    y_Ztt = tf.placeholder(tf.float32)
+    y_W = tf.placeholder(tf.float32)
+    y_ttbar = tf.placeholder(tf.float32)
+
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
     batch_len = None
