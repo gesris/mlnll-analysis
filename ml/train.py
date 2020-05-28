@@ -155,6 +155,11 @@ def main(args):
     ####                ####
     ####    NLL LOSS    ####
     ####                ####
+    y_temp = np.array(y)
+    y_Htt = y_temp[:, 0]
+    y_Ztt = y_temp[:, 1]
+    y_W = y_temp[:, 2]
+    y_ttbar = y_temp[:, 3]
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
     batch_len = None
@@ -181,10 +186,10 @@ def main(args):
 
         # Signals
         mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        Htt = tf.reduce_sum(mask * y_Htt * w_ph * batch_scale)
+        Ztt = tf.reduce_sum(mask * y_Ztt * w_ph * batch_scale)
+        W = tf.reduce_sum(mask * y_W * w_ph * batch_scale)
+        ttbar = tf.reduce_sum(mask * y_ttbar * w_ph * batch_scale)
 
         print("\nY_PH: {}\n".format(y_ph))
 
