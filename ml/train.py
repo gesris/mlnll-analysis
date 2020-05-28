@@ -119,6 +119,7 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     print("\n\nX-TRAIN: {}\nLength: {}\nWidth: {}\n".format(x_train, len(x_train[0]), len(x_train[:])))
+    print("\n\nY-TRAIN: {}\nLength: {}\nWidth: {}\n".format(y_train, len(y_train[0]), len(y_train[:])))
     print("\n\nW TRAIN: {}\nLength: {}\n".format(w_train, len(w_train)))
     # Build dataset for systematic shifts
     """
