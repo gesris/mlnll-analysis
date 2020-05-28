@@ -248,12 +248,25 @@ def main(args):
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _, f_test = session.run([loss, minimize, f],
-                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx], batch_scale: 2.0})
-        print("\n NN Function Output: {}".format(f_test))
+                feed_dict={ x_ph: x_train_preproc[idx],\
+                            y_ph: y_train[idx], \
+                            y_Htt_: y_Htt,\
+                            y_Ztt_: y_Ztt,\
+                            y_W_: y_W,\
+                            y_ttbar_: y_ttbar,\
+                            w_ph: w_train[idx], \
+                            batch_scale: 2.0})
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, batch_scale: 2.0})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc,\
+                                                    y_ph: y_val, \
+                                                    y_Htt_: y_Htt,\
+                                                    y_Ztt_: y_Ztt,\
+                                                    y_W_: y_W,\
+                                                    y_ttbar_: y_ttbar,\
+                                                    w_ph: w_val, \
+                                                    batch_scale: 2.0})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
