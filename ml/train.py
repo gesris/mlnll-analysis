@@ -247,7 +247,7 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, f_test = session.run([loss, minimize, f],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={ x_ph: x_train_preproc[idx],\
                             y_ph: y_train[idx], \
                             y_Htt_: y_Htt_train[idx],\
@@ -256,7 +256,6 @@ def main(args):
                             y_ttbar_: y_ttbar_train[idx],\
                             w_ph: w_train[idx], \
                             batch_scale: 2.0})
-        print("NN Function: {}\nWidth: {}".format(f_test, len(f_test[:])))
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
