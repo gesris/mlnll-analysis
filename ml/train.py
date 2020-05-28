@@ -157,22 +157,6 @@ def main(args):
     ####                ####
     ####    NLL LOSS    ####
     ####                ####
-    
-    y_temp = np.array(y_train)
-    y_Htt_ = y_temp[:, 0]
-    print("Y Htt: {}, Width: {}".format(y_Htt_, len(y_Htt_)))
-    y_Ztt_ = y_temp[:, 1]
-    print("Y Ztt: {}, Width: {}".format(y_Ztt_, len(y_Ztt_)))
-    y_W_ = y_temp[:, 2]
-    print("Y W: {}, Width: {}".format(y_W_, len(y_W_)))
-    y_ttbar_ = y_temp[:, 3]
-    print("Y ttbar: {}, Width: {}".format(y_ttbar_, len(y_ttbar_)))
-
-    y_Htt = tf.placeholder(tf.float32)
-    y_Ztt = tf.placeholder(tf.float32)
-    y_W = tf.placeholder(tf.float32)
-    y_ttbar = tf.placeholder(tf.float32)
-
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
     batch_len = None
@@ -255,12 +239,12 @@ def main(args):
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
+                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx], batch_scale: 2.0})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, batch_scale: 2.0})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
