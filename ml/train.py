@@ -186,12 +186,14 @@ def main(args):
         W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
         ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
 
+        print("Y_PH: {}".format(y_ph))
+
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
-    
+        print("NLL Value: {}".format(nll))
     # Nuisance constraint 
     #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
