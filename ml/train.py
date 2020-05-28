@@ -158,10 +158,16 @@ def main(args):
     ####                ####
 
     y_temp = np.array(y_train)
-    y_Htt = y_temp[:, 0]
-    y_Ztt = y_temp[:, 1]
-    y_W = y_temp[:, 2]
-    y_ttbar = y_temp[:, 3]
+    y_Htt_train = y_temp[:, 0]
+    y_Ztt_train = y_temp[:, 1]
+    y_W_train = y_temp[:, 2]
+    y_ttbar_train = y_temp[:, 3]
+
+    y_temp = np.array(y_val)
+    y_Htt_val = y_temp[:, 0]
+    y_Ztt_val = y_temp[:, 1]
+    y_W_val = y_temp[:, 2]
+    y_ttbar_val = y_temp[:, 3]
 
     y_Htt_ = tf.placeholder(tf.float32)
     y_Ztt_ = tf.placeholder(tf.float32)
@@ -250,10 +256,10 @@ def main(args):
         loss_train, _, f_test = session.run([loss, minimize, f],
                 feed_dict={ x_ph: x_train_preproc[idx],\
                             y_ph: y_train[idx], \
-                            y_Htt_: y_Htt[idx],\
-                            y_Ztt_: y_Ztt[idx],\
-                            y_W_: y_W[idx],\
-                            y_ttbar_: y_ttbar[idx],\
+                            y_Htt_: y_Htt_train[idx],\
+                            y_Ztt_: y_Ztt_train[idx],\
+                            y_W_: y_W_train[idx],\
+                            y_ttbar_: y_ttbar_train[idx],\
                             w_ph: w_train[idx], \
                             batch_scale: 2.0})
         if step % validation_steps == 0:
@@ -261,10 +267,10 @@ def main(args):
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc,\
                                                     y_ph: y_val, \
-                                                    y_Htt_: y_Htt[idx],\
-                                                    y_Ztt_: y_Ztt[idx],\
-                                                    y_W_: y_W[idx],\
-                                                    y_ttbar_: y_ttbar[idx],\
+                                                    y_Htt_: y_Htt_val[idx],\
+                                                    y_Ztt_: y_Ztt_val[idx],\
+                                                    y_W_: y_W_val[idx],\
+                                                    y_ttbar_: y_ttbar_val[idx],\
                                                     w_ph: w_val, \
                                                     batch_scale: 2.0})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
