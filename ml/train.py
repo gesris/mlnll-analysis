@@ -267,10 +267,10 @@ def main(args):
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc,\
                                                     y_ph: y_val, \
-                                                    y_Htt_: y_Htt_val[idx],\
-                                                    y_Ztt_: y_Ztt_val[idx],\
-                                                    y_W_: y_W_val[idx],\
-                                                    y_ttbar_: y_ttbar_val[idx],\
+                                                    y_Htt_: y_Htt_val,\
+                                                    y_Ztt_: y_Ztt_val,\
+                                                    y_W_: y_W_val,\
+                                                    y_ttbar_: y_ttbar_val,\
                                                     w_ph: w_val, \
                                                     batch_scale: 2.0})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
