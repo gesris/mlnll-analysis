@@ -194,10 +194,10 @@ def main(args):
 
         # Signals
         mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask * y_Htt * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(mask * y_Ztt * w_ph * batch_scale)
-        W = tf.reduce_sum(mask * y_W * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(mask * y_ttbar * w_ph * batch_scale)
+        Htt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        Ztt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
 
         print("\nY_PH: {}\n".format(y_ph))
 
