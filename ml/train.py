@@ -190,8 +190,6 @@ def main(args):
     nll = zero
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
-        print("\nBin (up, down, mid): {:g} / {:g} / {:g}\n".format(
-            up, down, down + 0.5 * (up - down)))
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
@@ -202,14 +200,11 @@ def main(args):
         W = tf.reduce_sum(mask_algo(f[:, 2], up_, down_) * y_W_ * w_ph * batch_scale)
         ttbar = tf.reduce_sum(mask_algo(f[:, 3], up_, down_) * y_ttbar_ * w_ph * batch_scale)
 
-        print("\nY_PH: {}\n".format(y_ph))
-
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
-        print("\nNLL Value: {}\n".format(nll))
     # Nuisance constraint 
     #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
@@ -227,7 +222,6 @@ def main(args):
         return constraint
 
     sd_loss_statsonly = get_constraint(nll, [mu])
-    #print("\nSD LOSS: {}\n".format(sd_loss))
 
 
     # Combine losses
