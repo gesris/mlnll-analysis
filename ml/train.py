@@ -118,9 +118,7 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    print("\n\nX-TRAIN: {}\nLength: {}\nWidth: {}\n".format(x_train, len(x_train[0]), len(x_train[:])))
-    print("\n\nY-TRAIN: {}\nLength: {}\nWidth: {}\n".format(y_train, len(y_train[0]), len(y_train[:])))
-    print("\n\nW TRAIN: {}\nLength: {}\n".format(w_train, len(w_train)))
+    
     # Build dataset for systematic shifts
     """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
@@ -146,19 +144,29 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
-    print("\n")
-    tf.Print(f)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
     ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
     
+    
     # Add loss treating systematics
 
     ####                ####
     ####    NLL LOSS    ####
     ####                ####
+
+    y_temp = np.array(y_train)
+    y_Htt = y_temp[:, 0]
+    y_Ztt = y_temp[:, 1]
+    y_W = y_temp[:, 2]
+    y_ttbar = y_temp[:, 3]
+
+    y_Htt_ = tf.placeholder(tf.float32)
+    y_Ztt_ = tf.placeholder(tf.float32)
+    y_W_ = tf.placeholder(tf.float32)
+    y_ttbar_ = tf.placeholder(tf.float32)
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
     bins = np.linspace(0, 1, 3)
@@ -183,10 +191,10 @@ def main(args):
 
         # Signals
         mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        Htt = tf.reduce_sum(mask * y_Htt_ * w_ph * batch_scale)
+        Ztt = tf.reduce_sum(mask * y_Ztt_ * w_ph * batch_scale)
+        W = tf.reduce_sum(mask * y_W_ * w_ph * batch_scale)
+        ttbar = tf.reduce_sum(mask * y_ttbar_ * w_ph * batch_scale)
 
         print("\nY_PH: {}\n".format(y_ph))
 
