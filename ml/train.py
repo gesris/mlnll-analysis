@@ -224,7 +224,7 @@ def main(args):
         return constraint
 
     sd_loss = get_constraint(nll, [mu, theta])
-    print("\nSD LOSS: {}\n".format(sd_loss))
+    #print("\nSD LOSS: {}\n".format(sd_loss))
 
 
     # Combine losses
