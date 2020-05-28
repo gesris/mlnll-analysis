@@ -159,7 +159,6 @@ def main(args):
     ####                ####
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
-    batch_len = None
     bins = np.linspace(0, 1, 3)
     upper_edges = bins[1:]
     lower_edges = bins[:-1]
@@ -238,9 +237,9 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, testitest= session.run([loss, minimize, y_ph],
                 feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx], batch_scale: 2.0})
-
+        print("TEST: ", testitest)
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
