@@ -118,7 +118,7 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-
+    print("\n\n{}\n\n".format(y))
     # Build dataset for systematic shifts
     """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
@@ -174,7 +174,7 @@ def main(args):
     nll_statsonly = zero
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
-        print("Bin (up, down, mid): {:g} / {:g} / {:g}".format(
+        print("\nBin (up, down, mid): {:g} / {:g} / {:g}\n".format(
             up, down, down + 0.5 * (up - down)))
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
@@ -186,14 +186,14 @@ def main(args):
         W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
         ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
 
-        print("Y_PH: {}".format(y_ph))
+        print("\nY_PH: {}\n".format(y_ph))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
-        print("NLL Value: {}".format(nll))
+        print("\nNLL Value: {}\n".format(nll))
     # Nuisance constraint 
     #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
@@ -211,7 +211,7 @@ def main(args):
         return constraint
 
     sd_loss = get_constraint(nll, [mu, theta])
-    print("SD LOSS: {}".format(sd_loss))
+    print("\nSD LOSS: {}\n".format(sd_loss))
 
 
     # Combine losses
