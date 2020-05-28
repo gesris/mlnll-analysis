@@ -160,9 +160,13 @@ def main(args):
     
     y_temp = np.array(y_train)
     y_Htt_ = y_temp[:, 0]
+    print("Y Htt: {}, Width: {}".format(y_Htt_, len(y_Htt_)))
     y_Ztt_ = y_temp[:, 1]
+    print("Y Ztt: {}, Width: {}".format(y_Ztt_, len(y_Ztt_)))
     y_W_ = y_temp[:, 2]
+    print("Y W: {}, Width: {}".format(y_W_, len(y_W_)))
     y_ttbar_ = y_temp[:, 3]
+    print("Y ttbar: {}, Width: {}".format(y_ttbar_, len(y_ttbar_)))
 
     y_Htt = tf.placeholder(tf.float32)
     y_Ztt = tf.placeholder(tf.float32)
