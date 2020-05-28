@@ -172,7 +172,6 @@ def main(args):
     epsilon = tf.constant(1e-9, tf.float32)
 
     nll = zero
-    nll_statsonly = zero
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
         print("\nBin (up, down, mid): {:g} / {:g} / {:g}\n".format(
@@ -182,10 +181,11 @@ def main(args):
 
         # Signals
         mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        W = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(mask * y_ph * w_ph * batch_scale)
+        #  * y_ph * w_ph * batch_scale
+        Htt = tf.reduce_sum(mask)
+        Ztt = tf.reduce_sum(mask)
+        W = tf.reduce_sum(mask)
+        ttbar = tf.reduce_sum(mask)
 
         print("\nY_PH: {}\n".format(y_ph))
 
@@ -237,9 +237,8 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, testitest= session.run([loss, minimize, y_ph],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx], batch_scale: 2.0})
-        print("TEST: ", testitest)
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
