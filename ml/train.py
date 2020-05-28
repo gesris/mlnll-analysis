@@ -256,7 +256,7 @@ def main(args):
                             y_ttbar_: y_ttbar_train[idx],\
                             w_ph: w_train[idx], \
                             batch_scale: 2.0})
-        print("NN Function: {}".format(f_test, len(f_test[:])))
+        print("NN Function: {}\nWidth: {}".format(f_test, len(f_test[:])))
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
