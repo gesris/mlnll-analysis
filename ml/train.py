@@ -211,7 +211,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    sd_loss = get_constraint(nll, [mu, theta])
+    sd_loss = get_constraint(nll, [mu])
     #print("\nSD LOSS: {}\n".format(sd_loss))
 
 
