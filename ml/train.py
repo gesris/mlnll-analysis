@@ -119,7 +119,9 @@ def main(args):
     # Build nominal dataset
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
-    logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
+    logger.info('\nNumber of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
+    logger.info("\nStatistical weights for training: {}".format(w_train))
+    logger.info("\nStatistical weights for training: {}".format(w_val))
 
     # Build dataset for systematic shifts
     """
