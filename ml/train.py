@@ -17,8 +17,6 @@ tf.set_random_seed(1234)
 import logging
 logger = logging.getLogger('')
 
-import utils.config as cfg
-
 
 @tf.custom_gradient
 def count_masking(x, up, down):
@@ -69,9 +67,13 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
+    # Print inputs before stacking
+    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs))
+
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
+    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs))
 
     # Stack targets
     ys = np.hstack(ys)
