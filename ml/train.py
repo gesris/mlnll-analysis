@@ -84,8 +84,8 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
     #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[0]))
     #logger.info("\n----------------------------------------\nInput width after stacking: {}".format(len(xs[0])))
-    #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[:]))
-    #logger.info("\n----------------------------------------\nInput height after stacking: {}".format(len(xs[:])))
+    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[:]))
+    logger.info("\n----------------------------------------\nInput height after stacking: {}".format(len(xs[:])))
 
     # Stack targets
     ys = np.hstack(ys)
