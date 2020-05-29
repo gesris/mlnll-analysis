@@ -111,6 +111,20 @@ def model(x, num_variables, num_classes, fold, reuse=False):
 
     return logits, f
 
+def model_test(x, num_variables, fold, reuse=False):
+    hidden_nodes = 100
+    with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
+        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
+        b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
+        w2 = tf.get_variable('w2', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
+        b2 = tf.get_variable('b2', shape=(1), initializer=tf.constant_initializer())
+
+    l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
+    logits = tf.add(b2, tf.matmul(l1, w2))
+    f = tf.nn.softmax(logits)
+
+    return logits, f
+
 
 def main(args):
     # Build nominal dataset
@@ -142,7 +156,8 @@ def main(args):
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
-    logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
+    #logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
+    logits, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
@@ -174,9 +189,9 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, f_test = session.run([loss, minimize, f],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
-        logging.info("\n ----------------------------------- \nNN Output: ".format(f_test))
+        #logging.info("\n ----------------------------------- \nNN Output: ".format(f_test))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
