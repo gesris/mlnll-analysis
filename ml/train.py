@@ -179,7 +179,7 @@ def main(args):
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
     bins = cfg.analysis_binning
-    print("BINS: {}".format(bins))
+    print("\n--------------------------------------------------------------------------------\nBINS: {}".format(bins))
     upper_edges = bins[1:]
     lower_edges = bins[:-1]
     mask_algo = count_masking
