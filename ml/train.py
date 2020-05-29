@@ -137,12 +137,9 @@ def main(args):
     x_train_preproc = preproc.transform(x_train)
     x_val_preproc = preproc.transform(x_val)
     for i, (var, mean, std) in enumerate(zip(cfg.ml_variables, preproc.mean_, preproc.scale_)):
-        logger.info('Variable: %s', var)
+        logger.info('\n\nVariable: %s', var)
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
-
-    print("Training Input: {}".format(x_train_preproc))
-    print("Validation Input: {}".format(x_val_preproc))
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
