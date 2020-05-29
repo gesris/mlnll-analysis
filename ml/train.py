@@ -140,7 +140,7 @@ def main(args):
         logger.info('\n\nVariable: %s', var)
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
-        logger.info('Preprocessed data: %s', x_train_preproc[:, i].numpy())
+        logger.info('Preprocessed data: %s', x_train_preproc[:, i])
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
