@@ -17,6 +17,8 @@ tf.set_random_seed(1234)
 import logging
 logger = logging.getLogger('')
 
+import utils.config as cfg
+
 
 @tf.custom_gradient
 def count_masking(x, up, down):
@@ -140,7 +142,7 @@ def main(args):
         logger.info('\n\nVariable: %s', var)
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
-        logger.info('Preprocessed data: %s', x_train_preproc[:, i])
+        #logger.info('Preprocessed data: %s', x_train_preproc[:, i])
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
@@ -176,7 +178,8 @@ def main(args):
     y_ttbar_ = tf.placeholder(tf.float32)
 
     batch_scale = tf.placeholder(tf.float32, shape=[])
-    bins = np.linspace(0, 1, 3)
+    bins = cfg.analysis_binning
+    print("BINS: {}".format(bins))
     upper_edges = bins[1:]
     lower_edges = bins[:-1]
     mask_algo = count_masking
@@ -258,7 +261,7 @@ def main(args):
                             w_ph: w_train[idx], \
                             batch_scale: 2.0})
         if step % validation_steps == 0:
-            logger.info('Step / patience: {} / {}'.format(step, patience_count))
+            logger.info('\nStep / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc,\
                                                     y_ph: y_val, \
