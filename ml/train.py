@@ -68,12 +68,14 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
     # Print inputs before stacking
-    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs))
+    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[0]))
+    logger.info("\n----------------------------------------\nInput (width, height) before stacking: {}, {}".format(len(xs[0]), len(xs[:])))
 
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
-    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs))
+    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[0]))
+    logger.info("\n----------------------------------------\nInput (width, height) after stacking: {}, {}".format(len(xs[0]), len(xs[:])))
 
     # Stack targets
     ys = np.hstack(ys)
