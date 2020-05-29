@@ -110,7 +110,7 @@ def model(x, num_variables, num_classes, fold, reuse=False):
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
     logits = tf.add(b3, tf.matmul(l2, w3))
-    f = tf.nn.softmax(logits)
+    f = tf.nn.sigmoid(logits)
 
     return logits, f
 
@@ -121,7 +121,7 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('\nNumber of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     logger.info("\nStatistical weights for training: {}".format(w_train))
-    logger.info("\nStatistical weights for training: {}".format(w_val))
+    logger.info("\nStatistical weights for validation: {}".format(w_val))
 
     # Build dataset for systematic shifts
     """
