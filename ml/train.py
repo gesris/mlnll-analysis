@@ -68,16 +68,18 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
     # Print inputs before stacking
-    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[0][0]))
-    logger.info("\n----------------------------------------\nInput width before stacking: {}".format(len(xs[0][0])))
-    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[:][0]))
-    logger.info("\n----------------------------------------\nInput height before stacking: {}".format(len(xs[:][0])))
+    #logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[0][0]))
+    #logger.info("\n----------------------------------------\nInput width before stacking: {}".format(len(xs[0][0])))
+    #logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[:][0]))
+    #logger.info("\n----------------------------------------\nInput height before stacking: {}".format(len(xs[:][0])))
 
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
-    #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[0][0]))
-    #logger.info("\n----------------------------------------\nInput (width, height) after stacking: {}, {}".format(len(xs[0][0]), len(xs[:])))
+    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[0][0]))
+    logger.info("\n----------------------------------------\nInput width after stacking: {}".format(len(xs[0][0])))
+    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[:][0]))
+    logger.info("\n----------------------------------------\nInput height after stacking: {}".format(len(xs[:][0])))
 
     # Stack targets
     ys = np.hstack(ys)
