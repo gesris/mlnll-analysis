@@ -70,8 +70,8 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     # Print inputs before stacking
     logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[0][0]))
     logger.info("\n----------------------------------------\nInput width before stacking: {}".format(len(xs[0][0])))
-    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[:]))
-    logger.info("\n----------------------------------------\nInput height before stacking: {}".format(len(xs[:])))
+    logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[:][0]))
+    logger.info("\n----------------------------------------\nInput height before stacking: {}".format(len(xs[:][0])))
 
     # Stack inputs
     xs = np.vstack(xs)
