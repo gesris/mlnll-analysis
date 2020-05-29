@@ -118,7 +118,7 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    print("\n\n{}".format(w_val))
+
     # Build dataset for systematic shifts
     """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
@@ -140,6 +140,9 @@ def main(args):
         logger.info('Variable: %s', var)
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
+
+    print("Training Input: {}".format(x_train_preproc))
+    print("Validation Input: {}".format(x_val_preproc))
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
