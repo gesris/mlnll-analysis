@@ -65,6 +65,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
+    logging.info("\n\nBefore stacking and multiplying: {}".format(ws))
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
@@ -84,6 +85,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
             mask = ys == i
             ws[mask] = ws[mask] / np.sum(ws[mask]) * sum_all
         logger.debug('Weights, with class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
+    logging.info("\n\nAfter stacking and multiplying: {}".format(ws))
     # Convert targets to categorical
     if make_categorical:
         ys = tf.keras.utils.to_categorical(ys)
@@ -154,8 +156,8 @@ def main(args):
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
-    logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
-    #logits, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
+    #logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
+    logits, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
