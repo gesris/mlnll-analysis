@@ -162,17 +162,17 @@ def main(args):
     ####    NLL LOSS    ####
     ####                ####
 
-    y_temp = np.array(y_train)
-    y_Htt_train = y_temp[:, 0]
-    y_Ztt_train = y_temp[:, 1]
-    y_W_train = y_temp[:, 2]
-    y_ttbar_train = y_temp[:, 3]
+    y_temp_train = np.array(y_train)
+    y_Htt_train = y_temp_train[:, 0]
+    y_Ztt_train = y_temp_train[:, 1]
+    y_W_train = y_temp_train[:, 2]
+    y_ttbar_train = y_temp_train[:, 3]
 
-    y_temp = np.array(y_val)
-    y_Htt_val = y_temp[:, 0]
-    y_Ztt_val = y_temp[:, 1]
-    y_W_val = y_temp[:, 2]
-    y_ttbar_val = y_temp[:, 3]
+    y_temp_val = np.array(y_val)
+    y_Htt_val = y_temp_val[:, 0]
+    y_Ztt_val = y_temp_val[:, 1]
+    y_W_val = y_temp_val[:, 2]
+    y_ttbar_val = y_temp_val[:, 3]
 
     y_Htt_ = tf.placeholder(tf.float32)
     y_Ztt_ = tf.placeholder(tf.float32)
