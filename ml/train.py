@@ -65,7 +65,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
-
+    logging.info("\n\nBefore stacking and multiplying: {}".format(ws))
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
@@ -85,7 +85,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
             mask = ys == i
             ws[mask] = ws[mask] / np.sum(ws[mask]) * sum_all
         logger.debug('Weights, with class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
-
+    logging.info("\n\nAfter stacking and multiplying: {}".format(ws))
     # Convert targets to categorical
     if make_categorical:
         ys = tf.keras.utils.to_categorical(ys)
@@ -131,7 +131,7 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    logger.info("\n\n{}".format(x_train))
+    
     # Build dataset for systematic shifts
     """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
@@ -166,6 +166,7 @@ def main(args):
 
     # Add loss treating systematics
     # TODO
+
 
     # Combine losses
     loss = ce_loss
