@@ -68,16 +68,16 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
     # Stack inputs
-    #xs = np.vstack(xs)
-    #logger.debug('Input dataset (shape): {}'.format(xs.shape))
+    xs = np.vstack(xs)
+    logger.debug('Input dataset (shape): {}'.format(xs.shape))
 
     # Stack targets
-    #ys = np.hstack(ys)
-    #logger.debug('Targets, not categorical (shape): {}'.format(ys.shape))
+    ys = np.hstack(ys)
+    logger.debug('Targets, not categorical (shape): {}'.format(ys.shape))
 
     # Stack weights
-    #ws = np.hstack(ws)
-    #logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
+    ws = np.hstack(ws)
+    logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
     # Multiply class weights to event weights
     if use_class_weights:
@@ -92,20 +92,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
     
-    # Print inputs for every array each
-    logger.info("\n----------------------------------------\nInput 0 before stacking: {}".format(xs[0]))
-    logger.info("\n----------------------------------------\nInput 1 before stacking: {}".format(xs[1]))
-    logger.info("\n----------------------------------------\nInput 2 before stacking: {}".format(xs[2]))
-    logger.info("\n----------------------------------------\nInput 3 before stacking: {}".format(xs[3]))
-    logger.info("\n----------------------------------------\nTargets 0 before stacking: {}".format(ys[0]))
-    logger.info("\n----------------------------------------\nTargets 1 before stacking: {}".format(ys[1]))
-    logger.info("\n----------------------------------------\nTargets 2 before stacking: {}".format(ys[2]))
-    logger.info("\n----------------------------------------\nTargets 3 before stacking: {}".format(ys[3]))
-    logger.info("\n----------------------------------------\nWeights 0 before stacking: {}".format(ws[0]))
-    logger.info("\n----------------------------------------\nWeights 1 before stacking: {}".format(ws[1]))
-    logger.info("\n----------------------------------------\nWeights 2 before stacking: {}".format(ws[2]))
-    logger.info("\n----------------------------------------\nWeights 3 before stacking: {}".format(ws[3]))
-    
+    '''    
     xs_Htt = xs[0]
     ys_Htt = ys[0]
     ws_Htt = ws[0]
@@ -117,7 +104,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     ws_W = ws[2]
     xs_ttbar = xs[3]
     ys_ttbar = ys[3]
-    ws_ttbar = ws[3]
+    ws_ttbar = ws[3]'''
 
     return xs, ys, ws
 
@@ -129,8 +116,8 @@ def model(x, num_variables, num_classes, fold, reuse=False):
         b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
         w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
         b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
-        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
+        w3 = tf.get_variable('w3', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
+        b3 = tf.get_variable('b3', shape=(1), initializer=tf.constant_initializer())
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
@@ -187,23 +174,6 @@ def main(args):
     ####    NLL LOSS    ####
     ####                ####
 
-    y_temp_train = np.array(y_train)
-    y_Htt_train = y_temp_train[:, 0]
-    y_Ztt_train = y_temp_train[:, 1]
-    y_W_train = y_temp_train[:, 2]
-    y_ttbar_train = y_temp_train[:, 3]
-
-    y_temp_val = np.array(y_val)
-    y_Htt_val = y_temp_val[:, 0]
-    y_Ztt_val = y_temp_val[:, 1]
-    y_W_val = y_temp_val[:, 2]
-    y_ttbar_val = y_temp_val[:, 3]
-
-    y_Htt_ = tf.placeholder(tf.float32)
-    y_Ztt_ = tf.placeholder(tf.float32)
-    y_W_ = tf.placeholder(tf.float32)
-    y_ttbar_ = tf.placeholder(tf.float32)
-
     batch_scale = tf.placeholder(tf.float32, shape=[])
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
@@ -226,10 +196,10 @@ def main(args):
 
         # Signals
         mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask_algo(f[:, 0], up_, down_) * y_Htt_ * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(mask_algo(f[:, 1], up_, down_) * y_Ztt_ * w_ph * batch_scale)
-        W = tf.reduce_sum(mask_algo(f[:, 2], up_, down_) * y_W_ * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(mask_algo(f[:, 3], up_, down_) * y_ttbar_ * w_ph * batch_scale)
+        Htt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
+        Ztt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
+        W = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
+        ttbar = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -278,24 +248,17 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, f_test = session.run([loss, minimize, f],
                 feed_dict={ x_ph: x_train_preproc[idx],\
                             y_ph: y_train[idx], \
-                            y_Htt_: y_Htt_train[idx],\
-                            y_Ztt_: y_Ztt_train[idx],\
-                            y_W_: y_W_train[idx],\
-                            y_ttbar_: y_ttbar_train[idx],\
                             w_ph: w_train[idx], \
                             batch_scale: 2.0})
+        logging.info("\n\nNN Output: ".format(f_test))
         if step % validation_steps == 0:
             logger.info('\nStep / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc,\
                                                     y_ph: y_val, \
-                                                    y_Htt_: y_Htt_val,\
-                                                    y_Ztt_: y_Ztt_val,\
-                                                    y_W_: y_W_val,\
-                                                    y_ttbar_: y_ttbar_val,\
                                                     w_ph: w_val, \
                                                     batch_scale: 2.0})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
