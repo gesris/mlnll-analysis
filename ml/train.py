@@ -116,8 +116,8 @@ def model(x, num_variables, num_classes, fold, reuse=False):
         b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
         w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
         b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
-        b3 = tf.get_variable('b3', shape=(1), initializer=tf.constant_initializer())
+        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
+        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
@@ -194,12 +194,13 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
-        # Signals
+        # Signals ------------------------------- needs fixing ------------------------------------------------
         mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
-        W = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)
+        Htt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)   # only apply for y == 0
+        Ztt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)   # only apply for y == 1
+        W = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)     # only apply for y == 2
+        ttbar = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale) # only apply for y == 3
+        # ------------------------------------------------------------------------------------------------------
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
