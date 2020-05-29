@@ -67,12 +67,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
-    # Print inputs before stacking
-    #logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[0][0]))
-    #logger.info("\n----------------------------------------\nInput width before stacking: {}".format(len(xs[0][0])))
-    #logger.info("\n----------------------------------------\nInput before stacking: {}".format(xs[:][0]))
-    #logger.info("\n----------------------------------------\nInput height before stacking: {}".format(len(xs[:][0])))
-
     # Print inputs for every array each
     #logger.info("\n----------------------------------------\nInput 0 before stacking: {}".format(xs[0]))
     #logger.info("\n----------------------------------------\nInput 1 before stacking: {}".format(xs[1]))
@@ -82,26 +76,22 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     #logger.info("\n----------------------------------------\nTargets 1 before stacking: {}".format(ys[1]))
     #logger.info("\n----------------------------------------\nTargets 2 before stacking: {}".format(ys[2]))
     #logger.info("\n----------------------------------------\nTargets 3 before stacking: {}".format(ys[3]))
-    logger.info("\n----------------------------------------\nWeights 0 before stacking: {}".format(ws[0]))
-    logger.info("\n----------------------------------------\nWeights 1 before stacking: {}".format(ws[1]))
-    logger.info("\n----------------------------------------\nWeights 2 before stacking: {}".format(ws[2]))
-    logger.info("\n----------------------------------------\nWeights 3 before stacking: {}".format(ws[3]))
+    #logger.info("\n----------------------------------------\nWeights 0 before stacking: {}".format(ws[0]))
+    #logger.info("\n----------------------------------------\nWeights 1 before stacking: {}".format(ws[1]))
+    #logger.info("\n----------------------------------------\nWeights 2 before stacking: {}".format(ws[2]))
+    #logger.info("\n----------------------------------------\nWeights 3 before stacking: {}".format(ws[3]))
 
     # Stack inputs
-    xs = np.vstack(xs)
-    logger.debug('Input dataset (shape): {}'.format(xs.shape))
-    #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[0]))
-    #logger.info("\n----------------------------------------\nInput width after stacking: {}".format(len(xs[0])))
-    #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[:]))
-    #logger.info("\n----------------------------------------\nInput height after stacking: {}".format(len(xs[:])))
+    #xs = np.vstack(xs)
+    #logger.debug('Input dataset (shape): {}'.format(xs.shape))
 
     # Stack targets
-    ys = np.hstack(ys)
-    logger.debug('Targets, not categorical (shape): {}'.format(ys.shape))
+    #ys = np.hstack(ys)
+    #logger.debug('Targets, not categorical (shape): {}'.format(ys.shape))
 
     # Stack weights
-    ws = np.hstack(ws)
-    logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
+    #ws = np.hstack(ws)
+    #logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
     # Multiply class weights to event weights
     if use_class_weights:
@@ -115,6 +105,19 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     if make_categorical:
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
+    
+    xs_Htt = xs[0]
+    ys_Htt = ys[0]
+    ws_Htt = ws[0]
+    xs_Ztt = xs[1]
+    ys_Ztt = ys[1]
+    ws_Ztt = ws[1]
+    xs_W = xs[2]
+    ys_W = ys[2]
+    ws_W = ws[2]
+    xs_ttbar = xs[3]
+    ys_ttbar = ys[3]
+    ws_ttbar = ws[3]
 
     return xs, ys, ws
 
