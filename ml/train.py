@@ -227,8 +227,8 @@ def main(args):
 
 
     # Combine losses
-    #loss = ce_loss
-    loss = sd_loss_statsonly
+    loss = ce_loss
+    #loss = sd_loss_statsonly
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
