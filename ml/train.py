@@ -74,18 +74,22 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     #logger.info("\n----------------------------------------\nInput height before stacking: {}".format(len(xs[:][0])))
 
     # Print inputs for every array each
-    logger.info("\n----------------------------------------\nInput 0 before stacking: {}".format(xs[0]))
-    logger.info("\n----------------------------------------\nInput 1 before stacking: {}".format(xs[1]))
-    logger.info("\n----------------------------------------\nInput 2 before stacking: {}".format(xs[2]))
-    logger.info("\n----------------------------------------\nInput 3 before stacking: {}".format(xs[3]))
+    #logger.info("\n----------------------------------------\nInput 0 before stacking: {}".format(xs[0]))
+    #logger.info("\n----------------------------------------\nInput 1 before stacking: {}".format(xs[1]))
+    #logger.info("\n----------------------------------------\nInput 2 before stacking: {}".format(xs[2]))
+    #logger.info("\n----------------------------------------\nInput 3 before stacking: {}".format(xs[3]))
+    logger.info("\n----------------------------------------\nTargets 0 before stacking: {}".format(ys[0]))
+    logger.info("\n----------------------------------------\nTargets 1 before stacking: {}".format(ys[1]))
+    logger.info("\n----------------------------------------\nTargets 2 before stacking: {}".format(ys[2]))
+    logger.info("\n----------------------------------------\nTargets 3 before stacking: {}".format(ys[3]))
 
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
     #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[0]))
     #logger.info("\n----------------------------------------\nInput width after stacking: {}".format(len(xs[0])))
-    logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[:]))
-    logger.info("\n----------------------------------------\nInput height after stacking: {}".format(len(xs[:])))
+    #logger.info("\n----------------------------------------\nInput after stacking: {}".format(xs[:]))
+    #logger.info("\n----------------------------------------\nInput height after stacking: {}".format(len(xs[:])))
 
     # Stack targets
     ys = np.hstack(ys)
