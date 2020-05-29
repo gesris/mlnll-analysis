@@ -116,8 +116,8 @@ def model(x, num_variables, num_classes, fold, reuse=False):
         b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
         w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
         b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
-        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
+        w3 = tf.get_variable('w3', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
+        b3 = tf.get_variable('b3', shape=(1), initializer=tf.constant_initializer())
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
