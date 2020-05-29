@@ -67,20 +67,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
-    # Print inputs for every array each
-    #logger.info("\n----------------------------------------\nInput 0 before stacking: {}".format(xs[0]))
-    #logger.info("\n----------------------------------------\nInput 1 before stacking: {}".format(xs[1]))
-    #logger.info("\n----------------------------------------\nInput 2 before stacking: {}".format(xs[2]))
-    #logger.info("\n----------------------------------------\nInput 3 before stacking: {}".format(xs[3]))
-    #logger.info("\n----------------------------------------\nTargets 0 before stacking: {}".format(ys[0]))
-    #logger.info("\n----------------------------------------\nTargets 1 before stacking: {}".format(ys[1]))
-    #logger.info("\n----------------------------------------\nTargets 2 before stacking: {}".format(ys[2]))
-    #logger.info("\n----------------------------------------\nTargets 3 before stacking: {}".format(ys[3]))
-    #logger.info("\n----------------------------------------\nWeights 0 before stacking: {}".format(ws[0]))
-    #logger.info("\n----------------------------------------\nWeights 1 before stacking: {}".format(ws[1]))
-    #logger.info("\n----------------------------------------\nWeights 2 before stacking: {}".format(ws[2]))
-    #logger.info("\n----------------------------------------\nWeights 3 before stacking: {}".format(ws[3]))
-
     # Stack inputs
     #xs = np.vstack(xs)
     #logger.debug('Input dataset (shape): {}'.format(xs.shape))
@@ -105,6 +91,20 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     if make_categorical:
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
+    
+    # Print inputs for every array each
+    logger.info("\n----------------------------------------\nInput 0 before stacking: {}".format(xs[0]))
+    logger.info("\n----------------------------------------\nInput 1 before stacking: {}".format(xs[1]))
+    logger.info("\n----------------------------------------\nInput 2 before stacking: {}".format(xs[2]))
+    logger.info("\n----------------------------------------\nInput 3 before stacking: {}".format(xs[3]))
+    logger.info("\n----------------------------------------\nTargets 0 before stacking: {}".format(ys[0]))
+    logger.info("\n----------------------------------------\nTargets 1 before stacking: {}".format(ys[1]))
+    logger.info("\n----------------------------------------\nTargets 2 before stacking: {}".format(ys[2]))
+    logger.info("\n----------------------------------------\nTargets 3 before stacking: {}".format(ys[3]))
+    logger.info("\n----------------------------------------\nWeights 0 before stacking: {}".format(ws[0]))
+    logger.info("\n----------------------------------------\nWeights 1 before stacking: {}".format(ws[1]))
+    logger.info("\n----------------------------------------\nWeights 2 before stacking: {}".format(ws[2]))
+    logger.info("\n----------------------------------------\nWeights 3 before stacking: {}".format(ws[3]))
     
     xs_Htt = xs[0]
     ys_Htt = ys[0]
