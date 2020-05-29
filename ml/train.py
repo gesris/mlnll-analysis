@@ -10,7 +10,6 @@ from sklearn.preprocessing import StandardScaler
 from utils import config as cfg
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-import tensorflow_probability as tfp
 tf.set_random_seed(1234)
 
 
@@ -91,20 +90,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     if make_categorical:
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
-    
-    '''    
-    xs_Htt = xs[0]
-    ys_Htt = ys[0]
-    ws_Htt = ws[0]
-    xs_Ztt = xs[1]
-    ys_Ztt = ys[1]
-    ws_Ztt = ws[1]
-    xs_W = xs[2]
-    ys_W = ys[2]
-    ws_W = ws[2]
-    xs_ttbar = xs[3]
-    ys_ttbar = ys[3]
-    ws_ttbar = ws[3]'''
 
     return xs, ys, ws
 
@@ -116,13 +101,13 @@ def model(x, num_variables, num_classes, fold, reuse=False):
         b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
         w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
         b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
-        b3 = tf.get_variable('b3', shape=(1), initializer=tf.constant_initializer())
+        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
+        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
     logits = tf.add(b3, tf.matmul(l2, w3))
-    f = tf.nn.sigmoid(logits)
+    f = tf.nn.softmax(logits)
 
     return logits, f
 
@@ -131,9 +116,7 @@ def main(args):
     # Build nominal dataset
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
-    logger.info('\nNumber of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    logger.info("\nStatistical weights for training: {}".format(w_train))
-    logger.info("\nStatistical weights for validation: {}".format(w_val))
+    logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     # Build dataset for systematic shifts
     """
@@ -153,10 +136,9 @@ def main(args):
     x_train_preproc = preproc.transform(x_train)
     x_val_preproc = preproc.transform(x_val)
     for i, (var, mean, std) in enumerate(zip(cfg.ml_variables, preproc.mean_, preproc.scale_)):
-        logger.info('\n\nVariable: %s', var)
+        logger.info('Variable: %s', var)
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
-        #logger.info('Preprocessed data: %s', x_train_preproc[:, i])
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
@@ -166,69 +148,12 @@ def main(args):
     y_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
     ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
-    
-    
+
     # Add loss treating systematics
-
-    ####                ####
-    ####    NLL LOSS    ####
-    ####                ####
-
-    batch_scale = tf.placeholder(tf.float32, shape=[])
-    bins = cfg.analysis_binning
-    logger.info("\nBins: {}".format(bins))
-    upper_edges = bins[1:]
-    lower_edges = bins[:-1]
-    mask_algo = count_masking
-
-    theta = tf.constant(0.0, tf.float32)
-    mu = tf.constant(1.0, tf.float32)
-
-    one = tf.constant(1, tf.float32)
-    zero = tf.constant(0, tf.float32)
-    epsilon = tf.constant(1e-9, tf.float32)
-
-    nll = zero
-    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
-        # Bin edges
-        up_ = tf.constant(up, tf.float32)
-        down_ = tf.constant(down, tf.float32)
-
-        # Signals ------------------------------- needs fixing ------------------------------------------------
-        mask = mask_algo(f, up_, down_)
-        Htt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)   # only apply for y == 0
-        Ztt = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)   # only apply for y == 1
-        W = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale)     # only apply for y == 2
-        ttbar = tf.reduce_sum(mask_algo(f, up_, down_) * y_ph * w_ph * batch_scale) # only apply for y == 3
-        # ------------------------------------------------------------------------------------------------------
-
-        # Likelihood
-        exp = mu * Htt + Ztt + W + ttbar
-        sys = zero  # systematic has to be added later
-        obs = Htt + Ztt + W + ttbar
-        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
-    # Nuisance constraint 
-    #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
-
-
-    ####                ####
-    ####    SD LOSS     ####
-    ####                ####
-
-    # POI constraint (full NLL)
-    def get_constraint(nll, params):
-        hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
-        inverse = tf.matrix_inverse(hessian)
-        covariance_poi = inverse[0][0]
-        constraint = tf.sqrt(covariance_poi)
-        return constraint
-
-    sd_loss_statsonly = get_constraint(nll, [mu])
-
+    # TODO
 
     # Combine losses
     loss = ce_loss
-    #loss = sd_loss_statsonly
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
@@ -249,19 +174,13 @@ def main(args):
     validation_steps = int(x_train.shape[0] / batch_size)
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, f_test = session.run([loss, minimize, f],
-                feed_dict={ x_ph: x_train_preproc[idx],\
-                            y_ph: y_train[idx], \
-                            w_ph: w_train[idx], \
-                            batch_scale: 2.0})
-        logging.info("\n\nNN Output: ".format(f_test))
+        loss_train, _ = session.run([loss, minimize],
+                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
+
         if step % validation_steps == 0:
-            logger.info('\nStep / patience: {} / {}'.format(step, patience_count))
+            logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc,\
-                                                    y_ph: y_val, \
-                                                    w_ph: w_val, \
-                                                    batch_scale: 2.0})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
