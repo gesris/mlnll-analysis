@@ -176,9 +176,7 @@ def main(args):
     batch_scale = tf.constant(2.0, tf.float32, shape=[])
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
-    upper_edges = bins[1:]
-    lower_edges = bins[:-1]
-    mask_algo = count_masking
+    upper_edges, lower_edges = bins[1:], bins[:-1]
 
     theta = tf.constant(0.0, tf.float32)
     mu = tf.constant(1.0, tf.float32)
@@ -186,11 +184,7 @@ def main(args):
     zero = tf.constant(0, tf.float32)
     epsilon = tf.constant(1e-9, tf.float32)
 
-    Htt = tf.placeholder(tf.float32)
-    Ztt = tf.placeholder(tf.float32)
-    W = tf.placeholder(tf.float32)
-    ttbar = tf.placeholder(tf.float32)
-    classes = [Htt, Ztt, W, ttbar]
+    classes = []
 
     nll = zero
     nll_statsonly = zero
@@ -199,11 +193,9 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
-
-        # Signals ------------------------------- edit here ------------------------------------------------
-        mask = mask_algo(f, up_, down_)
+        mask = count_masking(f, up_, down_)
         
-        for i, Class in zip(range(0, 4), classes):
+        for i in range(0, 4):
             labels = y_ph
 
             mask_zero = tf.not_equal(labels, i)
@@ -218,10 +210,14 @@ def main(args):
             temp_mask = tf.tensor_scatter_nd_update(labels, indices_zero, update_zero)
             main_mask = tf.tensor_scatter_nd_update(temp_mask, indices_one, update_one)
 
-            Class = tf.reduce_sum(mask_algo(f, up_, down_) * main_mask * w_ph * batch_scale)
-        # ------------------------------------------------------------------------------------------------------
+            classes.append(tf.reduce_sum(count_masking(f, up_, down_) * main_mask * w_ph * batch_scale))
 
         # Likelihood
+        Htt = classes[0]
+        Ztt = classes[1]
+        W = classes[2]
+        ttbar = classes[3]
+        
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
@@ -252,7 +248,6 @@ def main(args):
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
-    #minimize = optimizer.minimize(loss)
     minimize = optimizer.minimize(loss, var_list=train_vars)
 
     # Train
