@@ -195,6 +195,7 @@ def main(args):
 
         mask = count_masking(f, up_, down_)
         
+        # feeding counts into different classes Htt, Ztt, W and ttbar
         for i in range(0, 4):
             labels = y_ph
 
@@ -207,17 +208,21 @@ def main(args):
             indices_one = tf.where(mask_ones)
             update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
 
-            temp_mask = tf.scatter_update(labels, indices_zero, update_zero, use_locking=False)
-            main_mask = tf.scatter_update(temp_mask, indices_one, update_one)
+            temp_mask = labels
+            temp_mask[indices_zero] = update_zero
+            main_mask = temp_mask
+            main_mask[indices_one] = update_one
+
+            #temp_mask = tf.scatter_update(labels, indices_zero, update_zero)
+            #main_mask = tf.scatter_update(temp_mask, indices_one, update_one)
 
             classes.append(tf.reduce_sum(count_masking(f, up_, down_) * main_mask * w_ph * batch_scale))
-
-        # Likelihood
         Htt = classes[0]
         Ztt = classes[1]
         W = classes[2]
         ttbar = classes[3]
 
+        # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
