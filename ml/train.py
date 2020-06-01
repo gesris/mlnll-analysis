@@ -251,7 +251,9 @@ def main(args):
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
     #minimize = optimizer.minimize(loss)
-    minimize = optimizer.minimize(loss, var_list=train_vars)
+    grads_and_vars = optimizer.compute_gradients(loss, train_vars)
+    #minimize = optimizer.minimize(loss, var_list=train_vars)
+    minimize = optimizer.apply_gradients(grads_and_vars)
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
