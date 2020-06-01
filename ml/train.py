@@ -196,7 +196,7 @@ def main(args):
         mask = count_masking(f, up_, down_)
         
         for i in range(0, 4):
-            labels = tf.constant(y_ph, dtype=tf.int32)
+            labels = tf.cast(y_ph, dtype=tf.int32)
 
             mask_zeros = tf.not_equal(labels, i)
             mask_ones = tf.equal(labels, i)
