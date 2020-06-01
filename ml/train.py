@@ -125,8 +125,8 @@ def model_test(x, num_variables, fold, reuse=False):
     logits = tf.add(b2, tf.matmul(l1, w2))
     f = tf.nn.softmax(logits)
 
-    #return (w1, b1, w2, b2), f
-    return logits, f
+    return (w1, b1, w2, b2), f
+
 
 
 def main(args):
@@ -173,7 +173,7 @@ def main(args):
     ####    NLL LOSS    ####
     ####                ####
 
-    batch_scale = tf.placeholder(tf.float32, shape=[])
+    batch_scale = tf.constant(2.0, tf.float32, shape=[])
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
     upper_edges = bins[1:]
@@ -183,7 +183,6 @@ def main(args):
     theta = tf.constant(0.0, tf.float32)
     mu = tf.constant(1.0, tf.float32)
 
-    one = tf.constant(1, tf.float32)
     zero = tf.constant(0, tf.float32)
     epsilon = tf.constant(1e-9, tf.float32)
 
@@ -194,6 +193,7 @@ def main(args):
     classes = [Htt, Ztt, W, ttbar]
 
     nll = zero
+    nll_statsonly = zero
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
         up_ = tf.constant(up, tf.float32)
@@ -226,8 +226,9 @@ def main(args):
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
-    #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+    nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
 
     ####                ####
@@ -242,7 +243,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    sd_loss_statsonly = get_constraint(nll, [mu])
+    sd_loss_statsonly = get_constraint(nll_statsonly, [mu])
 
 
     # Combine losses
@@ -271,7 +272,6 @@ def main(args):
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
-        #logging.info("\n ----------------------------------- \nNN Output: ".format(f_test))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
