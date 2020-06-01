@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from utils import config as cfg
 import tensorflow.compat.v1 as tf
+import tensorflow_probability as tfp
 tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 
