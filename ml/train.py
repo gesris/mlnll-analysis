@@ -199,22 +199,17 @@ def main(args):
         for i in range(0, 4):
             labels = y_ph
 
-            mask_zeros = tf.not_equal(labels, i)
-            mask_ones = tf.equal(labels, i)
+            mask_zeros = tf.not_equal(y_ph, i)
+            mask_ones = tf.equal(y_ph, i)
 
             indices_zero = tf.where(mask_zeros)
-            update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.float32)
-
             indices_one = tf.where(mask_ones)
+
+            update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.float32)
             update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
 
-            temp_mask = labels
-            temp_mask[indices_zero] = update_zero
-            main_mask = temp_mask
-            main_mask[indices_one] = update_one
-
-            #temp_mask = tf.scatter_update(labels, indices_zero, update_zero)
-            #main_mask = tf.scatter_update(temp_mask, indices_one, update_one)
+            temp_mask = tf.scatter_update(y_ph, indices_zero, update_zero)
+            main_mask = tf.scatter_update(temp_mask, indices_one, update_one)
 
             classes.append(tf.reduce_sum(count_masking(f, up_, down_) * main_mask * w_ph * batch_scale))
         Htt = classes[0]
