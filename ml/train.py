@@ -125,7 +125,8 @@ def model_test(x, num_variables, fold, reuse=False):
     logits = tf.add(b2, tf.matmul(l1, w2))
     f = tf.nn.softmax(logits)
 
-    return (w1, b1, w2, b2), f
+    #return (w1, b1, w2, b2), f
+    return logits, f
 
 
 def main(args):
@@ -251,9 +252,7 @@ def main(args):
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
     #minimize = optimizer.minimize(loss)
-    grads_and_vars = optimizer.compute_gradients(loss, train_vars)
-    #minimize = optimizer.minimize(loss, var_list=train_vars)
-    minimize = optimizer.apply_gradients(grads_and_vars)
+    minimize = optimizer.minimize(loss, var_list=train_vars)
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
