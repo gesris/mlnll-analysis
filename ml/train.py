@@ -94,6 +94,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     return xs, ys, ws
 
 
+
 def model(x, num_variables, num_classes, fold, reuse=False):
     hidden_nodes = 100
     with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
@@ -165,7 +166,81 @@ def main(args):
     ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
 
     # Add loss treating systematics
-    # TODO
+    
+    ####                ####
+    ####    NLL LOSS    ####
+    ####                ####
+
+    batch_scale = tf.placeholder(tf.float32, shape=[])
+    bins = cfg.analysis_binning
+    logger.info("\nBins: {}".format(bins))
+    upper_edges = bins[1:]
+    lower_edges = bins[:-1]
+    mask_algo = count_masking
+
+    theta = tf.constant(0.0, tf.float32)
+    mu = tf.constant(1.0, tf.float32)
+
+    one = tf.constant(1, tf.float32)
+    zero = tf.constant(0, tf.float32)
+    epsilon = tf.constant(1e-9, tf.float32)
+
+    Htt = tf.placeholder(tf.float32)
+    Ztt = tf.placeholder(tf.float32)
+    W = tf.placeholder(tf.float32)
+    ttbar = tf.placeholder(tf.float32)
+    classes = [Htt, Ztt, W, ttbar]
+
+    nll = zero
+    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
+        # Bin edges
+        up_ = tf.constant(up, tf.float32)
+        down_ = tf.constant(down, tf.float32)
+
+
+        # Signals ------------------------------- edit here ------------------------------------------------
+        mask = mask_algo(f, up_, down_)
+        
+        for i, Class in zip(range(0, 4), classes):
+            labels = y_ph
+
+            mask_zero = tf.not_equal(labels, i)
+            mask_one = tf.equal(labels, i)
+
+            indices_zero = tf.where(mask_zero)
+            update_zero = tf.zeros(len(indices_zero.numpy()), dtype=tf.int32)
+
+            indices_one = tf.where(mask_one)
+            update_one = tf.ones(len(indices_one.numpy()), dtype=tf.int32)
+
+            temp_mask = tf.tensor_scatter_nd_update(labels, indices_zero, update_zero)
+            main_mask = tf.tensor_scatter_nd_update(temp_mask, indices_one, update_one)
+
+            Class = tf.reduce_sum(mask_algo(f, up_, down_) * main_mask * w_ph * batch_scale)
+        # ------------------------------------------------------------------------------------------------------
+
+        # Likelihood
+        exp = mu * Htt + Ztt + W + ttbar
+        sys = zero  # systematic has to be added later
+        obs = Htt + Ztt + W + ttbar
+        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+    # Nuisance constraint 
+    #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+
+
+    ####                ####
+    ####    SD LOSS     ####
+    ####                ####
+
+    # POI constraint (full NLL)
+    def get_constraint(nll, params):
+        hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
+        inverse = tf.matrix_inverse(hessian)
+        covariance_poi = inverse[0][0]
+        constraint = tf.sqrt(covariance_poi)
+        return constraint
+
+    sd_loss_statsonly = get_constraint(nll, [mu])
 
 
     # Combine losses
