@@ -208,10 +208,10 @@ def main(args):
             mask_one = tf.equal(labels, i)
 
             indices_zero = tf.where(mask_zero)
-            update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.int32)
+            update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.float32)
 
             indices_one = tf.where(mask_one)
-            update_one = tf.ones(tf.size(indices_one), dtype=tf.int32)
+            update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
 
             temp_mask = tf.tensor_scatter_nd_update(labels, indices_zero, update_zero)
             main_mask = tf.tensor_scatter_nd_update(temp_mask, indices_one, update_one)
