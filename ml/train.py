@@ -125,7 +125,7 @@ def model_test(x, num_variables, fold, reuse=False):
     logits = tf.add(b2, tf.matmul(l1, w2))
     f = tf.nn.softmax(logits)
 
-    return logits, f
+    return (w1, b1, w2, b2), f
 
 
 def main(args):
@@ -159,12 +159,12 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     #logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
-    logits, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
+    train_vars, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
-    ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
+    #ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
 
     # Add loss treating systematics
     
@@ -250,7 +250,8 @@ def main(args):
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
-    minimize = optimizer.minimize(loss)
+    #minimize = optimizer.minimize(loss)
+    minimize = optimizer.minimize(loss, var_list=train_vars)
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
