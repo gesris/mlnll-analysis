@@ -198,13 +198,13 @@ def main(args):
         for i in range(0, 4):
             labels = y_ph
 
-            mask_zero = tf.not_equal(labels, i)
-            mask_one = tf.equal(labels, i)
+            mask_zeros = tf.not_equal(labels, i)
+            mask_ones = tf.equal(labels, i)
 
-            indices_zero = tf.where(mask_zero)
+            indices_zero = tf.where(mask_zeros)
             update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.float32)
 
-            indices_one = tf.where(mask_one)
+            indices_one = tf.where(mask_ones)
             update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
 
             temp_mask = tf.tensor_scatter_nd_update(labels, indices_zero, update_zero)
