@@ -196,15 +196,15 @@ def main(args):
         mask = count_masking(f, up_, down_)
         
         for i in range(0, 4):
-            labels = y_ph
+            labels = tf.constant(y_ph, dtype=tf.int32)
 
             mask_zeros = tf.not_equal(labels, i)
             mask_ones = tf.equal(labels, i)
 
-            indices_zero = tf.constant(tf.where(mask_zeros), dtype=tf.int32)
+            indices_zero = tf.where(mask_zeros)
             update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.float32)
 
-            indices_one = tf.constant(tf.where(mask_ones), dtype=tf.int32)
+            indices_one = tf.where(mask_ones)
             update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
 
             temp_mask = tf.scatter_nd(labels, indices_zero, update_zero)
