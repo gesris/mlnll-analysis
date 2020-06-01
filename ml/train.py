@@ -217,7 +217,7 @@ def main(args):
         Ztt = classes[1]
         W = classes[2]
         ttbar = classes[3]
-        
+
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
         obs = Htt + Ztt + W + ttbar
