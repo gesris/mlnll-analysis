@@ -207,8 +207,8 @@ def main(args):
             indices_one = tf.where(mask_ones)
             update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
 
-            temp_mask = tf.tensor_scatter_nd_update(labels, indices_zero, update_zero)
-            main_mask = tf.tensor_scatter_nd_update(temp_mask, indices_one, update_one)
+            temp_mask = tf.scatter_nd(labels, indices_zero, update_zero)
+            main_mask = tf.scatter_nd(temp_mask, indices_one, update_one)
 
             classes.append(tf.reduce_sum(count_masking(f, up_, down_) * main_mask * w_ph * batch_scale))
 
