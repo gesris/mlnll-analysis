@@ -262,7 +262,7 @@ def main(args):
     min_loss = 1e9
     tolerance = 0.001
     step = 0
-    batch_size = 1000
+    batch_size = 10
     validation_steps = int(x_train.shape[0] / batch_size)
 
     # Parameters for plotting loss convergence
