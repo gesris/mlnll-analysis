@@ -311,23 +311,11 @@ def main(args):
         step += 1
     
     ## Plot minimization of loss
-    fig, ax1 = plt.subplots()
-
-    color = 'tab:red'
-    ax1.set_xlabel("Step")
-    ax1.set_ylabel("Train Loss", color=color)
-    ax1.plot(steps_list, loss_train_list, color=color)
-    ax1.tick_params(axis='y', labelcolor=color)
-
-    ax2 = ax1.twinx()
-
-    color = 'tab:blue'
-    ax2.set_ylabel("Validation Loss", color=color)
-    ax2.plot(steps_list, loss_val_list, color=color)
-    ax2.tick_params(axis='y', labelcolor=color)
-
-    fig.tight_layout
-
+    plt.figure()
+    plt.plot(steps_list, loss_train_list)
+    plt.plot(steps_list, loss_val_list)
+    plt.xlabel("Steps")
+    plt.ylabel("Loss")
     plt.savefig("./minimization.png", bbox_inches = "tight")
 
 if __name__ == '__main__':
