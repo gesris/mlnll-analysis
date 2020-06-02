@@ -13,6 +13,8 @@ import tensorflow_probability as tfp
 tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 
+import matplotlib.pyplot as plt
+
 
 import logging
 logger = logging.getLogger('')
@@ -109,7 +111,7 @@ def model(x, num_variables, fold, reuse=False):
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
     logits = tf.add(b3, tf.matmul(l2, w3))
-    f = tf.nn.softmax(logits)
+    f = tf.nn.sigmoid(logits)
 
     return logits, f
 
@@ -123,7 +125,7 @@ def model_test(x, num_variables, fold, reuse=False):
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     logits = tf.add(b2, tf.matmul(l1, w2))
-    f = tf.nn.softmax(logits)
+    f = tf.nn.sigmoid(logits)
 
     return (w1, b1, w2, b2), f
 
@@ -187,7 +189,7 @@ def main(args):
     ####    NLL LOSS    ####
     ####                ####
 
-    batch_scale = tf.constant(2.0, tf.float32, shape=[])
+    batch_scale = tf.placeholder(tf.float32)
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
     upper_edges, lower_edges = bins[1:], bins[:-1]
@@ -261,6 +263,12 @@ def main(args):
     step = 0
     batch_size = 1000
     validation_steps = int(x_train.shape[0] / batch_size)
+
+    # Parameters for plotting loss convergence
+    loss_train_list = []
+    loss_val_list = []
+    steps_list = []
+
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
@@ -268,7 +276,8 @@ def main(args):
                             Htt_mask: Htt_mask_train[idx], \
                             Ztt_mask: Ztt_mask_train[idx], \
                             W_mask: W_mask_train[idx], \
-                            ttbar_mask: ttbar_mask_train[idx]})
+                            ttbar_mask: ttbar_mask_train[idx], \
+                            batch_scale: (4.0 / 3.0)})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
@@ -277,8 +286,14 @@ def main(args):
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
-                            ttbar_mask: ttbar_mask_val})
+                            ttbar_mask: ttbar_mask_val, \
+                            batch_scale: 4.0})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
+
+            ### feed loss values in lists for plot 
+            loss_train_list.append(loss_train)
+            loss_val_list.append(loss_val)
+            steps_list.append(step)
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
@@ -293,7 +308,14 @@ def main(args):
                 break
 
         step += 1
-
+    
+    ## Plot minimization of loss
+    plt.figure()
+    plt.plot(steps_list, loss_train_list)
+    plt.plot(steps_list, loss_val_list)
+    plt.xlabel("Step")
+    plt.ylabel("Loss")
+    plt.savefig("./minimization.png", bbox_inches = "tight")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
