@@ -134,7 +134,6 @@ def main(args):
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    logger.info("Y LABELS: {}".format(y_train[:, 0]))
     
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
@@ -247,7 +246,7 @@ def main(args):
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
-    minimize = optimizer.minimize(loss, var_list=train_vars)
+    minimize = optimizer.minimize(loss)
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
