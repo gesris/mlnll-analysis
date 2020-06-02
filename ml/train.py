@@ -280,7 +280,7 @@ def main(args):
                             ttbar_mask: ttbar_mask_train[idx], \
                             batch_scale: (1 / (1 - test_size))})
 
-        if step % validation_steps//100 == 0:
+        if step % validation_steps//10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
