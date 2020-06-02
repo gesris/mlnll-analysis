@@ -136,13 +136,13 @@ def main(args):
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     
     # Create masks for each class Htt, Ztt, W and ttbar
-    labels = y
+    labels = y  # labels are numbers 0 to 3
     masks = []
     for label in range(0, 4):
         premask = np.not_equal(labels, label)
         mask = []
         for i in range(0, len(labels)):
-            if premask[i]:
+            if premask[i] == True:
                 mask.append(0)
             else:
                 mask.append(1)
