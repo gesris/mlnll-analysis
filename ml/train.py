@@ -323,7 +323,7 @@ def main(args):
 
     color = 'tab:blue'
     ax2.set_ylabel("Validation Loss", color=color)
-    ax2.plot(steps_list, loss_val_list, color=color)
+    ax2.plot(steps_list, loss_train_list, color=color)
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout
