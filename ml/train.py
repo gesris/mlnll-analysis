@@ -135,6 +135,24 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     
+    # Create masks for each class Htt, Ztt, W and ttbar
+    labels = y
+    masks = []
+    for label in range(0, 4):
+        premask = np.not_equal(labels, label)
+        mask = []
+        for i in range(0, len(labels)):
+            if premask[i]:
+                mask.append(0)
+            else:
+                mask.append(1)
+        masks.append(mask)
+    Htt_mask = masks[0]
+    Ztt_mask = masks[1]
+    W_mask = masks[2]
+    ttbar_mask = masks[3]
+    logger.info("HTT MASK: {}".format(Htt_mask))
+
     # Build dataset for systematic shifts
     """
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
