@@ -136,23 +136,19 @@ def main(args):
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     logger.info("Y LABELS: {}".format(y_train[:, 0]))
     
-    # Create masks for each class Htt, Ztt, W and ttbar
-    '''labels = y  # labels are numbers 0 to 3
-    masks = []
-    for label in range(0, 4):
-        premask = np.not_equal(labels, label)
-        mask = []
-        for i in range(0, len(labels)):
-            if premask[i] == True:
-                mask.append(0)
-            else:
-                mask.append(1)
-        masks.append(mask)
-    Htt_mask = masks[0]
-    Ztt_mask = masks[1]
-    W_mask = masks[2]
-    ttbar_mask = masks[3]
-    logger.info("HTT MASK: {}".format(Htt_mask))'''
+    # Build masks for each class Htt, Ztt, W and ttbar
+    y_train_array = np.array(y_train)
+    y_val_array = np.array(y_val)
+
+    Htt_mask_train = y_train_array[:, 0]
+    Ztt_mask_train = y_train_array[:, 1]
+    W_mask_train = y_train_array[:, 2]
+    ttbar_mask_train = y_train_array[:, 3]
+
+    Htt_mask_val = y_val_array[:, 0]
+    Ztt_mask_val = y_val_array[:, 1]
+    W_mask_val = y_val_array[:, 2]
+    ttbar_mask_val = y_val_array[:, 3]
 
     # Build dataset for systematic shifts
     """
@@ -203,7 +199,10 @@ def main(args):
     zero = tf.constant(0, tf.float32)
     epsilon = tf.constant(1e-9, tf.float32)
 
-    classes = []
+    Htt_mask = tf.placeholder(tf.float32)
+    Ztt_mask = tf.placeholder(tf.float32)
+    W_mask = tf.placeholder(tf.float32)
+    ttbar_mask = tf.placeholder(tf.float32)
 
     nll = zero
     nll_statsonly = zero
@@ -212,27 +211,10 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
-        mask = count_masking(f, up_, down_)
-        
-        # feeding counts into different classes Htt, Ztt, W and ttbar
-        for i in range(0, 4):
-            mask_zeros = tf.not_equal(y_ph, i)
-            mask_ones = tf.equal(y_ph, i)
-
-            indices_zero = tf.where(mask_zeros)
-            indices_one = tf.where(mask_ones)
-
-            update_zero = tf.zeros(tf.size(indices_zero), dtype=tf.float32)
-            update_one = tf.ones(tf.size(indices_one), dtype=tf.float32)
-
-            temp_mask = tf.scatter_nd_update(y_ph, indices_zero, update_zero)
-            main_mask = tf.scatter_nd_update(temp_mask, indices_one, update_one)
-
-            classes.append(tf.reduce_sum(count_masking(f, up_, down_) * main_mask * w_ph * batch_scale))
-        Htt = classes[0]
-        Ztt = classes[1]
-        W = classes[2]
-        ttbar = classes[3]
+        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale)
+        Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale)
+        W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
+        ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -283,12 +265,20 @@ def main(args):
     while True:
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
+                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx],\
+                            Htt_mask: Htt_mask_train[idx], \
+                            Ztt_mask: Ztt_mask_train[idx], \
+                            W_mask: W_mask_train[idx], \
+                            ttbar_mask: ttbar_mask_train[idx]})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
+                            Htt_mask: Htt_mask_val, \
+                            Ztt_mask: Ztt_mask_val, \
+                            W_mask: W_mask_val, \
+                            ttbar_mask: ttbar_mask_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
