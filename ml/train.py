@@ -262,7 +262,7 @@ def main(args):
     min_loss = 1e9
     tolerance = 0.001
     step = 0
-    batch_size = 10
+    batch_size = 1000
     validation_steps = int(x_train.shape[0] / batch_size)
 
     # Parameters for plotting loss convergence
@@ -280,7 +280,7 @@ def main(args):
                             ttbar_mask: ttbar_mask_train[idx], \
                             batch_scale: (1 / (1 - test_size))})
 
-        if step % validation_steps == 0:
+        if step % validation_steps//100 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
