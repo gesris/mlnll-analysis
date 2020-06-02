@@ -177,7 +177,7 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     #logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
-    train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
+    train_vars, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
@@ -270,7 +270,7 @@ def main(args):
     loss_val_list = []
     steps_list = []
 
-    for epoch in range(0, 10000):
+    for epoch in range(0, 1000):
         #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
@@ -280,7 +280,7 @@ def main(args):
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
 
-        if step % 100 == 0:
+        if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
