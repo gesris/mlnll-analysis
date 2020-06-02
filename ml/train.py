@@ -134,7 +134,8 @@ def model_test(x, num_variables, fold, reuse=False):
 def main(args):
     # Build nominal dataset
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
-    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
+    test_size = 0.25    # has to be used later for correct batch scale
+    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     
     # Build masks for each class Htt, Ztt, W and ttbar
@@ -277,7 +278,7 @@ def main(args):
                             Ztt_mask: Ztt_mask_train[idx], \
                             W_mask: W_mask_train[idx], \
                             ttbar_mask: ttbar_mask_train[idx], \
-                            batch_scale: (4.0 / 3.0)})
+                            batch_scale: (1 / (1 - test_size))})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
@@ -287,7 +288,7 @@ def main(args):
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
-                            batch_scale: 4.0})
+                            batch_scale: (1 / test_size)})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             ### feed loss values in lists for plot 
