@@ -270,7 +270,7 @@ def main(args):
     loss_val_list = []
     steps_list = []
 
-    for epoch in range(0, 1000):
+    for epoch in range(0, 10000):
         idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx],\
@@ -323,7 +323,7 @@ def main(args):
 
     color = 'tab:blue'
     ax2.set_ylabel("Validation Loss", color=color)
-    ax2.plot(steps_list, loss_train_list, color=color)
+    ax2.plot(steps_list, loss_val_list, color=color)
     ax2.tick_params(axis='y', labelcolor=color)
 
     fig.tight_layout
