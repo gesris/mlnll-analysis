@@ -279,13 +279,6 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
-    
-    '''                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx],\
-                            Htt_mask: Htt_mask_train[idx], \
-                            Ztt_mask: Ztt_mask_train[idx], \
-                            W_mask: W_mask_train[idx], \
-                            ttbar_mask: ttbar_mask_train[idx], \
-                            batch_scale: (1 / (1 - test_size))})'''
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
