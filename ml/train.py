@@ -271,16 +271,23 @@ def main(args):
     steps_list = []
 
     for epoch in range(0, 10000):
-        idx = np.random.choice(x_train_preproc.shape[0], batch_size)
+        #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx],\
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
+                            Htt_mask: Htt_mask_train, \
+                            Ztt_mask: Ztt_mask_train, \
+                            W_mask: W_mask_train, \
+                            ttbar_mask: ttbar_mask_train, \
+                            batch_scale: (1 / (1 - test_size))})
+    
+    '''                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx],\
                             Htt_mask: Htt_mask_train[idx], \
                             Ztt_mask: Ztt_mask_train[idx], \
                             W_mask: W_mask_train[idx], \
                             ttbar_mask: ttbar_mask_train[idx], \
-                            batch_scale: (1 / (1 - test_size))})
+                            batch_scale: (1 / (1 - test_size))})'''
 
-        if step % validation_steps//10 == 0:
+        if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
