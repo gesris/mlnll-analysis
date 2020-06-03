@@ -97,25 +97,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     return xs, ys, ws
 
 
-
 def model(x, num_variables, fold, reuse=False):
-    hidden_nodes = 100
-    with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
-        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
-        b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
-        b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
-        b3 = tf.get_variable('b3', shape=(1), initializer=tf.constant_initializer())
-
-    l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
-    l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
-    logits = tf.add(b3, tf.matmul(l2, w3))
-    f = tf.nn.sigmoid(logits)
-
-    return logits, f
-
-def model_test(x, num_variables, fold, reuse=False):
     hidden_nodes = 100
     with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
         w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
@@ -177,7 +159,7 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     #logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
-    train_vars, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
+    train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
 
     # Add CE loss
     y_ph = tf.placeholder(tf.float32)
