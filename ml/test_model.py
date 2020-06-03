@@ -134,10 +134,10 @@ def main(args):
                                     W_mask: W_mask_feed, \
                                     ttbar_mask: ttbar_mask_feed})
 
-    logger.info("\n\nHtt Counts: {]".format(Htt_counts))
-    logger.info("Ztt Counts: {]".format(Ztt_counts))
-    logger.info("W Counts: {]".format(W_counts))
-    logger.info("ttbar Counts: {]\n\n".format(ttbar_counts))
+    logger.info("\n\nHtt Counts: {}".format(Htt_counts))
+    logger.info("Ztt Counts: {}".format(Ztt_counts))
+    logger.info("W Counts: {}".format(W_counts))
+    logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
 
 
 if __name__ == '__main__':
