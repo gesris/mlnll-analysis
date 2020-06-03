@@ -143,19 +143,12 @@ def application(workdir, folder, filename):
 
     # Load models
     def load_model(x, fold):
-        #_, f = model(x, len(cfg.ml_variables), fold)
-        #variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='model_fold{}'.format(fold))
-        #path = tf.train.latest_checkpoint(os.path.join(workdir, 'model_fold{}'.format(fold)))
-        #print('Load variables for fold {} from {}'.format(fold, path))
-        #saver = tf.train.Saver(variables)
-        #saver.restore(session, path)
-        
         _, f = model(x, len(cfg.ml_variables), fold)
-        path = tf.train.latest_checkpoint(os.path.join(args.workdir, 'model_fold{}'.format(fold)))
-        logger.debug('Load model {}'.format(path))
-        saver = tf.train.Saver()
+        variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='model_fold{}'.format(fold))
+        path = tf.train.latest_checkpoint(os.path.join(workdir, 'model_fold{}'.format(fold)))
+        print('Load variables for fold {} from {}'.format(fold, path))
+        saver = tf.train.Saver(variables)
         saver.restore(session, path)
-
         return f
 
     x_ph = tf.placeholder(tf.float32)
