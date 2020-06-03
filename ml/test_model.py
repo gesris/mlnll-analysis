@@ -86,6 +86,7 @@ def main(args):
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
 
+    logger.info("\n\n laels: {}".format(y))
     ####
     #### Prepare masking
     ####
