@@ -38,9 +38,13 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def plot(signal, background, category, bins, bins_center):
     plt.figure(figsize=(7, 6))
-    plt.hist(bins_center, weights= [signal[0], signal[1]], bins= bins, histtype="step", lw=2, label="Signal")
+    plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2, label="Signal")
     for i in range(0, len(background)):
-        plt.hist(bins_center, weights= [background[i][0], background[i][1]], bins= bins, histtype="step", lw=2, label="{}".format(category[i]))
+        plt.hist(bins_center, weights= background[i], bins= bins, histtype="step", lw=2, label="{}".format(category[i]))
+    plt.plot([0], [0], ls="-", lw=2, color="C0", label="Htt")
+    plt.plot([0], [0], ls="-", lw=2, color="C1", label="Ztt")
+    plt.plot([0], [0], ls="--", lw=2, color="C1", label="W")
+    plt.plot([0], [0], ls=":", lw=2, color="C1", label="ttbar")
     plt.legend(loc= "lower center")
     plt.xlabel("Counts")
     plt.ylabel("# Events")
@@ -134,7 +138,7 @@ def main(args):
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
 
-    plot(Htt, [Ztt, W, ttbar], background_category, bins)
+    plot(Htt, [Ztt, W, ttbar], background_category, bins, bins_center)
 
 
 if __name__ == '__main__':
