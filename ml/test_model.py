@@ -112,16 +112,21 @@ def main(args):
     
     bins = cfg.analysis_binning
     upper_edges, lower_edges = bins[1:], bins[:-1]
+    
+    Htt = []
+    Ztt = []
+    W = []
+    ttbar = []
 
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
-
-        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph)
-        Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph)
-        W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph)
-        ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph)
+        
+        Htt.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph))
+        Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph))
+        W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph))  
+        ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph))
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
