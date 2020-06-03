@@ -14,7 +14,7 @@ friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFi
 ml_score_base = ['/home/wunsch/workspace/mlnll-analysis/output_ml/MLScores']
 
 # File list
-files = {
+'''files = {
     'singlemuon': [
         'SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD',
         'SingleMuon_Run2018B_17Sep2018v1_13TeV_MINIAOD',
@@ -66,6 +66,30 @@ files = {
         'ZHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2',
         'WminusHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2',
         'WplusHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2'
+        ]
+    }'''
+
+files = {
+    'singlemuon': [
+        'SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD'
+        ],
+    'wjets': [
+        'W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2'
+        ],
+    'dy': [
+        'DY1JetsToLLM50_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2'
+        ],
+    'tt': [
+        'TTTo2L2Nu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1'
+        ],
+    'vv': [
+        'WW_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_pythia8_v2'
+        ],
+    'ggh': [
+        'GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2'
+        ],
+    'qqh': [
+        'VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1'
         ]
     }
 
