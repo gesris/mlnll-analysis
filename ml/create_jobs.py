@@ -75,7 +75,7 @@ def main(args):
     modelpath_fold0 = os.path.join(args.workdir, 'model_fold0.h5')
     modelpath_fold1 = os.path.join(args.workdir, 'model_fold1.h5')
     arguments = []
-    for process in cfg.files:
+    for process in cfg.files[0:10]: #[0:10] für schnellere effizienz! später löschen
         for filename in cfg.files[process]:
             for folder in foldernames:
                 # Check whether the input file and folder exist
@@ -131,7 +131,7 @@ queue arguments from arguments.txt
 '''.format(os.path.join(os.getcwd(), 'ml/job.sh')))
 
     # Test a single job
-    application(*arguments[-1])
+    application(*arguments[-1]) # wichtig fürs testen
 
 
 def application(workdir, folder, filename):
@@ -143,7 +143,7 @@ def application(workdir, folder, filename):
 
     # Load models
     def load_model(x, fold):
-        _, f = model(x, len(cfg.ml_variables), len(cfg.ml_classes), fold)
+        _, f = model(x, len(cfg.ml_variables), fold)
         variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='model_fold{}'.format(fold))
         path = tf.train.latest_checkpoint(os.path.join(workdir, 'model_fold{}'.format(fold)))
         print('Load variables for fold {} from {}'.format(fold, path))
@@ -168,29 +168,29 @@ def application(workdir, folder, filename):
     inputs  = np.vstack([np.array(npy[k], dtype=np.float32) for k in cfg.ml_variables]).T
 
     # Apply model of fold 0 to data of fold 1 and v.v.
-    mask_fold0 = npy['event'] % 2 == 0
+    mask_fold0 = npy['event'] % 2 == 0 #ACHTUNG
     mask_fold1 = npy['event'] % 2 == 1
     if np.sum(mask_fold0) + np.sum(mask_fold1) != num_entries:
         raise Exception('Events in folds dont add up to expected total')
 
     outputs_fold0 = session.run(model_fold0,
             feed_dict={x_ph: preproc_fold0.transform(inputs[mask_fold0])})
-    scores_fold0 = np.max(outputs_fold0, axis=1)
-    indices_fold0 = np.argmax(outputs_fold0, axis=1)
+    scores_fold0 = outputs_fold0 #ACHTUNG
+    #indices_fold0 = np.argmax(outputs_fold0, axis=1)
 
     outputs_fold1 = session.run(model_fold1,
             feed_dict={x_ph: preproc_fold1.transform(inputs[mask_fold1])})
-    scores_fold1 = np.max(outputs_fold1, axis=1)
-    indices_fold1 = np.argmax(outputs_fold1, axis=1)
+    scores_fold1 = outputs_fold1 #ACHTUNG
+    #indices_fold1 = np.argmax(outputs_fold1, axis=1)
 
     # Merge scores back together
     scores = np.zeros(npy['event'].shape, dtype=np.float32)
-    scores[mask_fold0] = scores_fold0
+    scores[mask_fold0] = scores_fold0 #ACHTUNG
     scores[mask_fold1] = scores_fold1
 
-    indices = np.zeros(npy['event'].shape, dtype=np.float32)
-    indices[mask_fold0] = indices_fold0
-    indices[mask_fold1] = indices_fold1
+    #indices = np.zeros(npy['event'].shape, dtype=np.float32)
+    #indices[mask_fold0] = indices_fold0 #ACHTUNG
+    #indices[mask_fold1] = indices_fold1
 
     # Write output file
     path = os.path.join(workdir, 'MLScores', filename, folder + '.root')
@@ -202,12 +202,12 @@ def application(workdir, folder, filename):
     dir_.cd()
     t = ROOT.TTree('ntuple', 'ntuple')
     val = array('f', [-999])
-    idx = array('f', [-999])
+    #idx = array('f', [-999])
     bval = t.Branch('ml_score', val, 'ml_score/F')
-    bidx = t.Branch('ml_index', idx, 'ml_index/F')
+    #bidx = t.Branch('ml_index', idx, 'ml_index/F')
     for i in range(scores.shape[0]):
         val[0] = scores[i]
-        idx[0] = indices[i]
+        #idx[0] = indices[i]
         t.Fill()
     t.Write()
     f.Close()
