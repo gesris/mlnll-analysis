@@ -90,7 +90,7 @@ def main(args):
     #### Prepare masking
     ####
 
-    y_array = np.arry(y)
+    y_array = np.array(y)
 
     Htt_mask_feed = y_array[:, 0]
     Ztt_mask_feed = y_array[:, 1]
