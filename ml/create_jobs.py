@@ -75,7 +75,7 @@ def main(args):
     modelpath_fold0 = os.path.join(args.workdir, 'model_fold0.h5')
     modelpath_fold1 = os.path.join(args.workdir, 'model_fold1.h5')
     arguments = []
-    for process in cfg.files[0]: #[0:10] für schnellere effizienz! später löschen
+    for process in cfg.files: #[0:10] für schnellere effizienz! später löschen
         for filename in cfg.files[process]:
             for folder in foldernames:
                 # Check whether the input file and folder exist
