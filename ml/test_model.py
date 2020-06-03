@@ -104,7 +104,7 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
-    _, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
+    _, f = model(x_ph, len(cfg.ml_variables), args.fold)
     path = tf.train.latest_checkpoint(os.path.join(args.workdir, 'model_fold{}'.format(args.fold)))
     logger.debug('Load model {}'.format(path))
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
