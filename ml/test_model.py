@@ -36,28 +36,15 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def plot(c, tag):
-    plt.figure(figsize=(7,6))
-    axis = plt.gca()
-    for i in range(c.shape[0]):
-        for j in range(c.shape[1]):
-            axis.text(
-                i + 0.5,
-                j + 0.5,
-                '{:.2f}'.format(c[i, -1 - j]),
-                ha='center',
-                va='center')
-    q = plt.pcolormesh(np.transpose(c)[::-1], cmap='Wistia')
-    plt.xlabel('True')
-    plt.ylabel('Predicted')
-    num_classes = len(cfg.ml_classes)
-    plt.xticks(np.array(range(num_classes)) + 0.5,
-            cfg.ml_classes, rotation='vertical')
-    plt.yticks(np.array(range(num_classes)) + 0.5,
-            cfg.ml_classes[::-1], rotation='horizontal')
-    plt.colorbar()
-    plt.savefig(os.path.join(args.workdir, 'confusion_{}_fold{}.png'.format(tag, args.fold)), bbox_inches='tight')
-
+def plot(signal, background, category, bins, bins_center):
+    plt.figure(figsize=(7, 6))
+    plt.hist(bins_center, weights= [signal[0], signal[1]], bins= bins, histtype="step", lw=2, label="Signal")
+    for i in range(0, len(background)):
+        plt.hist(bins_center, weights= [background[i][0], background[i][1]], bins= bins, histtype="step", lw=2, label="{}".format(category[i]))
+    plt.legend(loc= "lower center")
+    plt.xlabel("Counts")
+    plt.ylabel("# Events")
+    plt.savefig("./histogram.png", bbox_inches = "tight")
 
 @tf.custom_gradient
 def count_masking(x, up, down):
@@ -112,7 +99,10 @@ def main(args):
     
     bins = cfg.analysis_binning
     upper_edges, lower_edges = bins[1:], bins[:-1]
-    
+    bins_center = []
+    for i in range(0, len(bins) - 1):
+        bins_center.append(bins[i] + (bins[i + 1] - bins[i]) / 2)
+    background_category = ['Ztt', 'W', 'ttbar']
     Htt = []
     Ztt = []
     W = []
@@ -143,6 +133,8 @@ def main(args):
     logger.info("Ztt Counts: {}".format(Ztt_counts))
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
+
+    plot(Htt, [Ztt, W, ttbar], background_category, bins)
 
 
 if __name__ == '__main__':
