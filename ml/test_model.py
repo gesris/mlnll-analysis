@@ -93,10 +93,10 @@ def main(args):
 
     y_array = np.array(y)
 
-    Htt_mask_feed = y_array[:, 0]
-    Ztt_mask_feed = y_array[:, 1]
-    W_mask_feed = y_array[:, 2]
-    ttbar_mask_feed = y_array[:, 3]
+    Htt_mask_feed = np.where(y_array == 0, 1, 0)
+    Ztt_mask_feed = np.where(y_array == 1, 1, 0)
+    W_mask_feed = np.where(y_array == 2, 1, 0)
+    ttbar_mask_feed = np.where(y_array == 3, 1, 0)
 
     x_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
