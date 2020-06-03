@@ -17,6 +17,7 @@ from train import build_dataset, model_test
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
+mpl.rc("font", size=16, family="serif")
 
 
 import logging
@@ -38,14 +39,15 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def plot(signal, background, category, bins, bins_center):
     plt.figure(figsize=(7, 6))
-    plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2, label="Signal")
-    for i in range(0, len(background)):
-        plt.hist(bins_center, weights= background[i], bins= bins, histtype="step", lw=2, label="{}".format(category[i]))
+    plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2)
+    plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2)
+    plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, ls="--")
+    plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, ls=":")
     plt.plot([0], [0], ls="-", lw=2, color="C0", label="Htt")
     plt.plot([0], [0], ls="-", lw=2, color="C1", label="Ztt")
     plt.plot([0], [0], ls="--", lw=2, color="C1", label="W")
     plt.plot([0], [0], ls=":", lw=2, color="C1", label="ttbar")
-    plt.legend(loc= "lower center")
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("Counts")
     plt.ylabel("# Events")
     plt.savefig("./histogram.png", bbox_inches = "tight")
@@ -78,7 +80,6 @@ def main(args):
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
 
-    logger.info("\n\n laels: {}".format(y))
     ####
     #### Prepare masking
     ####
@@ -96,6 +97,11 @@ def main(args):
     Ztt_mask = tf.placeholder(tf.float32)
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
+
+    
+    ####
+    #### Load model
+    ####
 
     _, f = model_test(x_ph, len(cfg.ml_variables), args.fold)
     path = tf.train.latest_checkpoint(os.path.join(args.workdir, 'model_fold{}'.format(args.fold)))
