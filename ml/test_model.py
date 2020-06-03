@@ -50,6 +50,7 @@ def plot(signal, background, category, bins, bins_center):
     plt.ylabel("# Events")
     plt.savefig("./histogram.png", bbox_inches = "tight")
 
+
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
@@ -138,7 +139,7 @@ def main(args):
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
 
-    plot(Htt, [Ztt, W, ttbar], background_category, bins, bins_center)
+    plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts], background_category, bins, bins_center)
 
 
 if __name__ == '__main__':
