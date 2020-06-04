@@ -191,8 +191,8 @@ def application(workdir, folder, filename):
 
     # Merge scores back together
     scores = np.zeros(npy['event'].shape, dtype=np.float32)
-    scores[mask_fold0] = scores_fold1 #ACHTUNG
-    scores[mask_fold1] = scores_fold0
+    scores[mask_fold0] = scores_fold0[:, 0] #ACHTUNG
+    scores[mask_fold1] = scores_fold1[:, 0]
 
     #indices = np.zeros(npy['event'].shape, dtype=np.float32)
     #indices[mask_fold0] = indices_fold0 #ACHTUNG
