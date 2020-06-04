@@ -183,8 +183,10 @@ def application(workdir, folder, filename):
     scores_fold1 = outputs_fold1 #ACHTUNG
     #indices_fold1 = np.argmax(outputs_fold1, axis=1)
 
-    logger.info("Mask Fold: {}\n length: {}".format(mask_fold0, len(mask_fold0)))
-    logger.info("Scores Fold: {}\n length: {}".format(scores_fold0, len(scores_fold0)))
+    logger.info("Mask Fold 0 length: {}".format(len(mask_fold0)))
+    logger.info("Mask Fold 1 length: {}".format(len(mask_fold1)))
+    logger.info("Scores Fold 0 length: {}".format(len(scores_fold0)))
+    logger.info("Scores Fold 1 length: {}".format(len(scores_fold1)))
 
     # Merge scores back together
     scores = np.zeros(npy['event'].shape, dtype=np.float32)
