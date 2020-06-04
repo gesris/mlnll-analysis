@@ -186,6 +186,7 @@ def application(workdir, folder, filename):
     logger.info("Mask Fold 0 length: {}".format(len(mask_fold0)))
     logger.info("Mask Fold 1 length: {}".format(len(mask_fold1)))
     logger.info("Scores Fold 0 length: {}".format(len(scores_fold0)))
+    logger.info("Scores Fold 0: {}".format(scores_fold0[0]))
     logger.info("Scores Fold 1 length: {}".format(len(scores_fold1)))
 
     # Merge scores back together
