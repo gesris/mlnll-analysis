@@ -32,6 +32,6 @@ source utils/setup_lcg.sh
 
 echo "PYTHONPATH: " $PYTHONPATH
 
-python ml/job.py $WORKDIR $FOLDER $FILENAME
+python3.6 ml/job.py $WORKDIR $FOLDER $FILENAME
 
 echo ">>> End job"
