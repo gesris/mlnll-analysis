@@ -30,6 +30,7 @@ cd $SRCDIR
 echo "PWD:" $PWD
 source utils/setup_lcg.sh
 
+echo "USER: " && whoami
 echo "PYTHONPATH: " $PYTHONPATH
 
 python3.6 ml/job.py $WORKDIR $FOLDER $FILENAME
