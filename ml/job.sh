@@ -32,7 +32,8 @@ source utils/setup_lcg.sh
 
 echo "USER: " && whoami
 echo "PYTHONPATH: " $PYTHONPATH
+echo "Python Verision: " && python --version
 
-python3.6 ml/job.py $WORKDIR $FOLDER $FILENAME
+python ml/job.py $WORKDIR $FOLDER $FILENAME
 
 echo ">>> End job"
