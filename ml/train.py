@@ -13,8 +13,9 @@ import tensorflow_probability as tfp
 tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 
+import sys
+sys.path.append('/home/gristo/.local/lib/python3.6/site-packages')
 import matplotlib.pyplot as plt
-
 
 import logging
 logger = logging.getLogger('')
