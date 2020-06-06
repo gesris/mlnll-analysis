@@ -30,12 +30,6 @@ cd $SRCDIR
 echo "PWD:" $PWD
 source utils/setup_lcg.sh
 
-echo "USER: " && whoami
-echo " "
-echo "PYTHONPATH: " $PYTHONPATH
-echo " "
-echo "Python Verision: " && python --version
-
 python ml/job.py $WORKDIR $FOLDER $FILENAME
 
 echo ">>> End job"

@@ -121,7 +121,7 @@ executable = {}
 output = out/$(cluster).$(Process).out
 error = err/$(cluster).$(Process).err
 log = log/$(cluster).$(Process).log
-Requirements = ( (TARGET.Cloudsite =!= "blade") && (TARGET.ProvidesEKPResources == True) )
+Requirements = ( (TARGET.Cloudsite =!= "blade") && (TARGET.ProvidesEKPResources == True) && (HAS_MODULES =?= TRUE) )
 +RequestWalltime = 1800
 RequestMemory = 2000
 RequestCpus = 1
