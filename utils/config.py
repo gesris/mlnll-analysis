@@ -301,8 +301,8 @@ control_variables = list(binning.keys())
 
 ml_variables = ['njets', 'nbtag', 'ptvis', 'pt_tt', 'mjj', 'jdeta', 'dijetpt', 'met', 'm_vis', 'm_sv_puppi']
 ml_weight = 'training_weight'
-#ml_classes = ['htt', 'ztt', 'w', 'tt']
-ml_classes = 'nll'
+ml_classes = ['htt', 'ztt', 'w', 'tt']
+#ml_classes = 'nll'
 
 # Analysis categories
 
