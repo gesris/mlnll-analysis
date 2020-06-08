@@ -1,8 +1,8 @@
 import os
 import argparse
 
-import Dumbledraw.dumbledraw as dd
-import Dumbledraw.styles as styles
+from Dumbledraw.Dumbledraw import dumbledraw as dd
+from Dumbledraw.Dumbledraw import styles as styles
 
 from utils import Reader
 from utils.config import control_variables, analysis_variable, analysis_categories
