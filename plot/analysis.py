@@ -33,7 +33,8 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def main(args):
     channel_categories = {
-        "mt": [str(i) for i in range(len(cfg.ml_classes))],
+        #"mt": [str(i) for i in range(len(cfg.ml_classes))],
+        "mt": [str(i) for i in range(len(cfg.ml_output))],
     }
     channel_dict = {
         "ee": "ee",
@@ -43,7 +44,8 @@ def main(args):
         "mt": "#mu#tau_{h}",
         "tt": "#tau_{h}#tau_{h}"
     }
-    category_dict = {str(i): c for i, c in enumerate(cfg.ml_classes)}
+    #category_dict = {str(i): c for i, c in enumerate(cfg.ml_classes)}
+    category_dict = {str(i): c for i, c in enumerate(cfg.ml_output)}
 
     bkg_processes = [
         "QCD",
