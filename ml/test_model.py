@@ -148,6 +148,8 @@ def main(args):
 
     plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts], background_category, bins, bins_center)
 
+    # histogramme mit matplotlib machen!
+    # abbrechen lassen, wenn counts mit der aussage von TF nicht übereinstimmen
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
