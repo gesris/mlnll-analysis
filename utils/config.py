@@ -11,8 +11,8 @@ ntuples_base = path.join(basepath, 'ntuples')
 
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
-#ml_score_base = ['/home/wunsch/workspace/mlnll-analysis/output_ml/MLScores']
-ml_score_base = ['/home/gristo/mlnll-analysis/output/test1/MLScores']
+ml_score_base = ['/home/wunsch/workspace/mlnll-analysis/output_ml/MLScores']
+#ml_score_base = ['/home/gristo/mlnll-analysis/output/test1/MLScores']
 
 # File list
 files = {
@@ -302,7 +302,7 @@ control_variables = list(binning.keys())
 ml_variables = ['njets', 'nbtag', 'ptvis', 'pt_tt', 'mjj', 'jdeta', 'dijetpt', 'met', 'm_vis', 'm_sv_puppi']
 ml_weight = 'training_weight'
 ml_classes = ['htt', 'ztt', 'w', 'tt']
-#ml_output = ['nll']
+ml_output = ['nll']
 
 # Analysis categories
 
