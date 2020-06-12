@@ -251,7 +251,7 @@ def main(args):
     loss_val_list = []
     steps_list = []
 
-    for epoch in range(0, 1000):
+    for epoch in range(0, 10000):
         #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
