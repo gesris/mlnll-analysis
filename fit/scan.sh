@@ -11,6 +11,6 @@ combineTool.py -M MultiDimFit \
     --algo grid \
     -P r \
     --floatOtherPOIs 1 \
-    --points 100 \
-    --setParameterRanges r=0,20 \
+    --points 30 \
+    --setParameterRanges r=0,2 \
     -n .Scan
