@@ -3,10 +3,10 @@
 WORKDIR=$1
 
 # Postprocess shapes for process estimations
-shapes/postproc.sh $WORKDIR
+#shapes/postproc.sh $WORKDIR
 
 # Control plots
-plot/control.sh $WORKDIR
+#plot/control.sh $WORKDIR
 
 # Create datacards and workspacd
 fit/convert2ch.sh $WORKDIR
