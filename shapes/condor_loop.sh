@@ -20,7 +20,7 @@ while $run; do
         sh /work/gristo/mlnll-analysis/condor_release.sh
     fi
 
-    condor_q
+    condor_q | head -5
     
     # Breakup sequence after too many loops
     #step=$(($step + 1))
