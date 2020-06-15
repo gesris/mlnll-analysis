@@ -17,6 +17,8 @@ while $run; do
         sh /work/gristo/mlnll-analysis/condor_release.sh
     fi
 
+    condor_q
+
     # Breakup sequence after too many loops
     #step=$(($step + 1))
     #if [ $step = 1000]
