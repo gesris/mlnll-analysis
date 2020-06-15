@@ -10,13 +10,13 @@ step=0
 while $run; do
     sleep 120s
     if [ $(ls -l /work/gristo/mlnll-analysis/$WORKDIR/MLScores_jobs/err | grep err | wc -l) =  1126 ]; then
-        echo "## ------------ All jobs done ------------- ##"
+        printf "\n\n## --------------  All jobs done  --------------- ##\n\n"
         run=false
         break
     fi
 
     if [ $(condor_q | grep HOLD | wc -l) = 1 ]; then
-        echo "## ------- Releasing jobs from HOLD ------- ##"
+        printf "\n\n## ---------  Releasing jobs from HOLD  --------- ##\n\n"
         sh /work/gristo/mlnll-analysis/condor_release.sh
     fi
 
