@@ -9,7 +9,7 @@ step=0
 
 while $run; do
     sleep 120s
-    if [ $(ls -l /work/gristo/mlnll-analysis/$WORKDIR_shapes/shapes_jobs/err | grep err | wc -l) =  191 ]; then
+    if [ $(ls -l /work/gristo/mlnll-analysis/$WORKDIR/shapes_jobs/err | grep err | wc -l) =  191 ]; then
         echo "## ------------ All jobs done ------------- ##"
         run=false
         break
