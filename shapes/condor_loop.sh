@@ -2,14 +2,17 @@
 
 # While loop counting sum of elements in directory for automatization
 
+WORKDIR=$1
+
 run=true
 step=0
 
 while $run; do
     sleep 120s
-    if [ $(ls -l /work/gristo/mlnll-analysis/output/run7_shapes/shapes_jobs/err | grep err | wc -l) =  191 ]; then
+    if [ $(ls -l /work/gristo/mlnll-analysis/$WORKDIR_shapes/shapes_jobs/err | grep err | wc -l) =  191 ]; then
         echo "## ------------ All jobs done ------------- ##"
         run=false
+        break
     fi
 
     if [ $(condor_q | grep HOLD | wc -l) = 1 ]; then
