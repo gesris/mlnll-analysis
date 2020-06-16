@@ -199,7 +199,7 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        print(Htt, Ztt, W, ttbar)
+        logging.info("\n\nHTT: {}".format(Htt))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
