@@ -187,6 +187,9 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
+    # arrays to check counts
+    Htt_array = tf.placeholder(tf.float32)
+
     nll = zero
     nll_statsonly = zero
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
@@ -199,7 +202,7 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        
+        Htt_array = tf.stack(Htt_array, Htt)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
