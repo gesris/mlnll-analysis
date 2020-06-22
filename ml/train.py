@@ -188,7 +188,10 @@ def main(args):
     ttbar_mask = tf.placeholder(tf.float32)
 
     # arrays to check counts
-    events_array = []
+    Htt_array = []
+    Ztt_array = []
+    W_array = []
+    ttbar_array = []
 
     nll = zero
     nll_statsonly = zero
@@ -202,10 +205,10 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        #events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale))
-        #events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale))
-        events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale))
-        #events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale))
+        Htt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale))
+        Ztt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale))
+        W_array.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale))
+        ttbar_array.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -261,14 +264,17 @@ def main(args):
 
     for epoch in range(0, 10000):
         #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, Htt_array_ = session.run([loss, minimize, events_array],
+        loss_train, _, Htt_array_, Ztt_array_, W_array_, ttbar_array_ = session.run([loss, minimize, Htt_array, Ztt_array, W_array, ttbar_array],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
-        logger.info("\n\nTotal events: {}".format(np.sum(Htt_array_)))
+        logger.info("\n\nTotal Htt events: {}".format(np.sum(Htt_array_)))
+        logger.info("\n\nTotal Ztt events: {}".format(np.sum(Ztt_array_)))
+        logger.info("\n\nTotal W events: {}".format(np.sum(W_array_)))
+        logger.info("\n\nTotal ttbar events: {}".format(np.sum(ttbar_array_)))
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
