@@ -265,7 +265,7 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
-        logger.info("\n\nHTT: {}".format(tf.squeeze(tf.stack(Htt_array_))))
+        logger.info("\n\nHTT: {}".format(tf.stack(Htt_array_)))
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
