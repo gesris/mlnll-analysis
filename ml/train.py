@@ -205,10 +205,10 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        Htt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * batch_scale))
-        Ztt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * batch_scale))
-        W_array.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * batch_scale))
-        ttbar_array.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * batch_scale))
+        Htt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * w_ph * Htt_mask * batch_scale))
+        Ztt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * w_ph * Ztt_mask * batch_scale))
+        W_array.append(tf.reduce_sum(count_masking(f, up_, down_) * w_ph * W_mask * batch_scale))
+        ttbar_array.append(tf.reduce_sum(count_masking(f, up_, down_) * w_ph * ttbar_mask * batch_scale))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
