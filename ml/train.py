@@ -205,10 +205,10 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        Htt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale))
-        Ztt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale))
-        W_array.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale))
-        ttbar_array.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale))
+        Htt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * batch_scale))
+        Ztt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * batch_scale))
+        W_array.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * batch_scale))
+        ttbar_array.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * batch_scale))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -272,9 +272,10 @@ def main(args):
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
         logger.info("\n\nTotal Htt events: {}".format(np.sum(Htt_array_)))
-        logger.info("\n\nTotal Ztt events: {}".format(np.sum(Ztt_array_)))
-        logger.info("\n\nTotal W events: {}".format(np.sum(W_array_)))
-        logger.info("\n\nTotal ttbar events: {}".format(np.sum(ttbar_array_)))
+        logger.info("Total Ztt events: {}".format(np.sum(Ztt_array_)))
+        logger.info("Total W events: {}".format(np.sum(W_array_)))
+        logger.info("Total ttbar events: {}".format(np.sum(ttbar_array_)))
+        logger.info("Total events: {}\n\n".format(np.sum(Htt_array_) + np.sum(Ztt_array_) + np.sum(W_array_) + np.sum(ttbar_array_)))
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
