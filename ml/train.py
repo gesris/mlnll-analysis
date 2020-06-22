@@ -213,8 +213,6 @@ def main(args):
     # Nuisance constraint 
     nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
-    print(tf.squeeze(tf.stack(Htt_array)))
-    logger.info("\n\nHTT: {}".format(tf.squeeze(tf.stack(Htt_array))))
 
     ####                ####
     ####    SD LOSS     ####
@@ -260,13 +258,14 @@ def main(args):
 
     for epoch in range(0, 10000):
         #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, Htt_array_ = session.run([loss, minimize, Htt_array],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
+        logger.info("\n\nHTT: {}".format(tf.squeeze(tf.stack(Htt_array_))))
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
