@@ -188,7 +188,7 @@ def main(args):
     ttbar_mask = tf.placeholder(tf.float32)
 
     # arrays to check counts
-    Htt_array = []
+    events_array = []
 
     nll = zero
     nll_statsonly = zero
@@ -202,7 +202,10 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        Htt_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph))
+        events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale))
+        events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale))
+        events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale))
+        events_array.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -258,14 +261,14 @@ def main(args):
 
     for epoch in range(0, 10000):
         #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, Htt_array_ = session.run([loss, minimize, Htt_array],
+        loss_train, _, Htt_array_ = session.run([loss, minimize, events_array],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
-        logger.info("\n\nHTT: {}".format(Htt_array_))
+        logger.info("\n\nEvents: {}".format(Htt_array_))
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
