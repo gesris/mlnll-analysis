@@ -271,11 +271,8 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
-        logger.info("\n\nTotal Htt events: {}".format(np.sum(Htt_array_)))
-        logger.info("Total Ztt events: {}".format(np.sum(Ztt_array_)))
-        logger.info("Total W events: {}".format(np.sum(W_array_)))
-        logger.info("Total ttbar events: {}".format(np.sum(ttbar_array_)))
-        logger.info("Total events: {}\n\n".format(np.sum(Htt_array_) + np.sum(Ztt_array_) + np.sum(W_array_) + np.sum(ttbar_array_)))
+        logger.info("\n\nTotal Htt events: {}\nTotal Ztt events: {}\nTotal W events: {}\nTotal ttbar events: {}\nTotal events: {}\n\n".format(np.sum(Htt_array_), np.sum(Ztt_array_), np.sum(W_array_), np.sum(ttbar_array_), np.sum(Htt_array_) + np.sum(Ztt_array_) + np.sum(W_array_) + np.sum(ttbar_array_)))
+
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
