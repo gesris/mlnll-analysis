@@ -188,7 +188,7 @@ def main(args):
     ttbar_mask = tf.placeholder(tf.float32)
 
     # arrays to check counts
-    #Htt_array = tf.placeholder(tf.float32)
+    Htt_array = []
 
     nll = zero
     nll_statsonly = zero
@@ -202,7 +202,7 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        #Htt_array = tf.stack(Htt_array, Htt)
+        Htt_array.append(Htt.eval(session=tf.compat.v1.Session()))
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -212,6 +212,8 @@ def main(args):
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
     nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+
+    print(Htt_array)
 
 
     ####                ####
