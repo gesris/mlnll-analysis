@@ -167,6 +167,7 @@ def main(args):
 
     # Add loss treating systematics
     
+    
     ####                ####
     ####    NLL LOSS    ####
     ####                ####
@@ -188,10 +189,10 @@ def main(args):
     ttbar_mask = tf.placeholder(tf.float32)
 
     # arrays to check counts
-    Htt_array = []
-    Ztt_array = []
-    W_array = []
-    ttbar_array = []
+    #Htt_array = []
+    #Ztt_array = []
+    #W_array = []
+    #ttbar_array = []
 
     nll = zero
     nll_statsonly = zero
@@ -205,10 +206,10 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        Htt_array.append(Htt)
-        Ztt_array.append(Ztt)
-        W_array.append(W)
-        ttbar_array.append(ttbar)
+        #Htt_array.append(Htt)
+        #Ztt_array.append(Ztt)
+        #W_array.append(W)
+        #ttbar_array.append(ttbar)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -264,7 +265,8 @@ def main(args):
 
     for epoch in range(0, 10000):
         #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
-        loss_train, _, Htt_array_, Ztt_array_, W_array_, ttbar_array_ = session.run([loss, minimize, Htt_array, Ztt_array, W_array, ttbar_array],
+        #loss_train, _, Htt_array_, Ztt_array_, W_array_, ttbar_array_ = session.run([loss, minimize, Htt_array, Ztt_array, W_array, ttbar_array],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \

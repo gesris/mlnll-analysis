@@ -12,7 +12,7 @@ ntuples_base = path.join(basepath, 'ntuples')
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
 #ml_score_base = ['/home/wunsch/workspace/mlnll-analysis/output_ml/MLScores']
-ml_score_base = ['/work/gristo/mlnll-analysis/output/8_bins_2/MLScores']
+ml_score_base = ['/work/gristo/mlnll-analysis/output/15_bins/MLScores']
 
 # File list
 files = {
@@ -311,11 +311,13 @@ ml_output = ['nll']
 #                      for i, c in enumerate(ml_classes)}
 analysis_categories = {c + '_cat': Selection(name = c + '_cat') \
                       for i, c in enumerate(ml_output)}
-#analysis_binning = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
 analysis_variable = 'ml_score'
 
+# 15 bins
+analysis_binning = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+
 # 8 bins
-analysis_binning = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0]
+#analysis_binning = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0]
 
 # 60 bins
 #analysis_binning = [0.         ,0.01666667 ,0.03333333 ,0.05       ,0.06666667 ,0.08333333 ,0.1        ,0.11666667 ,0.13333333 ,0.15       ,0.16666667 ,0.18333333 ,0.2        ,0.21666667 ,0.23333333 ,0.25       ,0.26666667 ,0.28333333 ,0.3        ,0.31666667 ,0.33333333 ,0.35       ,0.36666667 ,0.38333333 ,0.4        ,0.41666667 ,0.43333333 ,0.45       ,0.46666667 ,0.48333333 ,0.5        ,0.51666667 ,0.53333333 ,0.55       ,0.56666667 ,0.58333333 ,0.6        ,0.61666667 ,0.63333333 ,0.65       ,0.66666667 ,0.68333333 ,0.7        ,0.71666667 ,0.73333333 ,0.75       ,0.76666667 ,0.78333333 ,0.8        ,0.81666667 ,0.83333333 ,0.85       ,0.86666667 ,0.88333333 ,0.9        ,0.91666667 ,0.93333333 ,0.95       ,0.96666667 ,0.98333333 ,1.        ]
