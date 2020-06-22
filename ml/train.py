@@ -214,7 +214,7 @@ def main(args):
     nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
     print(tf.squeeze(tf.stack(Htt_array)))
-
+    logger.info("\n\nHTT: {}".format(tf.squeeze(tf.stack(Htt_array))))
 
     ####                ####
     ####    SD LOSS     ####
@@ -278,7 +278,6 @@ def main(args):
                             ttbar_mask: ttbar_mask_val, \
                             batch_scale: (1 / test_size)})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
-            #logging.info("\n\nHTT: {}".format(Htt_))
 
             ### feed loss values in lists for plot 
             loss_train_list.append(loss_train)
