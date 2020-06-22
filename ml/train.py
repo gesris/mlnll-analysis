@@ -268,7 +268,7 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size))})
-        logger.info("\n\nEvents: {}".format(Htt_array_))
+        logger.info("\n\nTotal events: {}".format(np.sum(Htt_array_)))
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
