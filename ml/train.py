@@ -202,7 +202,7 @@ def main(args):
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
 
-        Htt_array.append(Htt.eval(session=tf.Session()))
+        Htt_array.append(Htt)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -213,7 +213,7 @@ def main(args):
     # Nuisance constraint 
     nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
-    print(Htt_array)
+    print(tf.squeeze(tf.stack(Htt_array)))
 
 
     ####                ####
