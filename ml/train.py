@@ -104,7 +104,7 @@ def model(x, num_variables, fold, reuse=False):
         w2 = tf.get_variable('w2', shape=(hidden_nodes, 1), initializer=tf.random_normal_initializer())
         b2 = tf.get_variable('b2', shape=(1), initializer=tf.constant_initializer())
 
-    l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
+    l1 = tf.nn.relu(tf.add(b1, tf.matmul(x, w1)))
     logits = tf.add(b2, tf.matmul(l1, w2))
     f = tf.nn.sigmoid(logits)
 
@@ -167,7 +167,7 @@ def main(args):
 
     # Add loss treating systematics
     
-    
+
     ####                ####
     ####    NLL LOSS    ####
     ####                ####
