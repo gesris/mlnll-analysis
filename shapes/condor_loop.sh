@@ -10,7 +10,6 @@ step=0
 
 while $run; do
     sleep 120s
-    clear
     if [ $(ls -l $ANALYSISDIR/$WORKDIR/shapes_jobs/err | grep err | wc -l) =  191 ]; then
         printf "\n\n## --------------  All jobs done  --------------- ##\n\n"
         run=false
@@ -22,7 +21,8 @@ while $run; do
         sh $ANALYSISDIR/condor_release.sh
     fi
 
-    condor_q | head -5
+    condor_q 
+    printf "_______________________________________________________________________________________________________________\n"
     
     # Breakup sequence after too many loops
     #step=$(($step + 1))
