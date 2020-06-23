@@ -157,13 +157,9 @@ def main(args):
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
-    #logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
-
-    # Add CE loss
     y_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
-    #ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
 
     # Add loss treating systematics
     
@@ -226,7 +222,6 @@ def main(args):
 
 
     # Combine losses
-    #loss = ce_loss
     loss = sd_loss_statsonly
 
     # Add minimization ops
@@ -253,7 +248,6 @@ def main(args):
     steps_list = []
 
     for epoch in range(0, 10000):
-        #idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
