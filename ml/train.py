@@ -169,6 +169,7 @@ def main(args):
     ####                ####
 
     batch_scale = tf.placeholder(tf.float32)
+    fold_scale = tf.placeholder(tf.float32)
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
     upper_edges, lower_edges = bins[1:], bins[:-1]
@@ -191,10 +192,10 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
-        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale)
-        Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale)
-        W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale)
-        ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale)
+        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale * fold_scale)
+        Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale * fold_scale)
+        W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale * fold_scale)
+        ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale * fold_scale)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -254,7 +255,8 @@ def main(args):
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
-                            batch_scale: (1 / (1 - test_size))})
+                            batch_scale: (1 / (1 - test_size)), \
+                            fold_scale: 2})
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
@@ -264,7 +266,8 @@ def main(args):
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
-                            batch_scale: (1 / test_size)})
+                            batch_scale: (1 / test_size), \
+                            fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             ### feed loss values in lists for plot 
