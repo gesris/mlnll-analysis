@@ -269,7 +269,7 @@ def main(args):
                             fold_scale: 2})
 
         if step % 10 == 0:
-            logger.info('\n\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Ztt_, W_, ttbar_))
+            logger.info('\n\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
