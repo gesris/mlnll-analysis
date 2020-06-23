@@ -56,7 +56,7 @@ def tree2numpy(path, tree, columns):
     return df.AsNumpy(columns)
 
 
-def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True): #use_class_weight=True is default
+def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
     columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
@@ -185,6 +185,11 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
+    Htt_array = []
+    Ztt_array = []
+    W_array = []
+    ttbar_array = []
+
     nll = zero
     nll_statsonly = zero
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
@@ -196,6 +201,11 @@ def main(args):
         Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale * fold_scale)
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale * fold_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale * fold_scale)
+
+        Htt_array.append(Htt)
+        Ztt_array.append(Ztt)
+        W_array.append(W)
+        ttbar_array.append(ttbar)
 
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
@@ -249,16 +259,17 @@ def main(args):
     steps_list = []
 
     for epoch in range(0, 10000):
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, Htt_, Ztt_, W_, ttbar_ = session.run([loss, minimize, Htt_array, Ztt_array, W_array, ttbar_array],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
-                            fold_scale: 1})
+                            fold_scale: 2})
 
         if step % 10 == 0:
+            logger.info('\n\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Ztt_, W_, ttbar_))
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
@@ -267,7 +278,7 @@ def main(args):
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
                             batch_scale: (1 / test_size), \
-                            fold_scale: 1})
+                            fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             ### feed loss values in lists for plot 
