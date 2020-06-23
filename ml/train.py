@@ -56,7 +56,7 @@ def tree2numpy(path, tree, columns):
     return df.AsNumpy(columns)
 
 
-def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
+def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True): #use_class_weight=True is default
     columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
@@ -197,7 +197,7 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
-        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale * fold_scale * 100)
+        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale * fold_scale)
         Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale * fold_scale)
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale * fold_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale * fold_scale)
