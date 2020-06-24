@@ -316,6 +316,9 @@ analysis_variable = 'ml_score'
 # 15 bins
 #analysis_binning = [0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
 
+# 4 bins
+#analysis_binning = [0.0, 0.25, 0.5, 0.75, 1.0]
+
 # 8 bins
 analysis_binning = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0]
 
