@@ -56,7 +56,7 @@ def tree2numpy(path, tree, columns):
     return df.AsNumpy(columns)
 
 
-def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
+def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True): #use_class_weight=True is default
     columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
@@ -266,7 +266,7 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
-                            fold_scale: 2})
+                            fold_scale: 1})
 
         if step % 10 == 0:
             logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
@@ -278,7 +278,7 @@ def main(args):
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
                             batch_scale: (1 / test_size), \
-                            fold_scale: 2})
+                            fold_scale: 1})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             ### feed loss values in lists for plot 
