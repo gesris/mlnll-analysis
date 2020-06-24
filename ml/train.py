@@ -67,7 +67,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
-    logging.info("\n\nBefore stacking and multiplying: {}".format(ws))
+    #logging.info("\n\nBefore stacking and multiplying: {}".format(ws))
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
@@ -266,10 +266,10 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
-                            fold_scale: 2})
+                            fold_scale: 1})
 
         if step % 10 == 0:
-            logger.info('\n\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
+            logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
@@ -278,7 +278,7 @@ def main(args):
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
                             batch_scale: (1 / test_size), \
-                            fold_scale: 2})
+                            fold_scale: 1})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             ### feed loss values in lists for plot 
