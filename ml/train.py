@@ -56,7 +56,7 @@ def tree2numpy(path, tree, columns):
     return df.AsNumpy(columns)
 
 
-def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
+def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True): #use_class_weight=True is default
     columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
