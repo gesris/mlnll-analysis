@@ -192,7 +192,7 @@ def main(args):
 
     nll = zero
     nll_statsonly = zero
-    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
+    for up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
@@ -208,9 +208,15 @@ def main(args):
         ttbar_array.append(ttbar)
 
         # Likelihood
-        exp = mu * Htt + Ztt + W + ttbar
+        
+        #exp = mu * Htt + Ztt + W + ttbar
+        exp = mu * Htt + ttbar
+
         sys = zero  # systematic has to be added later
-        obs = Htt + Ztt + W + ttbar
+
+        #obs = Htt + Ztt + W + ttbar
+        obs = Htt + ttbar
+
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
