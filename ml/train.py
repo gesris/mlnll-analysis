@@ -192,7 +192,7 @@ def main(args):
 
     nll = zero
     nll_statsonly = zero
-    for up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
+    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
