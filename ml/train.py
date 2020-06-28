@@ -208,7 +208,7 @@ def main(args):
         ttbar_array.append(ttbar)
 
         # Likelihood
-        
+
         #exp = mu * Htt + Ztt + W + ttbar
         exp = mu * Htt + ttbar
 
@@ -265,7 +265,7 @@ def main(args):
     steps_list = []
 
     for epoch in range(0, 10000):
-        loss_train, _, Htt_, Ztt_, W_, ttbar_ = session.run([loss, minimize, Htt_array, Ztt_array, W_array, ttbar_array],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
@@ -275,10 +275,9 @@ def main(args):
                             fold_scale: 2})
 
         if step % 10 == 0:
-            logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
+            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt_array, Ztt_array, W_array, ttbar_array], feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
@@ -286,6 +285,8 @@ def main(args):
                             batch_scale: (1 / test_size), \
                             fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
+            #logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
+            logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Ztt_, W_, ttbar_))
 
             ### feed loss values in lists for plot 
             loss_train_list.append(loss_train)
