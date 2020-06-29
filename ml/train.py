@@ -210,12 +210,12 @@ def main(args):
         # Likelihood
 
         #exp = mu * Htt + Ztt + W + ttbar
-        exp = mu * Htt + Ztt
+        exp = mu * Htt + W
 
         sys = zero  # systematic has to be added later
 
         #obs = Htt + Ztt + W + ttbar
-        obs = Htt + Ztt
+        obs = Htt + W
 
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
