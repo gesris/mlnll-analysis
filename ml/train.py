@@ -197,7 +197,7 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
 
-        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale * fold_scale)
+        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale * fold_scale * 100)
         Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale * fold_scale)
         W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale * fold_scale)
         ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale * fold_scale)
@@ -209,14 +209,10 @@ def main(args):
 
         # Likelihood
 
-        #exp = mu * Htt + Ztt + W + ttbar
-        exp = mu * Htt + W
-
+        exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
-
-        #obs = Htt + Ztt + W + ttbar
-        obs = Htt + W
-
+        obs = Htt + Ztt + W + ttbar
+        
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
