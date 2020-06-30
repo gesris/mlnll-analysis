@@ -188,20 +188,20 @@ def main(args):
     nll = zero
     nll_statsonly = zero
 
-    def hist(f, bins, masking, w_ph, batch_scale, fold_scale):
+    def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
         counts = []
         # splits histogram in bins regarding their left and right edges
         # zip function puts left and right edge together in one iterable array
         for right_edge, left_edge in zip(bins[1:], bins[:-1]):
             # sums up all 1 entries of each bin 
-            Events = tf.reduce_sum(count_masking(f, right_edge, left_edge) * masking * w_ph * batch_scale * fold_scale)
+            Events = tf.reduce_sum(count_masking(f, right_edge, left_edge) * masking * w_ph * batch_scale * fold_scale * custom_scale)
             counts.append(Events)
         return tf.squeeze(tf.stack(counts))
 
-    Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale)
-    Ztt = hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale) 
-    W = hist(f, bins, W_mask, w_ph, batch_scale, fold_scale)
-    ttbar = hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale)
+    Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1)
+    Ztt = hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1) 
+    W = hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1)
+    ttbar = hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1)
 
     for i in range(0, len(bins) - 1):
         # Likelihood
