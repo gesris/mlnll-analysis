@@ -174,8 +174,8 @@ def main(args):
     logger.info("\nBins: {}".format(bins))
     upper_edges, lower_edges = bins[1:], bins[:-1]
 
-    theta = tf.constant(0.0, tf.float32)
-    mu = tf.constant(1.0, tf.float32)
+    theta = tf.placeholder(tf.float32)
+    mu = tf.placeholder(tf.float32)
 
     zero = tf.constant(0, tf.float32)
     epsilon = tf.constant(1e-9, tf.float32)
@@ -268,7 +268,9 @@ def main(args):
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
-                            fold_scale: 2})
+                            fold_scale: 2,\
+                            mu: 1.,\
+                            theta: 0.})
 
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
@@ -279,7 +281,9 @@ def main(args):
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
                             batch_scale: (1 / test_size), \
-                            fold_scale: 2})
+                            fold_scale: 2,\
+                            mu: 1.,\
+                            theta: 0.})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
             logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Ztt_, W_, ttbar_))
