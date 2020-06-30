@@ -197,10 +197,10 @@ def main(args):
             counts.append(tf.reduce_sum(count_masking(f, right_edge, left_edge)))
         return tf.squeeze(tf.stack(counts))
 
-    Htt = hist(f, bins) * Htt_mask 
-    Ztt = hist(f, bins) * Ztt_mask 
-    W = hist(f, bins) * W_mask
-    ttbar = hist(f, bins) * ttbar_mask
+    Htt = hist(f, bins)
+    Ztt = hist(f, bins) 
+    W = hist(f, bins)
+    ttbar = hist(f, bins)
 
     for i in range(0, len(bins) - 1):
         # Likelihood
