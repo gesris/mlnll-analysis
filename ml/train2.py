@@ -204,9 +204,9 @@ def main(args):
 
     for i in range(0, len(bins) - 1):
         # Likelihood
-        exp = mu * Htt + Ztt + W + ttbar
+        exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
         sys = zero  # systematic has to be added later
-        obs = Htt + Ztt + W + ttbar
+        obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
