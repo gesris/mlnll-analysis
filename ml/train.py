@@ -185,33 +185,29 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
-    Htt_array = []
-    Ztt_array = []
-    W_array = []
-    ttbar_array = []
-
     nll = zero
     nll_statsonly = zero
-    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
-        # Bin edges
-        up_ = tf.constant(up, tf.float32)
-        down_ = tf.constant(down, tf.float32)
 
-        Htt = tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * batch_scale * fold_scale * 200)
-        Ztt = tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * batch_scale * fold_scale)
-        W = tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * batch_scale * fold_scale)
-        ttbar = tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * batch_scale * fold_scale)
+    def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
+        counts = []
+        # splits histogram in bins regarding their left and right edges
+        # zip function puts left and right edge together in one iterable array
+        for right_edge, left_edge in zip(bins[1:], bins[:-1]):
+            # sums up all 1 entries of each bin 
+            Events = tf.reduce_sum(count_masking(f, right_edge, left_edge) * masking * w_ph * batch_scale * fold_scale * custom_scale)
+            counts.append(Events)
+        return tf.squeeze(tf.stack(counts))
 
-        Htt_array.append(Htt)
-        Ztt_array.append(Ztt)
-        W_array.append(W)
-        ttbar_array.append(ttbar)
+    Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1)
+    Ztt = hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1) 
+    W = hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1)
+    ttbar = hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1)
 
+    for i in range(0, len(bins) - 1):
         # Likelihood
-
-        exp = mu * Htt + Ztt + W + ttbar
+        exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
         sys = zero  # systematic has to be added later
-        obs = Htt + Ztt + W + ttbar
+        obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -273,7 +269,7 @@ def main(args):
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt_array, Ztt_array, W_array, ttbar_array], feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
+            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
