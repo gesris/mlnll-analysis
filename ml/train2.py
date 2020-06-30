@@ -185,9 +185,6 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
-    nll = zero
-    nll_statsonly = zero
-
     def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
         counts = []
         for right_edge, left_edge in zip(bins[1:], bins[:-1]):
@@ -195,11 +192,13 @@ def main(args):
             counts.append(Events)
         return tf.squeeze(tf.stack(counts))
 
-    Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 2) # 100:1 sig:bkg relation
+    Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1) 
     Ztt = hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1) 
     W = hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1)
     ttbar = hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1)
 
+    nll = zero
+    nll_statsonly = zero
     for i in range(0, len(bins) - 1):
         # Likelihood
         exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
