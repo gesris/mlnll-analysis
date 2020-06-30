@@ -202,7 +202,7 @@ def main(args):
     W = hist(f, bins) * W_mask * w_ph * batch_scale * fold_scale
     ttbar = hist(f, bins) * ttbar_mask * w_ph * batch_scale * fold_scale
 
-    for i in range(0, len(Htt)):
+    for i in range(0, len(bins) - 1):
         # Likelihood
         exp = mu * Htt + Ztt + W + ttbar
         sys = zero  # systematic has to be added later
