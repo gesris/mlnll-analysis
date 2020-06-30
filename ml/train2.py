@@ -194,7 +194,8 @@ def main(args):
         # zip function puts left and right edge together in one iterable array
         for right_edge, left_edge in zip(bins[1:], bins[:-1]):
             # sums up all 1 entries of each bin 
-            counts.append(tf.reduce_sum(count_masking(f, right_edge, left_edge)) * masking * w_ph * batch_scale * fold_scale)
+            Events = tf.reduce_sum(count_masking(f, right_edge, left_edge)) * masking * w_ph * batch_scale * fold_scale
+            counts.append(Events)
         return tf.squeeze(counts)
 
     Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale)
