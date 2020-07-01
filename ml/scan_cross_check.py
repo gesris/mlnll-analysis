@@ -78,10 +78,10 @@ def main():
     plt.xlim((0, 2))
     plt.ylabel("Delta NLL")
     plt.ylim((0, 9))
-    plt.axvline(x= 1. - sigma_left, ymax=1., color='r')
-    plt.axvline(x= 1. + sigma_right, ymax=0.5, color='r')
-    plt.axhline(y=1., xmin=0., xmax=1.-sigma_left, color='r')
-    plt.axhline(y=1., xmin=1.+sigma_right, xmax=2., color='r')
+    plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
+    plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
+    plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
+    plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
 
 
