@@ -57,7 +57,7 @@ def main():
             scaling = 2. / len(x)
             d_value = nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)
             diff.append(d_value)
-            if sess.run(d_value) <= 1.05 and sess.run(d_value) >= 0.95 and i * scaling < 1:
+            if sess.run(d_value) <= 1.1 and sess.run(d_value) >= 0.9 and i * scaling < 1:
                 sigma_left.append(1 - i * scaling)
             elif sess.run(d_value) <= 1.05 and sess.run(d_value) >= 0.95 and i * scaling > 1:
                 sigma_right.append(i * scaling - 1)
@@ -65,7 +65,7 @@ def main():
         print('SIGMA R: {}'.format(sigma_right))
         return diff
 
-    x = np.linspace(0, 2, 51)
+    x = np.linspace(0, 2, 71)
 
     sess = tf.Session()
     diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
