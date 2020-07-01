@@ -24,7 +24,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 
 def main():
-    mu = tf.constant(1.0, tf.float32)
+    mu = tf.constant(0.5, tf.float32)
 
     Htt = [544.02484, 291.63315, 235.41945, 89.54457]
     Ztt = [107477.97, 7436.9565, 3119.643, 4390.905]
