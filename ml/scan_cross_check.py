@@ -63,12 +63,12 @@ def main():
                 sigma_right.append(i * scaling - 1)
         print('SIGMA L: {}'.format(sigma_left))
         print('SIGMA R: {}'.format(sigma_right))
-        return diff
+        return diff, sigma_left, sigma_right
 
     x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
-    diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
+    diff_nll, sigma_left, sigma_right = sess.run([scan(mu, x, Htt, Ztt, W, ttbar)])
     print('DIFF NLL: {}'.format(diff_nll))
     
 
@@ -78,9 +78,10 @@ def main():
     plt.xlim((0, 2))
     plt.ylabel("Delta NLL")
     plt.ylim((0, 9))
+    plt.axvline(x=sigma_left)
+    plt.axvline(x=sigma_right)
+    plt.axhline(y=1.)
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
-    #plt.show()
-
 
 
 if __name__ == '__main__':
