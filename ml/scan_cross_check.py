@@ -47,16 +47,28 @@ def main():
 
     def scan(mu0, x, Htt, Ztt, W, ttbar):
         diff = []
-        mu1 = tf.constant(x, dtype=tf.float32)
-        for i in range(0, len(x)):
-            diff.append(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
-        return diff
 
-    x = np.linspace(0, 2, 1001)
+        mu1 = tf.constant(x, dtype=tf.float32)
+        one_plus = tf.constant(1.05, tf.float)
+        one_minus = tf.constant(0.95, tf.float)
+        sigma_left = []
+        sigma_right = []
+        for i in range(0, len(x)):
+            d_value = nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)
+            diff.append(d_value)
+            if d_value <= one_plus and d_value >= one_minus and i < 1:
+                sigma_left.append(1 - i)
+            elif d_value <= one_plus and d_value >= one_minus and i > 1:
+                sigma_right.append(i - 1)
+        return diff, sigma_left, sigma_right
+
+    x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
-    diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
+    diff_nll, left, right = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
     print('DIFF NLL: {}'.format(diff_nll))
+    print('SIGMA L: {}'.format(left))
+    print('SIGMA R: {}'.format(right))
 
     plt.figure()
     plt.plot(x, diff_nll)
