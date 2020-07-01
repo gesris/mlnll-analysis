@@ -66,11 +66,15 @@ def main():
         print('SIGMA R: {}'.format(sigma_right))
         return diff, sigma_left, sigma_right
 
+    def first_derivative(mu, Htt, Ztt, W, ttbar):
+        return tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu)
+
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
 
     sess = tf.Session()
 
+    print(sess.run(first_derivative(mu, Htt, Ztt, W, ttbar)))
     print(sess.run(second_derivative(mu, Htt, Ztt, W, ttbar)))
 
     '''
