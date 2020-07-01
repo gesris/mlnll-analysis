@@ -74,7 +74,7 @@ def main():
 
     plt.figure()
     plt.plot(x, diff_nll)
-    plt.xlabel("r = 1.0 +{} -{}".format(sigma_right, sigma_left))
+    plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
     plt.ylabel("Delta NLL")
     plt.ylim((0, 9))
