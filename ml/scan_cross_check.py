@@ -65,7 +65,7 @@ def main():
         print('SIGMA R: {}'.format(sigma_right))
         return diff
 
-    x = np.linspace(0, 2, 71)
+    x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
     diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
