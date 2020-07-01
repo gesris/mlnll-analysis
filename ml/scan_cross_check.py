@@ -52,7 +52,7 @@ def main():
             diff.append(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
         return diff
 
-    x = np.linspace(0, 2, 51)
+    x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
     diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
@@ -61,7 +61,9 @@ def main():
     plt.figure()
     plt.plot(x, diff_nll)
     plt.xlabel("r")
+    plt.xlim((0, 2))
     plt.ylabel("Delta NLL")
+    plt.ylim((0, 9))
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
     #plt.show()
 
