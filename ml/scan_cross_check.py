@@ -60,15 +60,16 @@ def main():
                 sigma_left.append(1 - i)
             elif sess.run(d_value) <= 1.05 and sess.run(d_value) >= 0.95 and i > 1:
                 sigma_right.append(i - 1)
-        return diff, sigma_left, sigma_right
+        print('SIGMA L: {}'.format(sigma_left))
+        print('SIGMA R: {}'.format(sigma_right))
+        return diff
 
     x = np.linspace(0, 2, 31)
 
     sess = tf.Session()
-    diff_nll, left, right = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
+    diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
     print('DIFF NLL: {}'.format(diff_nll))
-    print('SIGMA L: {}'.format(left))
-    print('SIGMA R: {}'.format(right))
+    
 
     plt.figure()
     plt.plot(x, diff_nll)
