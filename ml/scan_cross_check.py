@@ -58,17 +58,19 @@ def main():
             d_value = sess.run(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
             diff.append(d_value)
             if d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1:
-                sigma_left.append(1 - i * scaling)
+                sigma_left = 1 - i * scaling
+                y_sigma_left = d_value  # ACHTUNG: nimmt den wert, der am nähsten zu 1 steht
             elif d_value <= 1.05 and d_value >= 0.95 and i * scaling > 1:
-                sigma_right.append(i * scaling - 1)
+                sigma_right = i * scaling - 1
+                y_sigma_right = d_value
         print('SIGMA L: {}'.format(sigma_left))
         print('SIGMA R: {}'.format(sigma_right))
-        return diff, sigma_left, sigma_right
+        return diff, sigma_left, sigma_right, y_sigma_left, y_sigma_right
 
     x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
-    diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
+    diff_nll, sigma_left, sigma_right, y_sigma_left, y_sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
     print('DIFF NLL: {}'.format(diff_nll))
     
 
@@ -78,9 +80,10 @@ def main():
     plt.xlim((0, 2))
     plt.ylabel("Delta NLL")
     plt.ylim((0, 9))
-    plt.axvline(x=sigma_left)
-    plt.axvline(x=sigma_right)
-    plt.axhline(y=1.)
+    plt.axvline(x= 1. - sigma_left, ymax=y_sigma_left, color='r')
+    plt.axvline(x= 1. + sigma_right, ymax=y_sigma_right, color='r')
+    plt.axhline(y=1., xmin=0., xmax=1. - sigma_left, color='r')
+    plt.axhline(y=1., xmin=1. + sigma_left, xmax=2., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
 
 
