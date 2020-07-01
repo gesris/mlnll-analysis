@@ -62,6 +62,7 @@ def main():
     plt.plot(x, diff_nll)
     plt.xlabel("r")
     plt.ylabel("Delta NLL")
+    plt.savefig("./scan_cross_check.png", bbox_inches="tight")
     #plt.show()
 
 
