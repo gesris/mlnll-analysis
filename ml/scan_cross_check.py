@@ -58,9 +58,9 @@ def main():
             scaling = 2. / len(x)
             d_value = sess.run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
             diff.append(d_value)
-            if d_value <= 1.02 and d_value >= 0.98 and i * scaling > 1:
+            if d_value <= 1.01 and d_value >= 0.99 and i * scaling > 1:
                 sigma_right = i * scaling - 1
-            elif d_value <= 1.02 and d_value >= 0.98 and i * scaling < 1:
+            elif d_value <= 1.01 and d_value >= 0.99 and i * scaling < 1:
                 sigma_left.append(1 - i * scaling)
         sigma_left = sigma_left[0]  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
@@ -87,11 +87,11 @@ def main():
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
-    #plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
-    #plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
-    #plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
-    #plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
-    plt.axhline(y=1., color='r')
+    plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
+    plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
+    plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
+    plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
+    #plt.axhline(y=1., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
 
 
