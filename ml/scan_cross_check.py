@@ -56,7 +56,7 @@ def main():
 
     sess = tf.Session()
     diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
-    logger.info("DIFF NLL: {}".formal(diff_nll))
+    logger.info("DIFF NLL: {}".format(diff_nll))
 
     plt.figure()
     plt.plot(x, diff_nll)
