@@ -62,7 +62,7 @@ def main():
                 sigma_right = i * scaling - 1
             elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1:
                 sigma_left.append(1 - i * scaling)
-            sigma_left = sigma_left[0]  #choose value furthest away from 1
+        sigma_left = sigma_left[0]  #choose value furthest away from 1
         print('SIGMA L: {}'.format(sigma_left))
         print('SIGMA R: {}'.format(sigma_right))
         return diff, sigma_left, sigma_right
