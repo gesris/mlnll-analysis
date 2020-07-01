@@ -6,6 +6,7 @@ tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 import logging
 logger = logging.getLogger('')
@@ -53,7 +54,7 @@ def main():
         one_minus = tf.constant(0.95, tf.float32)
         sigma_left = []
         sigma_right = []
-        for i in range(0, len(x)):
+        for i in tqdm(range(0, len(x))):
             scaling = 2. / len(x)
             d_value = sess.run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
             diff.append(d_value)
