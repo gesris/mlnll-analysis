@@ -47,7 +47,7 @@ def main():
 
     def scan(mu0, x, Htt, Ztt, W, ttbar):
         diff = []
-        mu1 = tf.stack(x)
+        mu1 = tf.stack(x, dtype=tf.float32)
         for i in range(0, len(x)):
             diff.append(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
         return diff
