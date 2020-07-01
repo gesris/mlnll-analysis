@@ -62,7 +62,7 @@ def main():
                 sigma_right.append(i - 1)
         return diff, sigma_left, sigma_right
 
-    x = np.linspace(0, 2, 101)
+    x = np.linspace(0, 2, 31)
 
     sess = tf.Session()
     diff_nll, left, right = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
