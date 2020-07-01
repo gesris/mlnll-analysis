@@ -56,9 +56,9 @@ def main():
         for i in range(0, len(x)):
             d_value = nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)
             diff.append(d_value)
-            if d_value <= one_plus and d_value >= one_minus and i < 1:
+            if sess.run(d_value) <= 1.05 and sess.run(d_value) >= 0.95 and i < 1:
                 sigma_left.append(1 - i)
-            elif d_value <= one_plus and d_value >= one_minus and i > 1:
+            elif sess.run(d_value) <= 1.05 and sess.run(d_value) >= 0.95 and i > 1:
                 sigma_right.append(i - 1)
         return diff, sigma_left, sigma_right
 
