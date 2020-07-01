@@ -53,7 +53,9 @@ def main():
         return diff
 
     x = np.linspace(0, 2, 31)
-    diff_nll = scan(mu, x, Htt, Ztt, W, ttbar)
+
+    sess = tf.Session()
+    diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
 
     plt.figure()
     plt.plot(x, diff_nll)
