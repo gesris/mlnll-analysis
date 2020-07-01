@@ -47,13 +47,13 @@ def main():
 
     def scan(mu0, x, Htt, Ztt, W, ttbar):
         diff = []
-        for mu1 in x:
-            diff.append(nll_value(mu1, Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
+        mu1 = tf.stack(x)
+        for i in range(0, len(x)):
+            diff.append(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
         return diff
 
     x = np.linspace(0, 2, 31)
-    x_tensor = tf.stack(x)
-    diff_nll = scan(mu, x_tensor, Htt, Ztt, W, ttbar)
+    diff_nll = scan(mu, x, Htt, Ztt, W, ttbar)
 
     plt.figure()
     plt.plot(x, diff_nll)
