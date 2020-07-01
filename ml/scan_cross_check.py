@@ -63,8 +63,6 @@ def main():
             elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1:
                 sigma_left.append(1 - i * scaling)
         sigma_left = sigma_left[0]  #choose value furthest away from 1
-        print('SIGMA L: {}'.format(sigma_left))
-        print('SIGMA R: {}'.format(sigma_right))
         return diff, sigma_left, sigma_right
 
     def second_derivative(mu, Htt, Ztt, W, ttbar):
@@ -74,25 +72,26 @@ def main():
 
     def f(x, a, b):
         return a*(x-b)**2
+
     x = np.linspace(0, 2, 201)
     a = sess.run(second_derivative(mu, Htt, Ztt, W, ttbar))
     y = f(x, a, 1)
 
-    
     diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
     print('DIFF NLL: {}'.format(diff_nll))
     
     plt.figure()
-    plt.plot(x, diff_nll)
-    plt.plot(x, y, color='r')
+    plt.plot(x, diff_nll, color='b')
+    plt.plot(x, y, color='k')
     plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
-    plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
-    plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
-    plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
-    plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
+    #plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
+    #plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
+    #plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
+    #plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
+    plt.axhline(y=1., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
 
 
