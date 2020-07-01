@@ -81,7 +81,8 @@ def main():
         return a*(x-b)**2
 
     x = np.linspace(0, 2, 201)
-    y = f(x, sess.run(second_derivative(mu, Htt, Ztt, W, ttbar) / 2.), 1)
+    a = sess.run(second_derivative(mu, Htt, Ztt, W, ttbar))
+    y = f(x, a, 1)
 
     
     diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
