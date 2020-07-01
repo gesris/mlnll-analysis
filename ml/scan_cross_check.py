@@ -68,7 +68,7 @@ def main():
     x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
-    diff_nll, sigma_left, sigma_right, y_sigma_left, y_sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
+    diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
     print('DIFF NLL: {}'.format(diff_nll))
     
 
@@ -81,7 +81,7 @@ def main():
     plt.axvline(x= 1. - sigma_left, ymax=1., color='r')
     plt.axvline(x= 1. + sigma_right, ymax=1., color='r')
     plt.axhline(y=1., xmin=0., xmax=1. - sigma_left, color='r')
-    plt.axhline(y=1., xmin=1. + sigma_left, xmax=2., color='r')
+    plt.axhline(y=1., xmin=1. + sigma_right, xmax=2., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
 
 
