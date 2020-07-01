@@ -63,12 +63,12 @@ def main():
                 sigma_right.append(i * scaling - 1)
         print('SIGMA L: {}'.format(sigma_left))
         print('SIGMA R: {}'.format(sigma_right))
-        return [diff, sigma_left, sigma_right]
+        return diff, sigma_left, sigma_right
 
     x = np.linspace(0, 2, 101)
 
     sess = tf.Session()
-    diff_nll, sigma_left, sigma_right = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
+    diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
     print('DIFF NLL: {}'.format(diff_nll))
     
 
