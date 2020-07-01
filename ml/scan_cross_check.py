@@ -55,7 +55,7 @@ def main():
         sigma_right = []
         for i in range(0, len(x)):
             scaling = 2. / len(x)
-            d_value = sess.run(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
+            d_value = sess.run(-2 * nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
             diff.append(d_value)
             if d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1:
                 sigma_left = 1 - i * scaling   # ACHTUNG: nimmt den wert, der am nähsten zu 1 steht
