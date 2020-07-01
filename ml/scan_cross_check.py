@@ -66,25 +66,30 @@ def main():
         print('SIGMA R: {}'.format(sigma_right))
         return diff, sigma_left, sigma_right
 
-    x = np.linspace(0, 2, 201)
+    def second_derivative(mu, Htt, Ztt, W, ttbar):
+        return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
 
     sess = tf.Session()
+
+    print(sess.run(second_derivative(mu, Htt, Ztt, W, ttbar)))
+
+    '''
+    x = np.linspace(0, 2, 201)
     diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
     print('DIFF NLL: {}'.format(diff_nll))
     
-
     plt.figure()
     plt.plot(x, diff_nll)
     plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
-    plt.ylabel("Delta NLL")
+    plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
     plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
     plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
     plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
     plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
-
+    '''
 
 if __name__ == '__main__':
     main()
