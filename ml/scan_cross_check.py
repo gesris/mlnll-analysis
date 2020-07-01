@@ -45,20 +45,20 @@ def main():
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
         return nll_statsonly
 
-    def scan(mu0, x):
+    def scan(mu0, x, Htt, Ztt, W, ttbar):
         diff = []
         for mu1 in x:
-            diff.append(nll_value(mu1) - nll_value(mu0))
+            diff.append(nll_value(mu1, Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
         return diff
 
     x = np.linspace(0, 2, 31)
-    y = scan(mu, x)
+    y = scan(mu, x, Htt, Ztt, W, ttbar)
 
     plt.figure()
     plt.plot(x, y)
     plt.xlabel("r")
     plt.ylabel("Delta NLL")
-    plt.show()
+    #plt.show()
 
 
 
