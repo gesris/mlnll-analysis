@@ -73,7 +73,7 @@ def main():
     def f(x, a, b):
         return a*(x-b)**2
 
-    x = np.linspace(0, 2, 201)
+    x = np.linspace(0, 2, 101)
     a = sess.run(second_derivative(mu, Htt, Ztt, W, ttbar))
     y = f(x, a, 1)
 
@@ -81,7 +81,7 @@ def main():
     print('DIFF NLL: {}'.format(diff_nll))
     
     plt.figure()
-    plt.plot(x, diff_nll, color='b')
+    plt.plot(x, diff_nll)
     plt.plot(x, y, color='k')
     plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
