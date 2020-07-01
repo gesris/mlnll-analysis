@@ -52,7 +52,7 @@ def main():
             diff.append(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
         return diff
 
-    x = np.linspace(0, 2, 31)
+    x = np.linspace(0, 2, 51)
 
     sess = tf.Session()
     diff_nll = sess.run(scan(mu, x, Htt, Ztt, W, ttbar))
