@@ -55,11 +55,11 @@ def main():
         sigma_right = []
         for i in range(0, len(x)):
             scaling = 2. / len(x)
-            d_value = nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)
+            d_value = sess.run(nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar))
             diff.append(d_value)
-            if sess.run(d_value) <= 1.1 and sess.run(d_value) >= 0.9 and i * scaling < 1:
+            if d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1:
                 sigma_left.append(1 - i * scaling)
-            elif sess.run(d_value) <= 1.05 and sess.run(d_value) >= 0.95 and i * scaling > 1:
+            elif d_value <= 1.05 and d_value >= 0.95 and i * scaling > 1:
                 sigma_right.append(i * scaling - 1)
         print('SIGMA L: {}'.format(sigma_left))
         print('SIGMA R: {}'.format(sigma_right))
