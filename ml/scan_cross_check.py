@@ -52,10 +52,11 @@ def main():
         return diff
 
     x = np.linspace(0, 2, 31)
-    y = scan(mu, x, Htt, Ztt, W, ttbar)
+    x_tensor = tf.stack(x)
+    diff_nll = scan(mu, x_tensor, Htt, Ztt, W, ttbar)
 
     plt.figure()
-    plt.plot(x, y)
+    plt.plot(x, diff_nll)
     plt.xlabel("r")
     plt.ylabel("Delta NLL")
     #plt.show()
