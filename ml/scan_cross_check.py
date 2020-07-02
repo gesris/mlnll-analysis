@@ -28,6 +28,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 def main():
     mu = tf.constant(1.0, tf.float32)
 
+    # make this recallable from csv file, which is created in testing stage
     Htt     = [544.02484, 291.63315, 235.41945, 89.54457]
     Ztt     = [107477.97, 7436.9565, 3119.643, 4390.905]
     W       = [41067.562, 4640.386, 3397.768, 13653.995]
@@ -47,7 +48,7 @@ def main():
             nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
         return nll_statsonly
-
+    '''
     def scan(mu0, x, Htt, Ztt, W, ttbar):
         diff = []
 
@@ -65,7 +66,7 @@ def main():
             elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
                 sigma_left = 1 - i * scaling  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
-
+    '''
 
     def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
         # empty file
@@ -90,30 +91,44 @@ def main():
                 elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
                     sigma_left = 1 - i * scaling  #choose value furthest away from 1
                 diff.append(d_value)
-            print(diff)
         return diff, sigma_left, sigma_right 
                 
 
-
     def second_derivative(mu, Htt, Ztt, W, ttbar):
-        return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
+        return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu))
+
     
-    x = np.linspace(0, 2, 501)
-    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
-    scan_from_file(x)
-'''
-    sess = tf.Session()
+    ####
+    #### only call this function, if there is no .csv file containing dnll-values
+    ####
+
+    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+
+
+    ####
+    #### assign values from .csv file
+    ####
+
+    diff_nll, sigma_left, sigma_right = scan_from_file(x)
+    print('DIFF NLL: {}'.format(diff_nll))
+    
+
+    ####
+    #### Create data for parabola fit
+    ####
 
     def f(x, a, b):
         return a*(x-b)**2
 
     x = np.linspace(0, 2, 501)
-    a = sess.run(second_derivative(mu, Htt, Ztt, W, ttbar))
+    a = second_derivative(mu, Htt, Ztt, W, ttbar)
     y = f(x, a, 1)
 
-    diff_nll, sigma_left, sigma_right = scan(mu, x, Htt, Ztt, W, ttbar)
-    print('DIFF NLL: {}'.format(diff_nll))
-    
+
+    ####
+    #### Plot data
+    ####
+
     plt.figure()
     plt.plot(x, diff_nll)
     plt.plot(x, y, color='k')
@@ -127,7 +142,7 @@ def main():
     plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
     #plt.axhline(y=1., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
-'''
+
 
 if __name__ == '__main__':
     main()
