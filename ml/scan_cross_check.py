@@ -68,6 +68,10 @@ def main():
 
 
     def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
+        # empty file
+        open("dnll_value_list.csv", "w").close()
+
+        # write new data into file
         mu1 = tf.constant(x, dtype=tf.float32)
         for i in tqdm(range(0, len(x))):
             d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))]
@@ -81,12 +85,12 @@ def main():
             diff = []
             for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
-                print(d_value)
                 if d_value <= 1.1 and d_value >= 0.9 and i * scaling > 1.:
                     sigma_right = i * scaling - 1
                 elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
                     sigma_left = 1 - i * scaling  #choose value furthest away from 1
                 diff.append(d_value)
+            print(diff)
         return diff, sigma_left, sigma_right 
                 
 
@@ -94,8 +98,8 @@ def main():
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
     
-    x = np.linspace(0, 2, 101)
-    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    x = np.linspace(0, 2, 501)
+    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
     scan_from_file(x)
 '''
     sess = tf.Session()
