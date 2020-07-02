@@ -61,8 +61,7 @@ def main():
             if d_value <= 1.05 and d_value >= 0.95 and i * scaling > 1.:
                 sigma_right = i * scaling - 1
             elif d_value <= 1.05 and d_value >= 0.95 and i * scaling < 1.:
-                sigma_left.append(1 - i * scaling)
-        sigma_left = sigma_left[0]  #choose value furthest away from 1
+                sigma_left = 1 - i * scaling  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
 
     def second_derivative(mu, Htt, Ztt, W, ttbar):
