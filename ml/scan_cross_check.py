@@ -7,6 +7,8 @@ tf.set_random_seed(1234)
 
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import csv
+from csv import reader
 
 import logging
 logger = logging.getLogger('')
@@ -64,9 +66,26 @@ def main():
                 sigma_left = 1 - i * scaling  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
 
+    def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
+        mu1 = tf.constant(x, dtype=tf.float32)
+        for i in tqdm(range(0, len(x))):
+            d_value = tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
+            with open(r'dnll_value_list.csv', 'a') as file:
+                csv.writer(file).writerow(d_value)
+    
+    def scan_from_file():
+        with open('dnll_value_list', 'r') as file:
+            for d_value in reader(file):
+                pass
+                
+
+
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
-
+    
+    x = np.linspace(0, 2, 501)
+    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+'''
     sess = tf.Session()
 
     def f(x, a, b):
@@ -92,7 +111,7 @@ def main():
     plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
     #plt.axhline(y=1., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
-
+'''
 
 if __name__ == '__main__':
     main()
