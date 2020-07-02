@@ -77,8 +77,10 @@ def main():
                 np.savetxt(file, d_value)
     def scan_from_file():
         with open('dnll_value_list', 'r') as file:
+            i = 0
             for d_value in reader(file):
-                print(d_value)
+                print(i, d_value)
+                i += 1
                 
 
 
