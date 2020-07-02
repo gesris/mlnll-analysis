@@ -73,7 +73,7 @@ def main():
     def f(x, a, b):
         return a*(x-b)**2
 
-    x = np.linspace(0, 2, 501)
+    x = np.linspace(0, 2, 301)
     a = sess.run(second_derivative(mu, Htt, Ztt, W, ttbar))
     y = f(x, a, 1)
 
