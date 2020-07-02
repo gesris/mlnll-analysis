@@ -146,6 +146,13 @@ def main(args):
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
 
+    # save counts into csv file
+    with open("./hists.csv", "ab") as file:
+        np.savetxt(file, Htt_counts)
+        np.savetxt(file, Ztt_counts)
+        np.savetxt(file, W_counts)
+        np.savetxt(file, ttbar_counts)
+
     plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts], background_category, bins, bins_center)
 
     # histogramme mit matplotlib machen!
