@@ -70,9 +70,11 @@ def main():
         mu1 = tf.constant(x, dtype=tf.float32)
         for i in tqdm(range(0, len(x))):
             d_value = tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
-            with open(r'dnll_value_list.csv', 'a') as file:
-                csv.writer(file).writerow(d_value)
-    
+            #with open(r'./dnll_value_list.csv', 'a') as file:
+            #    writer = csv.writer(file)
+            #    writer.writerow(d_value)
+            with open(r"./dnll_value_list.csv", "ab") as file:
+                np.savetxt(file, d_value)
     def scan_from_file():
         with open('dnll_value_list', 'r') as file:
             for d_value in reader(file):
