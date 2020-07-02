@@ -85,7 +85,7 @@ def main():
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
     
-    x = np.linspace(0, 2, 501)
+    x = np.linspace(0, 2, 51)
     create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
 '''
     sess = tf.Session()
