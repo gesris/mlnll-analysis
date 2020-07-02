@@ -81,7 +81,7 @@ def main():
             scaling = 2. / len(x)
             diff = []
             for d_value_ in tqdm(reader(file)):
-                d_value = d_value_[0]
+                d_value = float(d_value_[0])
                 if d_value <= 1.1 and d_value >= 0.9 and i * scaling > 1.:
                     sigma_right = i * scaling - 1
                 elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
