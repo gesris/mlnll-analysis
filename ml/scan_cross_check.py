@@ -66,21 +66,28 @@ def main():
                 sigma_left = 1 - i * scaling  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
 
+
     def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
         mu1 = tf.constant(x, dtype=tf.float32)
         for i in tqdm(range(0, len(x))):
             d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))]
-            #with open(r'./dnll_value_list.csv', 'a') as file:
-            #    writer = csv.writer(file)
-            #    writer.writerow(d_value)
             with open("./dnll_value_list.csv", "ab") as file:
                 np.savetxt(file, d_value)
-    def scan_from_file():
+
+
+    def scan_from_file(x):
         with open('./dnll_value_list.csv', 'r') as file:
             i = 0
-            for d_value in reader(file):
-                print(i, d_value)
+            scaling = 2. / len(x)
+            diff = []
+            for d_value in tqdm(reader(file)):
+                if d_value <= 1.1 and d_value >= 0.9 and i * scaling > 1.:
+                    sigma_right = i * scaling - 1
+                elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
+                    sigma_left = 1 - i * scaling  #choose value furthest away from 1
                 i += 1
+                diff.append(d_value)
+        return diff, sigma_left, sigma_right 
                 
 
 
