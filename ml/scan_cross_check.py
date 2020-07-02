@@ -88,8 +88,8 @@ def main():
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
     
     x = np.linspace(0, 2, 101)
-    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
-    scan_from_file
+    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    scan_from_file()
 '''
     sess = tf.Session()
 
