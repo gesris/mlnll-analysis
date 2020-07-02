@@ -96,7 +96,7 @@ def main():
     
     x = np.linspace(0, 2, 101)
     #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
-    scan_from_file()
+    scan_from_file(x)
 '''
     sess = tf.Session()
 
