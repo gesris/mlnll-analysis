@@ -73,7 +73,7 @@ def main():
             #with open(r'./dnll_value_list.csv', 'a') as file:
             #    writer = csv.writer(file)
             #    writer.writerow(d_value)
-            with open(r"./dnll_value_list.csv", "ab") as file:
+            with open("./dnll_value_list.csv", "ab") as file:
                 np.savetxt(file, d_value)
     def scan_from_file():
         with open('dnll_value_list', 'r') as file:
@@ -85,7 +85,7 @@ def main():
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
     
-    x = np.linspace(0, 2, 51)
+    x = np.linspace(0, 2, 5)
     create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
 '''
     sess = tf.Session()
