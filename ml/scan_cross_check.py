@@ -79,8 +79,9 @@ def main():
         with open('./dnll_value_list.csv', 'r') as file:
             scaling = 2. / len(x)
             diff = []
-            for i, d_value_ in tqdm(enumerate(reader(file))):
+            for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
+                print(d_value)
                 if d_value <= 1.1 and d_value >= 0.9 and i * scaling > 1.:
                     sigma_right = i * scaling - 1
                 elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
