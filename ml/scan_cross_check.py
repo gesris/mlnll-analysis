@@ -26,10 +26,10 @@ def setup_logging(output_file, level=logging.DEBUG):
 def main():
     mu = tf.constant(1.0, tf.float32)
 
-    Htt = [544.02484, 291.63315, 235.41945, 89.54457]
-    Ztt = [107477.97, 7436.9565, 3119.643, 4390.905]
-    W = [41067.562, 4640.386, 3397.768, 13653.995]
-    ttbar = [12337.207, 441.09576, 337.55807, 677.2558]
+    Htt     = [544.02484, 291.63315, 235.41945, 89.54457]
+    Ztt     = [107477.97, 7436.9565, 3119.643, 4390.905]
+    W       = [41067.562, 4640.386, 3397.768, 13653.995]
+    ttbar   = [12337.207, 441.09576, 337.55807, 677.2558]
 
     def nll_value(mu, Htt, Ztt, W, ttbar):
         zero = tf.constant(0, tf.float32)
@@ -58,9 +58,9 @@ def main():
             scaling = 2. / len(x)
             d_value = sess.run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
             diff.append(d_value)
-            if d_value <= 1.01 and d_value >= 0.99 and i * scaling > 1:
+            if d_value <= 1.01 and d_value >= 0.96 and i * scaling > 1.04:
                 sigma_right = i * scaling - 1
-            elif d_value <= 1.01 and d_value >= 0.99 and i * scaling < 1:
+            elif d_value <= 1.01 and d_value >= 0.96 and i * scaling < 1.04:
                 sigma_left.append(1 - i * scaling)
         sigma_left = sigma_left[0]  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
