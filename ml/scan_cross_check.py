@@ -58,9 +58,9 @@ def main():
             scaling = 2. / len(x)
             d_value = sess.run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
             diff.append(d_value)
-            if d_value <= 1.01 and d_value >= 0.96 and i * scaling > 1.04:
+            if d_value <= 1.01 and d_value >= 0.95 and i * scaling > 1.05:
                 sigma_right = i * scaling - 1
-            elif d_value <= 1.01 and d_value >= 0.96 and i * scaling < 1.04:
+            elif d_value <= 1.01 and d_value >= 0.95 and i * scaling < 1.05:
                 sigma_left.append(1 - i * scaling)
         sigma_left = sigma_left[0]  #choose value furthest away from 1
         return diff, sigma_left, sigma_right
@@ -73,7 +73,7 @@ def main():
     def f(x, a, b):
         return a*(x-b)**2
 
-    x = np.linspace(0, 2, 301)
+    x = np.linspace(0, 2, 201)
     a = sess.run(second_derivative(mu, Htt, Ztt, W, ttbar))
     y = f(x, a, 1)
 
