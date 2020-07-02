@@ -78,15 +78,16 @@ def main():
     def scan_from_file():
         with open('dnll_value_list', 'r') as file:
             for d_value in reader(file):
-                pass
+                print(d_value)
                 
 
 
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu)
     
-    x = np.linspace(0, 2, 5)
+    x = np.linspace(0, 2, 101)
     create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    scan_from_file
 '''
     sess = tf.Session()
 
