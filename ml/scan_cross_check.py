@@ -76,7 +76,7 @@ def main():
             with open("./dnll_value_list.csv", "ab") as file:
                 np.savetxt(file, d_value)
     def scan_from_file():
-        with open('dnll_value_list', 'r') as file:
+        with open('./dnll_value_list.csv', 'r') as file:
             i = 0
             for d_value in reader(file):
                 print(i, d_value)
