@@ -34,6 +34,8 @@ def main():
     W       = [41067.562, 4640.386, 3397.768, 13653.995]
     ttbar   = [12337.207, 441.09576, 337.55807, 677.2558]
 
+    
+
     def nll_value(mu, Htt, Ztt, W, ttbar):
         zero = tf.constant(0, tf.float32)
         epsilon = tf.constant(1e-9, tf.float32)
@@ -84,12 +86,14 @@ def main():
         with open('./dnll_value_list.csv', 'r') as file:
             scaling = 2. / len(x)
             diff = []
+            sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
                 if d_value <= 1.1 and d_value >= 0.9 and i * scaling > 1.:
                     sigma_right = i * scaling - 1
                 elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
-                    sigma_left = 1 - i * scaling  #choose value furthest away from 1
+                    sigma_left_list.append(1 - i * scaling)  #choose value furthest away from 1
+                sigma_left = sigma_left_list[0]
                 diff.append(d_value)
         return diff, sigma_left, sigma_right 
                 
