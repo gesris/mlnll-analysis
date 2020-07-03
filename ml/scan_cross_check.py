@@ -123,7 +123,7 @@ def main():
     ####
 
     diff_nll, sigma_left, sigma_right = scan_from_file(x)
-    print('DIFF NLL: {}'.format(diff_nll[101]))
+    print('DIFF NLL: {}'.format(diff_nll[100], diff_nll[101], diff_nll[102]))
 
 
     ####
