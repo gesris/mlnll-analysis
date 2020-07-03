@@ -34,6 +34,11 @@ def main():
     W       = [41067.562, 4640.386, 3397.768, 13653.995]
     ttbar   = [12337.207, 441.09576, 337.55807, 677.2558]
 
+    def load_hists():
+        with open('./hists.csv', 'r') as file:
+            print(file[0])
+            print(file[1])
+
     
 
     def nll_value(mu, Htt, Ztt, W, ttbar):
@@ -109,7 +114,7 @@ def main():
     def f(x, a, b):
         return a*(x-b)**2
 
-    x = np.linspace(0, 2, 501)
+    x = np.linspace(0, 2, 51)
     a = second_derivative(mu, Htt, Ztt, W, ttbar)
     y = f(x, a, 1)
     
