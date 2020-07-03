@@ -79,7 +79,7 @@ def main():
             sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
-                if d_value <= 1.04 and d_value >= 0.96 and i * scaling > 1.:
+                if d_value <= 1.05 and d_value >= 0.95 and i * scaling > 1.:
                     sigma_right = i * scaling - 1
                 elif d_value <= 1.03 and d_value >= 0.97 and i * scaling < 1.:
                     sigma_left_list.append(1 - i * scaling)  #choose value furthest away from 1
@@ -106,11 +106,12 @@ def main():
     a = second_derivative(mu, Htt, Ztt, W, ttbar)
     y = f(x, a, 1)
     
+    
     ####
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
 
 
     ####
