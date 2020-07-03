@@ -41,6 +41,7 @@ def main():
         Ztt = counts[1]
         W = counts[2]
         ttbar = counts[3]
+        print(Htt)
         return(Htt, Ztt, W, ttbar)
     
 
@@ -111,7 +112,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
 
 
     ####
