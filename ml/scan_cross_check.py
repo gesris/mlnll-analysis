@@ -36,9 +36,10 @@ def main():
 
     def load_hists():
         with open('./hists.csv', 'r') as file:
-            print(file[0])
-            print(file[1])
-
+            counts = []
+            for line in file:
+                counts.append([line])
+        print(counts)
     
 
     def nll_value(mu, Htt, Ztt, W, ttbar):
