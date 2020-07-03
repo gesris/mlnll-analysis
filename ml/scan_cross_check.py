@@ -102,6 +102,16 @@ def main():
     def second_derivative(mu, Htt, Ztt, W, ttbar):
         return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu))
 
+    ####
+    #### Create data for parabola fit
+    ####
+
+    def f(x, a, b):
+        return a*(x-b)**2
+
+    x = np.linspace(0, 2, 501)
+    a = second_derivative(mu, Htt, Ztt, W, ttbar)
+    y = f(x, a, 1)
     
     ####
     #### only call this function, if there is no .csv file containing dnll-values
@@ -116,18 +126,6 @@ def main():
 
     diff_nll, sigma_left, sigma_right = scan_from_file(x)
     print('DIFF NLL: {}'.format(diff_nll))
-    
-
-    ####
-    #### Create data for parabola fit
-    ####
-
-    def f(x, a, b):
-        return a*(x-b)**2
-
-    x = np.linspace(0, 2, 501)
-    a = second_derivative(mu, Htt, Ztt, W, ttbar)
-    y = f(x, a, 1)
 
 
     ####
