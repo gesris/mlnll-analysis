@@ -119,7 +119,7 @@ def main():
     ####
 
     diff_nll, sigma_left, sigma_right = scan_from_file(x)
-    print("DIFF NLL:", diff_nll[100], diff_nll[101], diff_nll[102])
+    print("DIFF NLL:", diff_nll[98], diff_nll[99], diff_nll[100], diff_nll[101], diff_nll[102])
 
 
     ####
