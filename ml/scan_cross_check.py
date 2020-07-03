@@ -132,7 +132,7 @@ def main():
     plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
-    plt.ylim((0, 9))
+    plt.ylim((-1, 9))
     plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
     plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
     plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
