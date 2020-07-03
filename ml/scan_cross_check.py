@@ -33,8 +33,9 @@ def main():
             counts = []
             for line in file:
                 lines = []
-                for element in line:
-                    lines.append(float(element))
+                elements = line.split()
+                for i in range(0, len(elements) - 1):
+                    lines.append(float(elements[i]))
                 counts.append(lines)
         Htt = counts[0]
         Ztt = counts[1]
