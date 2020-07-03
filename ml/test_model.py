@@ -94,6 +94,7 @@ def main(args):
 
     x_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
+    fold_scale = tf.placeholder(tf.float)
     Htt_mask = tf.placeholder(tf.float32)
     Ztt_mask = tf.placeholder(tf.float32)
     W_mask = tf.placeholder(tf.float32)
@@ -125,10 +126,10 @@ def main(args):
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
         
-        Htt.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph))
-        Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph))
-        W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph))  
-        ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph))
+        Htt.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale))
+        Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * fold_scale))
+        W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * fold_scale))  
+        ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * fold_scale))
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
@@ -139,15 +140,17 @@ def main(args):
                                     Htt_mask: Htt_mask_feed, \
                                     Ztt_mask: Ztt_mask_feed, \
                                     W_mask: W_mask_feed, \
-                                    ttbar_mask: ttbar_mask_feed})
+                                    ttbar_mask: ttbar_mask_feed,\
+                                    fold_scale: 2.})
 
     logger.info("\n\nHtt Counts: {}".format(Htt_counts))
     logger.info("Ztt Counts: {}".format(Ztt_counts))
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
 
-    # save counts into csv file
-    open("hists.csv", "w").close()
+    ### save counts into csv file
+    # first empty existing file
+    open("./hists.csv", "w").close()
     with open("./hists.csv", "ab") as file:
         np.savetxt(file, [Htt_counts])
         np.savetxt(file, [Ztt_counts])
