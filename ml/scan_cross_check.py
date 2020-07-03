@@ -93,8 +93,9 @@ def main():
                     sigma_right = i * scaling - 1
                 elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
                     sigma_left_list.append(1 - i * scaling)  #choose value furthest away from 1
+                    sigma_left = 1 - i * scaling
                 diff.append(d_value)
-            sigma_left = sigma_left_list[0]
+            print(sigma_left_list)
         return diff, sigma_left, sigma_right 
                 
 
