@@ -32,7 +32,7 @@ def main():
         with open('./hists.csv', 'r') as file:
             counts = []
             for line in file:
-                counts.append([line])
+                counts.append(float([line]))
         Htt = counts[0]
         Ztt = counts[1]
         W = counts[2]
