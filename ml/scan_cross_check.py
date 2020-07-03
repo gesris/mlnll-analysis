@@ -31,7 +31,7 @@ def main():
     def load_hists():
         with open('./hists.csv', 'rU') as file:
             counts = []
-            for line in reader:
+            for line in file:
                 lines = []
                 for element in line:
                     lines.append(float(element))
