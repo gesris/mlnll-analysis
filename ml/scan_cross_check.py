@@ -29,12 +29,20 @@ def main():
     mu = tf.constant(1.0, tf.float32)
 
     def load_hists():
-        with open('./hists.csv', 'r') as file:
+        def conv(s):
+            try:
+                s=float(s)
+            except ValueError:
+                pass
+            return s
+
+        with open('./hists.csv', 'rU') as file:
+            reader = csv.reader(file)
             counts = []
-            for line in file:
+            for line in reader:
                 lines = []
                 for element in line:
-                    lines.append(float(element))
+                    lines.append(conv(element))
                 counts.append(lines)
         Htt = counts[0]
         Ztt = counts[1]
@@ -57,25 +65,7 @@ def main():
             nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
         return nll_statsonly
-    '''
-    def scan(mu0, x, Htt, Ztt, W, ttbar):
-        diff = []
 
-        mu1 = tf.constant(x, dtype=tf.float32)
-        one_plus = tf.constant(1.05, tf.float32)
-        one_minus = tf.constant(0.95, tf.float32)
-        #sigma_left = []
-        #sigma_right = []
-        for i in tqdm(range(0, len(x))):
-            scaling = 2. / len(x)
-            d_value = sess.run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))
-            diff.append(d_value)
-            if d_value <= 1.1 and d_value >= 0.9 and i * scaling > 1.:
-                sigma_right = i * scaling - 1
-            elif d_value <= 1.1 and d_value >= 0.9 and i * scaling < 1.:
-                sigma_left = 1 - i * scaling  #choose value furthest away from 1
-        return diff, sigma_left, sigma_right
-    '''
 
     def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
         # empty file
