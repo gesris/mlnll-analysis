@@ -28,18 +28,16 @@ def setup_logging(output_file, level=logging.DEBUG):
 def main():
     mu = tf.constant(1.0, tf.float32)
 
-    # make this recallable from csv file, which is created in testing stage
-    Htt     = [544.02484, 291.63315, 235.41945, 89.54457]
-    Ztt     = [107477.97, 7436.9565, 3119.643, 4390.905]
-    W       = [41067.562, 4640.386, 3397.768, 13653.995]
-    ttbar   = [12337.207, 441.09576, 337.55807, 677.2558]
-
     def load_hists():
         with open('./hists.csv', 'r') as file:
             counts = []
             for line in file:
                 counts.append([line])
-        print(counts)
+        Htt = counts[0]
+        Ztt = counts[1]
+        W = counts[2]
+        ttbar = counts[3]
+        return(Htt, Ztt, W, ttbar)
     
 
     def nll_value(mu, Htt, Ztt, W, ttbar):
@@ -109,7 +107,7 @@ def main():
         return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu))
 
 
-    load_hists()
+    Htt, Ztt, W, ttbar = load_hists()
 
     ####
     #### Create data for parabola fit
@@ -126,7 +124,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
 
 
     ####
