@@ -29,20 +29,12 @@ def main():
     mu = tf.constant(1.0, tf.float32)
 
     def load_hists():
-        def conv(s):
-            try:
-                s=float(s)
-            except ValueError:
-                pass
-            return s
-
         with open('./hists.csv', 'rU') as file:
-            reader = csv.reader(file)
             counts = []
             for line in reader:
                 lines = []
                 for element in line:
-                    lines.append(conv(element))
+                    lines.append(float(element))
                 counts.append(lines)
         Htt = counts[0]
         Ztt = counts[1]
