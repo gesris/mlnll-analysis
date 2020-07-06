@@ -57,8 +57,8 @@ def plot(signal, background, category, bins, bins_center):
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
-            tf.cast(x > down, tf.float64) * tf.cast(x <= up, tf.float64),
-            tf.float64)
+            tf.cast(x > down, tf.float32) * tf.cast(x <= up, tf.float32),
+            tf.float32)
     mask = tf.squeeze(mask)
 
     def grad(dy):
@@ -92,9 +92,9 @@ def main(args):
     W_mask_feed = np.where(y_array == 2, 1, 0)
     ttbar_mask_feed = np.where(y_array == 3, 1, 0)
 
-    x_ph = tf.placeholder(tf.float64)
-    w_ph = tf.placeholder(tf.float64)
-    fold_scale = tf.placeholder(tf.float64)
+    x_ph = tf.placeholder(tf.float32)
+    w_ph = tf.placeholder(tf.float32)
+    fold_scale = tf.placeholder(tf.float32)
     Htt_mask = tf.placeholder(tf.float64)
     Ztt_mask = tf.placeholder(tf.float64)
     W_mask = tf.placeholder(tf.float64)
@@ -123,8 +123,8 @@ def main(args):
 
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
-        up_ = tf.constant(up, tf.float64)
-        down_ = tf.constant(down, tf.float64)
+        up_ = tf.constant(up, tf.float32)
+        down_ = tf.constant(down, tf.float32)
         
         Htt.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale))
         Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * fold_scale))
