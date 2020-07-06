@@ -76,7 +76,7 @@ def count_masking(x, up, down):
 def main(args):
     inv_fold = [1, 0][args.fold]
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
-                            make_categorical=False, use_class_weights=False)
+                            make_categorical=True, use_class_weights=False)
 
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
@@ -87,10 +87,14 @@ def main(args):
 
     y_array = np.array(y)
 
-    Htt_mask_feed = np.where(y_array == 0, 1, 0)
-    Ztt_mask_feed = np.where(y_array == 1, 1, 0)
-    W_mask_feed = np.where(y_array == 2, 1, 0)
-    ttbar_mask_feed = np.where(y_array == 3, 1, 0)
+    #Htt_mask_feed = np.where(y_array == 0, 1, 0)
+    #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
+    #W_mask_feed = np.where(y_array == 2, 1, 0)
+    #ttbar_mask_feed = np.where(y_array == 3, 1, 0)
+    Htt_mask_feed = y_array[:, 0]
+    Ztt_mask_feed = y_array[:, 1]
+    W_mask_feed = y_array[:, 2]
+    ttbar_mask_feed = y_array[:, 3]
 
     x_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
