@@ -26,7 +26,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 
 def main():
-    mu = tf.constant(1.0, tf.float32)
+    mu = tf.constant(1.0, tf.float64)
 
     def load_hists():
         with open('./hists.csv', 'rU') as file:
@@ -37,16 +37,16 @@ def main():
                 for i in range(0, len(elements)):
                     lines.append(float(elements[i]))
                 counts.append(lines)
-        Htt = counts[0]
-        Ztt = counts[1]
-        W = counts[2]
-        ttbar = counts[3]
+        Htt = tf.constant(counts[0], tf.float64)
+        Ztt = tf.constant(counts[0], tf.float64)
+        W = tf.constant(counts[0], tf.float64)
+        ttbar = tf.constant(counts[0], tf.float64)
         return(Htt, Ztt, W, ttbar)
     
 
     def nll_value(mu, Htt, Ztt, W, ttbar):
-        zero = tf.constant(0, tf.float32)
-        epsilon = tf.constant(1e-9, tf.float32)
+        zero = tf.constant(0, tf.float64)
+        epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
         for i in range(0, len(Htt)):
@@ -65,7 +65,7 @@ def main():
         open("dnll_value_list.csv", "w").close()
 
         # write new data into file
-        mu1 = tf.constant(x, dtype=tf.float32)
+        mu1 = tf.constant(x, dtype=tf.float64)
         for i in tqdm(range(0, len(x))):
             d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))]
             with open("./dnll_value_list.csv", "ab") as file:
@@ -74,15 +74,14 @@ def main():
 
     def scan_from_file(x):
         with open('./dnll_value_list.csv', 'r') as file:
-            scaling = 2. / len(x)
             diff = []
             sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
-                if d_value <= 1.05 and d_value >= 0.95 and i * scaling > 1.:
-                    sigma_right = i * scaling - 1
-                elif d_value <= 1.03 and d_value >= 0.97 and i * scaling < 1.:
-                    sigma_left_list.append(1 - i * scaling)  #choose value furthest away from 1
+                if d_value <= 1.05 and d_value >= 0.95 and i > len(x) / 2:
+                    sigma_right = x[i] - 1
+                elif d_value <= 1.05 and d_value >= 0.95 and i < len(x) / 2:
+                    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
                     #sigma_left = 1 - i * scaling
                 diff.append(d_value)
             sigma_left = sigma_left_list[0]
