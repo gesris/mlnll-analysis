@@ -22,8 +22,8 @@ logger = logging.getLogger('')
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
-            tf.cast(x > down, tf.float32) * tf.cast(x <= up, tf.float32),
-            tf.float32)
+            tf.cast(x > down, tf.float64) * tf.cast(x <= up, tf.float64),
+            tf.float64)
     mask = tf.squeeze(mask)
 
     def grad(dy):
@@ -63,8 +63,8 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     ws = [] # Event weights
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
-        xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
-        w = np.array(d[cfg.ml_weight], dtype=np.float32)
+        xs.append(np.vstack([np.array(d[k], dtype=np.float64) for k in cfg.ml_variables]).T)
+        w = np.array(d[cfg.ml_weight], dtype=np.float64)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
     #logging.info("\n\nBefore stacking and multiplying: {}".format(ws))
@@ -156,10 +156,10 @@ def main(args):
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
 
     # Create model
-    x_ph = tf.placeholder(tf.float32)
+    x_ph = tf.placeholder(tf.float64)
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
-    y_ph = tf.placeholder(tf.float32)
-    w_ph = tf.placeholder(tf.float32)
+    y_ph = tf.placeholder(tf.float64)
+    w_ph = tf.placeholder(tf.float64)
 
     # Add loss treating systematics
     
@@ -168,22 +168,22 @@ def main(args):
     ####    NLL LOSS    ####
     ####                ####
 
-    batch_scale = tf.placeholder(tf.float32)
-    fold_scale = tf.placeholder(tf.float32)
+    batch_scale = tf.placeholder(tf.float64)
+    fold_scale = tf.placeholder(tf.float64)
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
     upper_edges, lower_edges = bins[1:], bins[:-1]
 
-    theta = tf.constant(0.0, tf.float32)
-    mu = tf.constant(1.0, tf.float32)
+    theta = tf.constant(0.0, tf.float64)
+    mu = tf.constant(1.0, tf.float64)
 
-    zero = tf.constant(0, tf.float32)
-    epsilon = tf.constant(1e-9, tf.float32)
+    zero = tf.constant(0, tf.float64)
+    epsilon = tf.constant(1e-9, tf.float64)
 
-    Htt_mask = tf.placeholder(tf.float32)
-    Ztt_mask = tf.placeholder(tf.float32)
-    W_mask = tf.placeholder(tf.float32)
-    ttbar_mask = tf.placeholder(tf.float32)
+    Htt_mask = tf.placeholder(tf.float64)
+    Ztt_mask = tf.placeholder(tf.float64)
+    W_mask = tf.placeholder(tf.float64)
+    ttbar_mask = tf.placeholder(tf.float64)
 
     def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
         counts = []
@@ -192,10 +192,10 @@ def main(args):
             counts.append(Events)
         return tf.squeeze(tf.stack(counts))
 
-    Htt = hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1)
-    Ztt = hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1) 
-    W = hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1)
-    ttbar = hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1)
+    Htt = tf.const(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    Ztt = tf.const(hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    W = tf.const(hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    ttbar = tf.const(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
     nll = zero
     nll_statsonly = zero
