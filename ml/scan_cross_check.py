@@ -102,7 +102,7 @@ def main():
     def f(x, a, b):
         return a*(x-b)**2
 
-    x = np.linspace(0.7, 1.3, 70)
+    x = np.linspace(0.75, 1.25, 70)
     a = second_derivative(mu, Htt, Ztt, W, ttbar)
     y = f(x, a, 1)
     
