@@ -263,7 +263,7 @@ def main(args):
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
+            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: 1.,\
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
