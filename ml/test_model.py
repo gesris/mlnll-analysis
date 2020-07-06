@@ -74,7 +74,8 @@ def count_masking(x, up, down):
 
 
 def main(args):
-    inv_fold = [1, 0][args.fold]
+    #inv_fold = [1, 0][args.fold]
+    inv_fold = args.fold
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
                             make_categorical=True, use_class_weights=False)
 
@@ -87,10 +88,13 @@ def main(args):
 
     y_array = np.array(y)
 
+    # oly possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
     #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
     #W_mask_feed = np.where(y_array == 2, 1, 0)
     #ttbar_mask_feed = np.where(y_array == 3, 1, 0)
+
+    # oly possible, wher make_categorical=True
     Htt_mask_feed = y_array[:, 0]
     Ztt_mask_feed = y_array[:, 1]
     W_mask_feed = y_array[:, 2]
