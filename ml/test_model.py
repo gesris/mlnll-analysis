@@ -143,7 +143,7 @@ def main(args):
     saver.restore(session, path)
 
     Htt_counts, Ztt_counts, W_counts, ttbar_counts = session.run([Htt, Ztt, W, ttbar], \
-                        feed_dict={x_ph: x_preproc, w_ph: 1., \
+                        feed_dict={x_ph: x_preproc, w_ph: w, \
                                     Htt_mask: Htt_mask_feed, \
                                     Ztt_mask: Ztt_mask_feed, \
                                     W_mask: W_mask_feed, \
