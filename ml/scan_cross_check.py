@@ -38,9 +38,9 @@ def main():
                     lines.append(float(elements[i]))
                 counts.append(lines)
         Htt = tf.constant(counts[0], tf.float64)
-        Ztt = tf.constant(counts[0], tf.float64)
-        W = tf.constant(counts[0], tf.float64)
-        ttbar = tf.constant(counts[0], tf.float64)
+        Ztt = tf.constant(counts[1], tf.float64)
+        W = tf.constant(counts[2], tf.float64)
+        ttbar = tf.constant(counts[3], tf.float64)
         return(Htt, Ztt, W, ttbar)
     
 
