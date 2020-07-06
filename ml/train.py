@@ -63,7 +63,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     ws = [] # Event weights
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
-        xs.append(np.vstack([np.array(d[k], dtype=np.floa32) for k in cfg.ml_variables]).T)
+        xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
