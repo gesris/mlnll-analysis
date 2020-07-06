@@ -49,7 +49,8 @@ def main():
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        for i in range(0, len(Htt)):
+        length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
+        for i in range(0, length):
             # Likelihood
             exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
             sys = zero  # systematic has to be added later
