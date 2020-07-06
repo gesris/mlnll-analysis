@@ -111,7 +111,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
 
 
     ####
@@ -119,7 +119,6 @@ def main():
     ####
 
     diff_nll, sigma_left, sigma_right = scan_from_file(x)
-    print("DIFF NLL:", diff_nll[98], diff_nll[99], diff_nll[100], diff_nll[101], diff_nll[102])
 
 
     ####
