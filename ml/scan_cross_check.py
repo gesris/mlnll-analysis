@@ -111,7 +111,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    #create_dnll_file(mu, x, Htt, Ztt, W, ttbar)
+    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
 
 
     ####
