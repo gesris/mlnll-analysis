@@ -22,7 +22,7 @@ logger = logging.getLogger('')
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
-            tf.cast(x > down, tf.float64) * tf.cast(x <= up, tf.float64),
+            tf.cast(x > tf.cast(down, tf.float64), tf.float64) * tf.cast(x <= tf.cast(up, tf.float64), tf.float64),
             tf.float64)
     mask = tf.squeeze(mask)
 
