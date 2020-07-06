@@ -192,10 +192,10 @@ def main(args):
             counts.append(Events)
         return tf.squeeze(tf.stack(counts))
 
-    Htt = tf.constant(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
-    Ztt = tf.constant(hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
-    W = tf.constant(hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
-    ttbar = tf.constant(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    Htt = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    Ztt = tf.cast(hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    W = tf.cast(hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    ttbar = tf.cast(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
     nll = zero
     nll_statsonly = zero
