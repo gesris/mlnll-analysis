@@ -158,7 +158,6 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
-    y_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
 
     # Add loss treating systematics
@@ -253,7 +252,7 @@ def main(args):
 
     for epoch in range(0, 10000):
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train,\
+                feed_dict={x_ph: x_train_preproc, w_ph: 1.,\
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
@@ -264,7 +263,7 @@ def main(args):
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val,\
+            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \

@@ -74,8 +74,7 @@ def count_masking(x, up, down):
 
 
 def main(args):
-    #inv_fold = [1, 0][args.fold]
-    inv_fold = args.fold
+    inv_fold = [1, 0][args.fold]
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
                             make_categorical=True, use_class_weights=False)
 
@@ -144,7 +143,7 @@ def main(args):
     saver.restore(session, path)
 
     Htt_counts, Ztt_counts, W_counts, ttbar_counts = session.run([Htt, Ztt, W, ttbar], \
-                        feed_dict={x_ph: x_preproc, w_ph: w, \
+                        feed_dict={x_ph: x_preproc, w_ph: 1., \
                                     Htt_mask: Htt_mask_feed, \
                                     Ztt_mask: Ztt_mask_feed, \
                                     W_mask: W_mask_feed, \
