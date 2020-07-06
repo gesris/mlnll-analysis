@@ -111,14 +111,14 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
+    #create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
 
 
     ####
     #### assign values from .csv file
     ####
 
-    diff_nll, sigma_left, sigma_right = scan_from_file(x)
+    #diff_nll, sigma_left, sigma_right = scan_from_file(x)
 
 
     ####
@@ -126,16 +126,16 @@ def main():
     ####
 
     plt.figure()
-    plt.plot(x, diff_nll)
+    #plt.plot(x, diff_nll)
     plt.plot(x, y, color='k')
-    plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
+    #plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
-    plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
-    plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
-    plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
-    plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
+    #plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
+    #plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
+    #plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
+    #plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
     #plt.axhline(y=1., color='r')
     plt.savefig("./scan_cross_check.png", bbox_inches="tight")
 
