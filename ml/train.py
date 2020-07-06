@@ -205,10 +205,10 @@ def main(args):
         sys = zero  # systematic has to be added later
         obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
-        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        #nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
-    nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+    #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
 
     ####                ####
