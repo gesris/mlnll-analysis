@@ -95,10 +95,10 @@ def main(args):
     x_ph = tf.placeholder(tf.float32)
     w_ph = tf.placeholder(tf.float32)
     fold_scale = tf.placeholder(tf.float32)
-    Htt_mask = tf.placeholder(tf.float64)
-    Ztt_mask = tf.placeholder(tf.float64)
-    W_mask = tf.placeholder(tf.float64)
-    ttbar_mask = tf.placeholder(tf.float64)
+    Htt_mask = tf.placeholder(tf.float32)
+    Ztt_mask = tf.placeholder(tf.float32)
+    W_mask = tf.placeholder(tf.float32)
+    ttbar_mask = tf.placeholder(tf.float32)
 
     
     ####
