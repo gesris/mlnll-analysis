@@ -299,7 +299,7 @@ def main(args):
     plt.plot(steps_list, loss_val_list)
     plt.xlabel("Steps")
     plt.ylabel("Loss")
-    plt.savefig("./minimization.png", bbox_inches = "tight")
+    plt.savefig(os.path.join(args.workdir, 'model_fold{}/minimization.png'.format(args.fold)), bbox_inches = "tight")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

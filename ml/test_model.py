@@ -51,7 +51,7 @@ def plot(signal, background, category, bins, bins_center):
     plt.xlabel("$f$")
     plt.ylabel("Counts")
     plt.yscale('log')
-    plt.savefig("./histogram.png", bbox_inches = "tight")
+    plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram.png'.format(args.fold)), bbox_inches = "tight")
 
 
 @tf.custom_gradient
