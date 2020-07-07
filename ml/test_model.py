@@ -144,8 +144,8 @@ def main(args):
         W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * fold_scale))  
         ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * fold_scale))
         
-        ttbar_labels.append(ttbar_mask)
-        ttbar_weights.append(ttbar_mask * w_ph)
+    ttbar_labels.append(ttbar_mask)
+    ttbar_weights.append(ttbar_mask * w_ph)
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
