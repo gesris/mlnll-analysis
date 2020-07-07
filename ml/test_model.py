@@ -88,8 +88,8 @@ def main(args):
     y_array = np.array(y)
 
     
-    logger.info("\n\nX: {}".format(x[:, -3:]))
-    logger.info("\n\nW: {}".format(w))
+    logger.info("\n\nX: {}\n length: {}".format(x[:, -3:], len(x[:])))
+    logger.info("\n\nW: {}\n{}".format(w, len(w)))
     
 
     logger.info("\n\nTTBAR LABELS: {}".format(y_array[:, 3]))
