@@ -89,7 +89,7 @@ def main(args):
 
     
     logger.info("\n\nX: {}".format(x[:, -3:]))
-    logger.info("\n\nX: {}".format(np.sum(x[:, -3:])))
+    logger.info("\n\nX: {}".format(w))
     
 
     logger.info("\n\nTTBAR LABELS: {}".format(y_array[:, 3]))
