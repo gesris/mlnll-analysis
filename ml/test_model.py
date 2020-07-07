@@ -76,7 +76,7 @@ def count_masking(x, up, down):
 def main(args):
     inv_fold = [1, 0][args.fold]
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
-                            make_categorical=True, use_class_weights=False)
+                            make_categorical=False, use_class_weights=False)
 
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
@@ -154,6 +154,7 @@ def main(args):
     logger.info("Ztt Counts: {}".format(Ztt_counts))
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
+    logger.info("ttbar Counts: {}\n\n".format(w_ph * ttbar_mask))
 
     ### save counts into csv file
     # first empty existing file
