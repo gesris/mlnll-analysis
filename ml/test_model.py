@@ -87,6 +87,7 @@ def main(args):
 
     y_array = np.array(y)
 
+    logger.info("\n\nWEIGHTS: {}".format(y_array))
     logger.info("\n\nWEIGHTS: {}".format(w))
     logger.info("\n\nSUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
     # oly possible, wher make_categorical=False
