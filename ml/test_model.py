@@ -87,10 +87,11 @@ def main(args):
 
     y_array = np.array(y)
 
+    logger.info("\n\nX: {}".format(x))
+
     logger.info("\n\nTTBAR LABELS: {}".format(y_array[:, 3]))
     logger.info("\n\nTTBAR WEIGHTS: {}".format(w[y_array[:, 3] == 1]))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
-    logger.info("\n\nTTBAR: {}".format(w[y_array[:, 3] == 1] * y_array[:, 3]))
     # oly possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
     #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
