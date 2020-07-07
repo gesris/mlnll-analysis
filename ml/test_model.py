@@ -87,8 +87,8 @@ def main(args):
 
     y_array = np.array(y)
 
-    logger.info("\n\nWEIGHTS: {}".format(y_array))
-    logger.info("\n\nWEIGHTS: {}".format(w))
+    logger.info("\n\nLABELS: {}".format(y_array[:, 3]))
+    logger.info("\n\nWEIGHTS: {}".format(w[y_array[:, 3] == 1]))
     logger.info("\n\nSUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
     # oly possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
