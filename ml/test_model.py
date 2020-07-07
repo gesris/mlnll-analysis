@@ -157,8 +157,8 @@ def main(args):
 
     ### save counts into csv file
     # first empty existing file
-    open("./hists.csv", "w").close()
-    with open("./hists.csv", "ab") as file:
+    open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), "w").close()
+    with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), "ab") as file:
         np.savetxt(file, [Htt_counts])
         np.savetxt(file, [Ztt_counts])
         np.savetxt(file, [W_counts])
