@@ -141,8 +141,8 @@ def main(args):
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
-
-    Htt_counts, Ztt_counts, W_counts, ttbar_counts = session.run([Htt, Ztt, W, ttbar], \
+    test = np.sum(w_ph * ttbar_mask)
+    Htt_counts, Ztt_counts, W_counts, ttbar_counts, test_ = session.run([Htt, Ztt, W, ttbar, test], \
                         feed_dict={x_ph: x_preproc, w_ph: w, \
                                     Htt_mask: Htt_mask_feed, \
                                     Ztt_mask: Ztt_mask_feed, \
@@ -154,7 +154,7 @@ def main(args):
     logger.info("Ztt Counts: {}".format(Ztt_counts))
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
-    logger.info("ttbar Counts: {}\n\n".format(w_ph * ttbar_mask))
+    logger.info("SUM WEIGHTS: {}\n\n".format(test))
 
     ### save counts into csv file
     # first empty existing file
