@@ -86,7 +86,9 @@ def main(args):
     ####
 
     y_array = np.array(y)
-    logger.info("SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
+
+    logger.info("\n\nWEIGHTS: {}".format(w))
+    logger.info("\n\nSUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
     # oly possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
     #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
@@ -127,6 +129,8 @@ def main(args):
     Ztt = []
     W = []
     ttbar = []
+    
+    ttbar_weights = []
 
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
@@ -137,12 +141,14 @@ def main(args):
         Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * fold_scale))
         W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * fold_scale))  
         ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * fold_scale))
+        
+        ttbar_weights.append(ttbar_mask * w_ph)
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
     
-    Htt_counts, Ztt_counts, W_counts, ttbar_counts, test_ = session.run([Htt, Ztt, W, ttbar], \
+    Htt_counts, Ztt_counts, W_counts, ttbar_counts, ttbar_weights_ = session.run([Htt, Ztt, W, ttbar, ttbar_weights], \
                         feed_dict={x_ph: x_preproc, w_ph: w, \
                                     Htt_mask: Htt_mask_feed, \
                                     Ztt_mask: Ztt_mask_feed, \
@@ -154,6 +160,8 @@ def main(args):
     logger.info("Ztt Counts: {}".format(Ztt_counts))
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
+
+    logger.info("TTBAR WEIGHTS: {}\n\n".format(ttbar_weights_))
 
     ### save counts into csv file
     # first empty existing file
