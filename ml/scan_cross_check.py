@@ -32,7 +32,7 @@ def main():
     mu = tf.constant(1.0, tf.float64)
 
     def load_hists():
-        with open('./hists.csv', 'rU') as file:
+        with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), 'rU') as file:
             counts = []
             for line in file:
                 lines = []
@@ -66,18 +66,18 @@ def main():
 
     def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
         # empty file
-        open("dnll_value_list.csv", "w").close()
+        open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "w").close()
 
         # write new data into file
         mu1 = tf.constant(x, dtype=tf.float64)
         for i in tqdm(range(0, len(x))):
             d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))]
-            with open("./dnll_value_list.csv", "ab") as file:
+            with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "ab") as file:
                 np.savetxt(file, d_value)
 
 
     def scan_from_file(x):
-        with open('./dnll_value_list.csv', 'r') as file:
+        with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), 'r') as file:
             diff = []
             sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
