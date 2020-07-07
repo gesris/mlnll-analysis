@@ -127,6 +127,7 @@ def main(args):
     Ztt = []
     W = []
     ttbar = []
+    test = []
 
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
@@ -137,11 +138,12 @@ def main(args):
         Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * fold_scale))
         W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * fold_scale))  
         ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * fold_scale))
+        test.append(w_ph * ttbar_mask)
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
-    test = np.sum(w_ph * ttbar_mask)
+    
     Htt_counts, Ztt_counts, W_counts, ttbar_counts, test_ = session.run([Htt, Ztt, W, ttbar, test], \
                         feed_dict={x_ph: x_preproc, w_ph: w, \
                                     Htt_mask: Htt_mask_feed, \
@@ -154,7 +156,7 @@ def main(args):
     logger.info("Ztt Counts: {}".format(Ztt_counts))
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
-    logger.info("SUM WEIGHTS: {}\n\n".format(test))
+    logger.info("SUM WEIGHTS: {}\n\n".format(np.sum(test_)))
 
     ### save counts into csv file
     # first empty existing file
