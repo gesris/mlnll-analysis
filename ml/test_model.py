@@ -88,7 +88,7 @@ def main(args):
     y_array = np.array(y)
 
     logger.info("\n\nX: {}".format(x))
-    logger.info("\n\nX: {}".format(x[:-3]))
+    logger.info("\n\nX: {}".format(x[-3:]))
 
     logger.info("\n\nTTBAR LABELS: {}".format(y_array[:, 3]))
     logger.info("\n\nTTBAR WEIGHTS: {}".format(w[y_array[:, 3] == 1]))
