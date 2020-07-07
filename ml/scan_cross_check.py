@@ -1,3 +1,6 @@
+import os
+import argparse
+
 import numpy as np
 np.random.seed(1234)
 import tensorflow.compat.v1 as tf
@@ -102,7 +105,7 @@ def main():
     def f(x, a, b):
         return a*(x-b)**2
 
-    x = np.linspace(0.75, 1.25, 100)
+    x = np.linspace(0.0, 2.0, 100)
     a = second_derivative(mu, Htt, Ztt, W, ttbar)
     y = f(x, a, 1)
     
@@ -111,7 +114,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
+    #create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
 
 
     ####
@@ -137,9 +140,15 @@ def main():
     plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
     plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
     #plt.axhline(y=1., color='r')
-    plt.savefig("./scan_cross_check.png", bbox_inches="tight")
+    #plt.savefig("./scan_cross_check.png", bbox_inches="tight")
+    plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check.png'.format(args.fold)), bbox_inches="tight")
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('workdir', help='Working directory for outputs')
+    parser.add_argument('fold', type=int, help='Training fold')
+    args = parser.parse_args()
+    setup_logging(os.path.join(args.workdir, 'scan_fold{}.log'.format(args.fold)), logging.INFO)
     main()
 
