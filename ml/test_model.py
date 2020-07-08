@@ -94,7 +94,7 @@ def main(args):
     test = x[y_array[:, 3] == 1]
     for i in range(1, 4):
         test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
-    logger.info("\n\nXxW: {}".format(test[:, -1]))
+    logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
     #logger.info("\n\nSUM XxW: {}".format(np.sum(test[:, -1])))
     
     # only possible, wher make_categorical=False
