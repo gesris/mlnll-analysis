@@ -93,10 +93,16 @@ def main(args):
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
     test = x_preproc[y_array[:, 3] == 1]
-    for i in range(1, 4):
-        test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
-    logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
-    logger.info("\n\nXxW SUM: {}".format(np.sum(test[:, -1]) + np.sum(test[:, -2]) + np.sum(test[:, -3])))
+    #for i in range(1, 4):
+    #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
+    summe = 0.
+    for i in range(0, 10):
+        test[:, i] = test[:, i] * w[y_array[:, 3] == 1]
+        logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, i]))
+        summe += np.sum(test[:, i])
+    logger.info("\n\nXxW SUM: {}".format(summe))
+    #logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
+    #logger.info("\n\nXxW SUM: {}".format(np.sum(test[:, -1]) + np.sum(test[:, -2]) + np.sum(test[:, -3])))
     
     # only possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
