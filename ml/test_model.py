@@ -87,25 +87,15 @@ def main(args):
 
     y_array = np.array(y)
 
-    #logger.info("\n\nYARRAY: {}\nLength: {}".format(y_array, len(y_array[:, 1])))
-    #logger.info("\n\nX TOT: {}\nLength: {}".format(x_preproc, len(x_preproc)))
-    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x_preproc[y_array[:, 3] == 1], len(x_preproc[y_array[:, 3] == 1])))
+    logger.info("\n\nHTT WEIGHTS: {}\nLength: {}".format(w[y_array[:, 0] == 1], len(w[y_array[:, 0] == 1])))
+    logger.info("\n\nHTT SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 0] == 1])))
+    logger.info("\n\nZTT WEIGHTS: {}\nLength: {}".format(w[y_array[:, 1] == 1], len(w[y_array[:, 1] == 1])))
+    logger.info("\n\nZTT SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 1] == 1])))
+    logger.info("\n\nW WEIGHTS: {}\nLength: {}".format(w[y_array[:, 2] == 1], len(w[y_array[:, 2] == 1])))
+    logger.info("\n\nW SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 2] == 1])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
-    x_weighted = x_preproc
-    #for i in range(1, 4):
-    #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
-    summe1, summe2, summe3, summe0 = [0., 0., 0., 0.]
-    for i in range(0, 10):
-        x_weighted[:, i] = x_weighted[:, i] * w
-        #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
-        summe0 = np.sum(x_weighted[y_array[:, 0] == 1][:, i])
-        summe1 = np.sum(x_weighted[y_array[:, 1] == 1][:, i])
-        summe2 = np.sum(x_weighted[y_array[:, 2] == 1][:, i])
-        summe3 = np.sum(x_weighted[y_array[:, 3] == 1][:, i])
-        logger.info("\n\nX Preprocess SUM: {} : {} : {} : {}".format(summe0, summe1, summe2, summe3))
-    #logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
-    #logger.info("\n\nXxW SUM: {}".format(np.sum(test[:, -1]) + np.sum(test[:, -2]) + np.sum(test[:, -3])))
+
     
     # only possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
