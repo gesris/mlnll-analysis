@@ -90,7 +90,7 @@ def main(args):
     
     logger.info("\n\nX: {}\n length: {}".format(x[:, -3:], len(x[:])))
     logger.info("\n\nW: {}\n{}".format(w, len(w)))
-    logger.info("\n\nWxX: {}\nSUM:".format(w * x[:, -1:]))
+    logger.info("\n\nX TTBAR: {}".format(x[y_array[:, 3] == 1]))
     
 
     logger.info("\n\nTTBAR LABELS: {}".format(y_array[:, 3]))
