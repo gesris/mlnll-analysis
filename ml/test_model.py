@@ -92,7 +92,7 @@ def main(args):
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
 
-    logger.info("\n\nXxW: {}".format(np.matmul(x[y_array[:, 3] == 1], w[y_array[:, 3] == 1])))
+    logger.info("\n\nXxW: {}".format((x[y_array[:, 3] == 1].dot(w[y_array[:, 3] == 1]))))
     # only possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
     #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
