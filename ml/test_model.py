@@ -87,14 +87,10 @@ def main(args):
 
     y_array = np.array(y)
 
-    logger.info("\n\nHTT WEIGHTS: {}\nLength: {}".format(w[y_array[:, 0] == 1], len(w[y_array[:, 0] == 1])))
-    logger.info("\n\nHTT SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 0] == 1])))
-    logger.info("\n\nZTT WEIGHTS: {}\nLength: {}".format(w[y_array[:, 1] == 1], len(w[y_array[:, 1] == 1])))
-    logger.info("\n\nZTT SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 1] == 1])))
-    logger.info("\n\nW WEIGHTS: {}\nLength: {}".format(w[y_array[:, 2] == 1], len(w[y_array[:, 2] == 1])))
-    logger.info("\n\nW SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 2] == 1])))
-    logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
-    logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
+    logger.info("\n\nHTT SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 0] == 1])))
+    logger.info("\n\nZTT SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 1] == 1])))
+    logger.info("\n\nW SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 2] == 1])))
+    logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 3] == 1])))
 
     
     # only possible, wher make_categorical=False
