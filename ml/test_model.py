@@ -95,7 +95,7 @@ def main(args):
     x_weighted = x_preproc
     #for i in range(1, 4):
     #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
-    summe1, summe2, summe3, summe0 = 0.
+    summe1, summe2, summe3, summe0 = [0., 0., 0., 0.]
     for i in range(0, 10):
         x_weighted[:, i] = x_weighted[:, i] * w
         #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
