@@ -89,10 +89,10 @@ def main(args):
 
     #logger.info("\n\nYARRAY: {}\nLength: {}".format(y_array, len(y_array[:, 1])))
     logger.info("\n\nX TOT: {}\nLength: {}".format(x_preproc, len(x_preproc)))
-    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x[y_array[:, 3] == 1][:, -3:], len(x[y_array[:, 3] == 1][:, -3:])))
+    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x_preproc[y_array[:, 3] == 1][:, -3:], len(x_preproc[y_array[:, 3] == 1][:, -3:])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
-    test = x[y_array[:, 3] == 1]
+    test = x_preproc[y_array[:, 3] == 1]
     for i in range(1, 4):
         test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
     logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
