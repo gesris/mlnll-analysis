@@ -87,7 +87,8 @@ def main(args):
 
     y_array = np.array(y)
 
-    logger.info("\n\nYARRAY: {}\nLength: {}".format(y_array, len(y_array[:, 1])))
+    #logger.info("\n\nYARRAY: {}\nLength: {}".format(y_array, len(y_array[:, 1])))
+    logger.info("\n\nX TOT: {}\nLength: {}".format(x, len(x)))
     logger.info("\n\nX TTBAR: {}\nLength: {}".format(x[y_array[:, 3] == 1][:, -3:], len(x[y_array[:, 3] == 1][:, -3:])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
@@ -96,7 +97,6 @@ def main(args):
         test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
     logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
     logger.info("\n\nXxW SUM: {}\n{}\n{}".format(np.sum(test[:, -1]), np.sum(test[:, -2]), np.sum(test[:, -3])))
-    #logger.info("\n\nSUM XxW: {}".format(np.sum(test[:, -1])))
     
     # only possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
