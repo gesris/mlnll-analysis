@@ -96,7 +96,7 @@ def main(args):
     for i in range(1, 4):
         test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
     logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
-    logger.info("\n\nXxW SUM: {}\n{}\n{}".format(np.sum(test[:, -1]), np.sum(test[:, -2]), np.sum(test[:, -3])))
+    logger.info("\n\nXxW SUM: {}".format(np.sum(test[:, -1]) + np.sum(test[:, -2]) + np.sum(test[:, -3])))
     
     # only possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
