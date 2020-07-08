@@ -88,8 +88,8 @@ def main(args):
     y_array = np.array(y)
 
     #logger.info("\n\nYARRAY: {}\nLength: {}".format(y_array, len(y_array[:, 1])))
-    logger.info("\n\nX TOT: {}\nLength: {}".format(x_preproc, len(x_preproc)))
-    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x_preproc[y_array[:, 3] == 1][:, -3:], len(x_preproc[y_array[:, 3] == 1][:, -3:])))
+    #logger.info("\n\nX TOT: {}\nLength: {}".format(x_preproc, len(x_preproc)))
+    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x_preproc[y_array[:, 3] == 1], len(x_preproc[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
     test = x_preproc
@@ -98,7 +98,7 @@ def main(args):
     summe = 0.
     for i in range(0, 10):
         test[y_array[:, 3] == 1][:, i] = test[y_array[:, 3] == 1][:, i] * w[y_array[:, 3] == 1]
-        logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
+        #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
         summe += np.sum(test[y_array[:, 3] == 1][:, i])
     logger.info("\n\nXxW SUM: {}".format(summe))
     #logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
