@@ -99,7 +99,7 @@ def main(args):
     for i in range(0, 10):
         test[:, i] = test[:, i] * w
         #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
-        summe += np.sum(test[y_array[:, 3] == 1][:, i])
+        summe += np.sum(test[y_array[:, 2] == 1][:, i])
     logger.info("\n\nX Preprocess SUM: {}".format(summe))
     #logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
     #logger.info("\n\nXxW SUM: {}".format(np.sum(test[:, -1]) + np.sum(test[:, -2]) + np.sum(test[:, -3])))
