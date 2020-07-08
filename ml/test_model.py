@@ -87,10 +87,11 @@ def main(args):
 
     y_array = np.array(y)
 
-    logger.info("\n\nHTT SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 0] == 1])))
-    logger.info("\n\nZTT SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 1] == 1])))
-    logger.info("\n\nW SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 2] == 1])))
-    logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(2*np.sum(w[y_array[:, 3] == 1])))
+    fold_factor = 2.
+    logger.info("\n\nHTT SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 0] == 1])))
+    logger.info("\n\nZTT SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 1] == 1])))
+    logger.info("\n\nW SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 2] == 1])))
+    logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 3] == 1])))
 
     
     # only possible, wher make_categorical=False
