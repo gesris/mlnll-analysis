@@ -87,14 +87,13 @@ def main(args):
 
     y_array = np.array(y)
 
-    logger.info("\n\nW: {}\n{}".format(w, len(w)))
-    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x[y_array[:, 3] == 1], len(x[y_array[:, 3] == 1])))
-    
 
-    logger.info("\n\nTTBAR LABELS: {}".format(y_array[:, 3]))
+    logger.info("\n\nX TTBAR: {}\nLength: {}".format(x[y_array[:, 3] == 1], len(x[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
-    # oly possible, wher make_categorical=False
+
+    logger.info("\n\nXxW: {}".format(x[y_array[:, 3] == 1] * w[y_array[:, 3] == 1]))
+    # only possible, wher make_categorical=False
     #Htt_mask_feed = np.where(y_array == 0, 1, 0)
     #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
     #W_mask_feed = np.where(y_array == 2, 1, 0)
