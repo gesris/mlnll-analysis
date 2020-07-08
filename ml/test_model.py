@@ -95,12 +95,15 @@ def main(args):
     x_weighted = x_preproc
     #for i in range(1, 4):
     #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
-    summe = 0.
+    summe1, summe2, summe3, summe0 = 0.
     for i in range(0, 10):
         x_weighted[:, i] = x_weighted[:, i] * w
         #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
-        summe = np.sum(x_weighted[y_array[:, 3] == 1][:, i])
-        logger.info("\n\nX Preprocess SUM: {}".format(summe))
+        summe0 = np.sum(x_weighted[y_array[:, 0] == 1][:, i])
+        summe1 = np.sum(x_weighted[y_array[:, 1] == 1][:, i])
+        summe2 = np.sum(x_weighted[y_array[:, 2] == 1][:, i])
+        summe3 = np.sum(x_weighted[y_array[:, 3] == 1][:, i])
+        logger.info("\n\nX Preprocess SUM: {} : {} : {} : {}".format(summe0, summe1, summe2, summe3))
     #logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
     #logger.info("\n\nXxW SUM: {}".format(np.sum(test[:, -1]) + np.sum(test[:, -2]) + np.sum(test[:, -3])))
     
