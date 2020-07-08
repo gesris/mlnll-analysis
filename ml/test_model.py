@@ -96,7 +96,7 @@ def main(args):
     #for i in range(1, 4):
     #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
     summe = 0.
-    for i in range(0, 2):
+    for i in range(1, 3):
         x_weighted[:, i] = x_weighted[:, i] * w
         #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
         summe += np.sum(x_weighted[y_array[:, 3] == 1][:, i])
