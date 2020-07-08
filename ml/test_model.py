@@ -97,7 +97,7 @@ def main(args):
     #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
     summe = 0.
     for i in range(0, 10):
-        #test[y_array[:, 3] == 1][:, i] = test[y_array[:, 3] == 1][:, i] * w[y_array[:, 3] == 1]
+        test[:, i] = test[:, i] * w
         #logger.info("\n\nXxW: {}".format(test[y_array[:, 3] == 1][:, i]))
         summe += np.sum(test[y_array[:, 3] == 1][:, i])
     logger.info("\n\nX Preprocess SUM: {}".format(summe))
