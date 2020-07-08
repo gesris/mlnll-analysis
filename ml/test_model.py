@@ -92,7 +92,7 @@ def main(args):
     logger.info("\n\nX TTBAR: {}\nLength: {}".format(x_preproc[y_array[:, 3] == 1], len(x_preproc[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
-    x_weighted = x_preproc
+    x_weighted = x
     #for i in range(1, 4):
     #    test[:, -1 * i] = test[:, -1 * i] * w[y_array[:, 3] == 1]
     summe = 0.
