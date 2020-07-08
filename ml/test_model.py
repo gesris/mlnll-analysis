@@ -87,7 +87,7 @@ def main(args):
 
     y_array = np.array(y)
 
-
+    logger.info("\n\nYARRAY: {}".format(y_array))
     logger.info("\n\nX TTBAR: {}\nLength: {}".format(x[y_array[:, 3] == 1][:, -3:], len(x[y_array[:, 3] == 1][:, -3:])))
     logger.info("\n\nTTBAR WEIGHTS: {}\nLength: {}".format(w[y_array[:, 3] == 1], len(w[y_array[:, 3] == 1])))
     logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(np.sum(w[y_array[:, 3] == 1])))
