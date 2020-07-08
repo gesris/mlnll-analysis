@@ -98,7 +98,7 @@ def main(args):
     summe = 0.
     for i in range(0, 10):
         test[:, i] = test[:, i] * w[y_array[:, 3] == 1]
-        logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, i]))
+        logger.info("\n\nXxW: {}".format(test[:, i]))
         summe += np.sum(test[:, i])
     logger.info("\n\nXxW SUM: {}".format(summe))
     #logger.info("\n\nXxW: {}\n{}\n{}".format(test[:, -1], test[:, -2], test[:, -3]))
