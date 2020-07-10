@@ -8,7 +8,7 @@ hdata = []
 hcount = []
 for key in d.GetListOfKeys():
     name = key.GetName()
-    if 'mt_' in name:
+    if 'ggH125' in name:
         h = d.Get(name)
         procs[name] = [h.Integral()]
         h.Draw("HIST SAME")
