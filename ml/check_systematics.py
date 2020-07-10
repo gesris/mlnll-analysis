@@ -41,10 +41,10 @@ def diff_hists():
     for i, hist in enumerate(systematics_ggH125):
         # normalization of sys hists
         hist *= hyields[0] / hyields[i + 1]
-        diff_sums.append(np.sum(np.abs(nominal_ggH125 - hist)))
+        diff_sums.append(np.sum((nominal_ggH125 - hist)**2))
     
     for i in range(len(hnames)):
-        print("Yield: {:.3f}       AbsDiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
+        print("Yield: {:.3f}       SquaredDiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
     
 
 diff_hists()
