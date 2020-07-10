@@ -42,7 +42,8 @@ def diff_hists():
         diff_sums.append(np.sum(np.abs(nominal_ggH125 - hist)))
     
     for i in range(len(hnames)):
-        print("Name: {},        Yield: {:.3f}       DiffSum: {:.3f}".format(hnames[i], hyields[i], diff_sums[i]))
+        print("Yield: {:.3f}       DiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
+    
 
 diff_hists()
 
