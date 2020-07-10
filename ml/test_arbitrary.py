@@ -11,10 +11,10 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         procs[name] = [h.Integral()]
         hcount.append(procs[name][0])
-hdata = []
+#hdata = []
 
 
-hdata.append(procs[name])
+#hdata.append(procs[name])
 
 print(hcount)
 
