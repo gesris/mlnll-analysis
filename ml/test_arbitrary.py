@@ -27,6 +27,7 @@ for key in d.GetListOfKeys():
 # first histogram is nominal ggH125, rest systematics
 nominal_ggH125 = hists[0]
 systematics_ggH125 = hists[0:]
+print(nominal_ggH125)
 print(systematics_ggH125)
 
 #for i in range(0, len(hnames)):
