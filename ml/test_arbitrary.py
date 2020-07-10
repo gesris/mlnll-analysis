@@ -8,9 +8,9 @@ nbins = 32
 yields = {}
 bincounts = {}
 
-hnames = []
-hyields = []
-hists = []
+hnames = []     # contains all names of root histograms
+hyields = []    # contains yields of root histograms
+hists = []      # contains python histograms of root histograms
 
 for key in d.GetListOfKeys():
     name = key.GetName()
@@ -24,8 +24,12 @@ for key in d.GetListOfKeys():
         bincounts[name] = [h.GetBinContent(i + 1) for i in range(nbins)]
         hists.append(bincounts[name])
 
+# first histogram is nominal ggH125, rest systematics
+nominal_ggH125 = hists[0]
+systematics_ggH125 = hists[0:]
+print(systematics_ggH125)
 
-for i in range(0, len(hnames)):
-    print("Name: {},        Yield: {:.3f}\nHistogram: {}".format(hnames[i], hyields[i], hists[i]))
+#for i in range(0, len(hnames)):
+#    print("Name: {},        Yield: {:.3f}\nHistogram: {}".format(hnames[i], hyields[i], hists[i]))
 
 
