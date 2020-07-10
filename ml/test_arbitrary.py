@@ -6,7 +6,7 @@ d = f.Get('htt_mt_0_2018')
 procs = {}
 for key in d.GetListOfKeys():
     name = key.GetName()
-    if 'ggH125_THU_ggH' in name:
+    if 'qqH125_THU_qqH_JET01' in name:
         continue
     h = d.Get(name)
     procs[name] = [h.Integrate()]
