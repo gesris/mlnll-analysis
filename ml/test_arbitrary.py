@@ -7,12 +7,12 @@ procs = {}
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'qqH125_THU_qqH_JET01' in name:
-        continue
-    h = d.Get(name)
-    procs[name] = [h.Integrate()]
+        #continue
+        h = d.Get(name)
+        procs[name] = [h.Integrate()]
 hdata = []
-hcount = []
+#hcount = []
 
 hdata.append(procs[name])
-hcount.append(procs[name][0])
+#hcount.append(procs[name][0])
 
