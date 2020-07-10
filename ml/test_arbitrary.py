@@ -9,8 +9,7 @@ for key in d.GetListOfKeys():
     if 'qqH125_THU_qqH' in name:
         h = d.Get(name)
         print(h)
-        #procs[name] = [h.Integrate()]
-    print('qqH125_THU_qqH_Mjj350Up'.Integrate())
+        procs[name] = [h.Integral()]
 #hdata = []
 #hcount = []
 
