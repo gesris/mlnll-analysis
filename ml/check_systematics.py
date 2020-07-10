@@ -37,17 +37,13 @@ def diff_hists():
     nominal_ggH125 = np.array(hists[0])
     systematics_ggH125 = np.array(hists[1:])
 
-    diff_sums = []
+    diff_sums = [0.000]
     for hist in systematics_ggH125:
         diff_sums.append(np.sum(np.abs(nominal_ggH125 - hist)))
-    print(len(diff_sums), diff_sums)
+    
+    for i in range(len(hnames)):
+        print("Name: {},        Yield: {:.3f}       DiffSum: {:.3f}".format(hnames[i], hyields[i], diff_sums[i]))
 
 diff_hists()
-
-
-
-
-#for i in range(0, len(hnames)):
-#    print("Name: {},        Yield: {:.3f}\nHistogram: {}".format(hnames[i], hyields[i], hists[i]))
 
 
