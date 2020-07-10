@@ -10,6 +10,7 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         print(h)
         #procs[name] = [h.Integrate()]
+    print('qqH125_THU_qqH_Mjj350Up'.Integrate())
 #hdata = []
 #hcount = []
 
