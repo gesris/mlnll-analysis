@@ -8,11 +8,10 @@ for key in d.GetListOfKeys():
     name = key.GetName()
     if 'qqH125_THU_qqH' in name:
         h = d.Get(name)
-        print(h)
         procs[name] = [h.Integral()]
-#hdata = []
-#hcount = []
+hdata = []
+hcount = []
 
-#hdata.append(procs[name])
-#hcount.append(procs[name][0])
+hdata.append(procs[name])
+hcount.append(procs[name][0])
 
