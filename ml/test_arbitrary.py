@@ -8,7 +8,7 @@ hdata = []
 hcount = []
 for key in d.GetListOfKeys():
     name = key.GetName()
-    if 'nominal' in name:
+    if 'ntuple' in name:
         h = d.Get(name)
         procs[name] = [h.Integral()]
 
