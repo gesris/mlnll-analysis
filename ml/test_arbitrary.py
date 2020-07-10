@@ -16,7 +16,6 @@ for key in d.GetListOfKeys():
         hcount.append(procs[name][0])
 
 for i in range(0, len(hdata)):
-    print(hdata[i])
-    print(hcount[i])
+    print("Name: {},        Events: {}".format(hdata[i], hcount[i]))
 
 
