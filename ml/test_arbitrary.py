@@ -6,9 +6,9 @@ d = f.Get('htt_mt_0_2018')
 procs = {}
 for key in d.GetListOfKeys():
     name = key.GetName()
-    if 'qqH125_THU_qqH_JET01' in name:
+    if 'qqH125_THU_qqH' in name:
         h = d.Get(name)
-        print(h.Integrate())
+        print(h)
         #procs[name] = [h.Integrate()]
 #hdata = []
 #hcount = []
