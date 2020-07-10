@@ -10,6 +10,7 @@ bincounts = {}
 
 hnames = []
 hyields = []
+hists = []
 
 for key in d.GetListOfKeys():
     name = key.GetName()
@@ -21,12 +22,10 @@ for key in d.GetListOfKeys():
         hnames.append(name)
         hyields.append(yields[name][0])
         bincounts[name] = [h.GetBinContent(i + 1) for i in range(nbins)]
-        print("1",bincounts[name])
-
-hist = []
+        hists.append(bincounts[name])
 
 
-#for i in range(0, len(hnames)):
-#    print("Name: {},        Yield: {:.3f}".format(hnames[i], hyields[i]))
+for i in range(0, len(hnames)):
+    print("Name: {},        Yield: {:.3f}\nHistogram: {}".format(hnames[i], hyields[i], hists[i]))
 
 
