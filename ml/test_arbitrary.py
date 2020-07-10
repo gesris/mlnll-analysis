@@ -29,6 +29,7 @@ nominal_ggH125 = hists[0]
 systematics_ggH125 = hists[1:]
 print(nominal_ggH125)
 print(systematics_ggH125)
+print(len(systematics_ggH125) len(hists))
 
 #for i in range(0, len(hnames)):
 #    print("Name: {},        Yield: {:.3f}\nHistogram: {}".format(hnames[i], hyields[i], hists[i]))
