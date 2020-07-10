@@ -14,4 +14,6 @@ hcount = []
 
 hdata.append(procs[name])
 hcount.append(procs[name][0])
+print(procs[name])
+print(procs[name][0])
 
