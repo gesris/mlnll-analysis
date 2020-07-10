@@ -12,7 +12,7 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         procs[name] = [h.Integral()]
 
-        hdata.append(h)
+        hdata.append(name)
         hcount.append(procs[name][0])
 
 for i in range(0, len(hdata)):
