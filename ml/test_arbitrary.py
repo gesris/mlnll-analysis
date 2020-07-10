@@ -22,7 +22,6 @@ for key in d.GetListOfKeys():
         hyields.append(yields[name][0])
         bincounts[name] = [h.GetBinContent(i + 1) for i in range(nbins)]
         print("1",bincounts[name])
-        print("2",bincounts)
 
 hist = []
 
