@@ -34,11 +34,15 @@ def diff_hists():
     hists, hnames, hyields = write_hists_names_yields()
 
     # first histogram is nominal ggH125, rest systematics
-    nominal_ggH125 = hists[0]
-    systematics_ggH125 = hists[1:]
+    nominal_ggH125 = np.array(hists[0])
+    systematics_ggH125 = np.array(hists[1:])
 
+    diff_sums = []
     for hist in systematics_ggH125:
-        diff_sum = 0.
+        diff_sums.append(np.sum(np.abs(nominal_ggH125 - hist)))
+    print(diff_sums)
+
+diff_hists()
 
 
 
