@@ -8,9 +8,10 @@ hdata = []
 hcount = []
 for key in d.GetListOfKeys():
     name = key.GetName()
-    if 'ntuple' in name:
+    if 'ggH125_THU_ggH_' in name:
         h = d.Get(name)
         procs[name] = [h.Integral()]
+        h.Draw("HIST SAME")
 
         hdata.append(name)
         hcount.append(procs[name][0])
