@@ -33,6 +33,8 @@ def diff_hists():
     nbins = 32
     hists, hnames, hyields = write_hists_names_yields()
 
+    hists[0].Scale(4)
+
     # first histogram is nominal ggH125, rest systematics
     nominal_ggH125 = np.array(hists[0])
     systematics_ggH125 = np.array(hists[1:])
