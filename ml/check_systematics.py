@@ -40,7 +40,7 @@ def diff_hists():
     diff_sums = []
     for hist in systematics_ggH125:
         diff_sums.append(np.sum(np.abs(nominal_ggH125 - hist)))
-    print(diff_sums)
+    print(len(diff_sums), diff_sums)
 
 diff_hists()
 
