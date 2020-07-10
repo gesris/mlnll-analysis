@@ -11,11 +11,8 @@ for key in d.GetListOfKeys():
     if 'ggH125_THU_ggH_' in name:
         h = d.Get(name)
         procs[name] = [h.Integral()]
-        print(h)
-        print(name)
-        print(procs)
 
-        hdata.append(procs[name])
+        hdata.append(h)
         hcount.append(procs[name][0])
 
 for i in range(0, len(hdata)):
