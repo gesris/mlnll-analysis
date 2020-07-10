@@ -33,18 +33,18 @@ def diff_hists():
     nbins = 32
     hists, hnames, hyields = write_hists_names_yields()
 
-    hists[0].Scale(4)
-
     # first histogram is nominal ggH125, rest systematics
     nominal_ggH125 = np.array(hists[0])
     systematics_ggH125 = np.array(hists[1:])
 
-    diff_sums = [0.000]
-    for hist in systematics_ggH125:
+    diff_sums = [0.000]     # first entry = nominal
+    for i, hist in enumerate(systematics_ggH125):
+        # normalization of sys hists
+        hist *= hyields[0] / hyields[i + 1]
         diff_sums.append(np.sum(np.abs(nominal_ggH125 - hist)))
     
     for i in range(len(hnames)):
-        print("Yield: {:.3f}       DiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
+        print("Yield: {:.3f}       AbsDiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
     
 
 diff_hists()
