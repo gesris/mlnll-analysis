@@ -148,6 +148,10 @@ def main(args):
     Htt_up_mask_train = y_sys_train[:, 1]
     Htt_down_mask_train = y_sys_train[:, 2]
 
+    Htt_nom_mask_val = y_sys_val[:, 0]
+    Htt_up_mask_val = y_sys_val[:, 1]
+    Htt_down_mask_val = y_sys_val[:, 2]
+
 
     # Preprocessing
     preproc = StandardScaler()
@@ -276,6 +280,9 @@ def main(args):
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
+                            Htt_nom_mask: Htt_nom_mask_train, \
+                            Htt_up_mask: Htt_up_mask_train, \
+                            Htt_down_mask: Htt_down_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
                             fold_scale: 2})
 
@@ -287,6 +294,9 @@ def main(args):
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
+                            Htt_nom_mask: Htt_nom_mask_val, \
+                            Htt_up_mask: Htt_up_mask_val, \
+                            Htt_down_mask: Htt_down_mask_val, \
                             batch_scale: (1 / test_size), \
                             fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
