@@ -120,7 +120,7 @@ def main(args):
 
     #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold)
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'THU_ggH_Mig01'], args.fold)
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'THU_ggH_Mig01Up', 'THU_ggH_Mig01Down'], args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
