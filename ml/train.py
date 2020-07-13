@@ -140,12 +140,13 @@ def main(args):
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
             ['htt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
             make_categorical=True, use_class_weights=False)
-    x_sys_train, x_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, w_sys, test_size=test_size, random_state=1234)
-    logger.info('\nSystematic Data: {}'.format(x_sys))
-    logger.info('\nSystematic Label: {}'.format(y_sys))
-    logger.info('\nSystematic Weights: {}'.format(w_sys))
+    x_sys_train, x_sys_val, y_sys_train, y_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, y_sys, w_sys, test_size=test_size, random_state=1234)
     logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
         np.sum(w_sys[y_sys[:, 0] == 1]), np.sum(w_sys[y_sys[:, 1] == 1]), np.sum(w_sys[y_sys[:, 2] == 1])))
+
+    Htt_nom_mask_train = y_sys_train[:, 0]
+    Htt_up_mask_train = y_sys_train[:, 1]
+    Htt_down_mask_train = y_sys_train[:, 2]
 
 
     # Preprocessing
@@ -159,10 +160,15 @@ def main(args):
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
 
+
     # Create model
     x_ph = tf.placeholder(tf.float32)
+    x_ph_sys = tf.placeholder(tf.float32)
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
+    train_vars_sys, f_sys = model(x_ph_sys, len(cfg.ml_variables), args.fold)
     w_ph = tf.placeholder(tf.float32)
+    w_ph_sys = tf.placeholder(tf.float32)
+
 
     # Add loss treating systematics
     
@@ -188,6 +194,10 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
+    Htt_nom_mask = tf.placeholder(tf.float32)
+    Htt_up_mask = tf.placeholder(tf.float32)
+    Htt_down_mask = tf.placeholder(tf.float32)
+
     def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
         counts = []
         for right_edge, left_edge in zip(bins[1:], bins[:-1]):
@@ -200,18 +210,22 @@ def main(args):
     W = tf.cast(hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     ttbar = tf.cast(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
+    Htt_nom = tf.cast(hist(f_sys, bins, Htt_nom_mask, w_ph_sys, batch_scale, fold_scale, 1), tf.float64)
+    Htt_up = tf.cast(hist(f_sys, bins, Htt_up_mask, w_ph_sys, batch_scale, fold_scale, 1), tf.float64)
+    Htt_down = tf.cast(hist(f_sys, bins, Htt_down_mask, w_ph_sys, batch_scale, fold_scale, 1), tf.float64)
+
     nll = zero
     nll_statsonly = zero
     for i in range(0, len(bins) - 1):
         # Likelihood
-        exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
-        sys = zero  # systematic has to be added later
+        exp = mu * Htt_nom[i] + Ztt[i] + W[i] + ttbar[i]
+        sys = tf.maximum(theta, zero) * Htt_up[i] + tf.maximum(theta, zero) * Htt_down[i]
         obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
-        #nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
-    #nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+    nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
 
 
     ####                ####
@@ -226,6 +240,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
+    sd_loss = get_constraint(nll, [mu, theta])
     sd_loss_statsonly = get_constraint(nll_statsonly, [mu])
 
     # Combine losses
