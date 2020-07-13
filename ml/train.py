@@ -141,7 +141,9 @@ def main(args):
             ['htt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
             make_categorical=True, use_class_weights=False)
     x_sys_train, x_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, w_sys, test_size=test_size, random_state=1234)
-    logger.info('\nSystematic Data: {}'.format(x_sys_train))
+    logger.info('\nSystematic Data: {}'.format(x_sys))
+    logger.info('\nSystematic Label: {}'.format(y_sys))
+    logger.info('\nSystematic Weights: {}'.format(w_sys))
     logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
         np.sum(w_sys[y_sys == 0]), np.sum(w_sys[y_sys == 1]), np.sum(w_sys[y_sys == 2])))
 
