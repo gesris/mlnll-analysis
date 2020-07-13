@@ -171,7 +171,7 @@ def main(args):
     logger.info("\nBins: {}".format(bins))
     upper_edges, lower_edges = bins[1:], bins[:-1]
 
-    theta = tf.constant(0.0, tf.float64)
+    theta = tf.constant(0.0, tf.float32)
     mu = tf.constant(1.0, tf.float64)
 
     zero = tf.constant(0, tf.float64)
