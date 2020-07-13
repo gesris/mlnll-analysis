@@ -160,6 +160,7 @@ def main(args):
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
     w_ph = tf.placeholder(tf.float32)
     
+    
 
     ####                ####
     ####    NLL LOSS    ####
@@ -218,7 +219,7 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
-    nll -= tfp.distributions.Normal(loc=tf.float64(0), scale=tf.float64(1)).log_prob(theta)
+    nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32))
 
 
 
@@ -243,13 +244,19 @@ def main(args):
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
     minimize = optimizer.minimize(loss)
+    
 
-    # Train
+    
+    ####                ####
+    ####    TRAINING    ####
+    ####                ####
+
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
     session = tf.Session(config=config)
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
+    # training parameters
     patience = 30
     patience_count = patience
     min_loss = 1e9
@@ -274,7 +281,7 @@ def main(args):
                             Htt_down_mask: Htt_down_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
                             fold_scale: 2})
-
+        # Validation
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
