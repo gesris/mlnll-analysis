@@ -276,6 +276,8 @@ def main(args):
     for epoch in range(0, 10000):
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, w_ph: w_train,\
+                            x_ph_sys: x_sys_train, \
+                            w_ph_sys: w_sys_train, \
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
@@ -290,6 +292,8 @@ def main(args):
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
+                            x_ph_sys: x_sys_val, \
+                            w_ph_sys: w_sys_val, \
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
