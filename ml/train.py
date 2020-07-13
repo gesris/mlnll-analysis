@@ -137,21 +137,16 @@ def main(args):
     ####
     ####  Build dataset for systematic shifts
     ####
-    '''
-    x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
-            ['htt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
-            make_categorical=True, use_class_weights=False)
-    x_sys_train, x_sys_val, y_sys_train, y_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, y_sys, w_sys, test_size=test_size, random_state=1234)
-    logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
-        np.sum(w_sys[y_sys[:, 0] == 1]), np.sum(w_sys[y_sys[:, 1] == 1]), np.sum(w_sys[y_sys[:, 2] == 1])))
-    '''
 
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
-            ['htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
+            ['htt', 'ztt', 'w' 'ttbar', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
             make_categorical=True, use_class_weights=False)
     x_sys_train, x_sys_val, y_sys_train, y_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, y_sys, w_sys, test_size=test_size, random_state=1234)
+    logger.info("Dataset Label: {}".format(y_sys))
     logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
-        np.sum(w_sys[y_sys[:, 0] == 1]), np.sum(w_sys[y_sys[:, 1] == 1])))
+        np.sum(w_sys[y_sys[:, 0] == 1]), np.sum(w_sys[y_sys[:, 1] == 1]), np.sum(w_sys[y_sys[:, 2] == 1])))
+    
+
 
     Htt_nom_mask_train = y_sys_train[:, 0]
     Htt_up_mask_train = y_sys_train[:, 1]
