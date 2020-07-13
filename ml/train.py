@@ -113,8 +113,13 @@ def model(x, num_variables, fold, reuse=False):
 
 
 def main(args):
-    # Build nominal dataset
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
+    
+    ####
+    ####  Build nominal + sys dataset
+    ####
+
+    #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
@@ -127,34 +132,15 @@ def main(args):
     Ztt_mask_train = y_train_array[:, 1]
     W_mask_train = y_train_array[:, 2]
     ttbar_mask_train = y_train_array[:, 3]
+    Htt_up_mask_train = y_train[:, 4]
+    Htt_down_mask_train = y_train[:, 5]
 
     Htt_mask_val = y_val_array[:, 0]
     Ztt_mask_val = y_val_array[:, 1]
     W_mask_val = y_val_array[:, 2]
-    ttbar_mask_val = y_val_array[:, 3]
-
-
-    ####
-    ####  Build dataset for systematic shifts
-    ####
-
-    x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
-            ['htt', 'ztt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
-            make_categorical=True, use_class_weights=False)
-    x_sys_train, x_sys_val, y_sys_train, y_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, y_sys, w_sys, test_size=test_size, random_state=1234)
-    logger.info("Dataset Label: {}".format(y_sys))
-    logger.debug('Sum of weights for nominal/up/down: {} / {} / {}'.format(
-        np.sum(w_sys[y_sys[:, 0] == 1]), np.sum(w_sys[y_sys[:, 1] == 1]), np.sum(w_sys[y_sys[:, 2] == 1])))
-    
-
-
-    Htt_nom_mask_train = y_sys_train[:, 0]
-    Htt_up_mask_train = y_sys_train[:, 1]
-    Htt_down_mask_train = y_sys_train[:, 2]
-
-    Htt_nom_mask_val = y_sys_val[:, 0]
-    Htt_up_mask_val = y_sys_val[:, 1]
-    Htt_down_mask_val = y_sys_val[:, 2]
+    ttbar_mask_val = y_val_array[:, 3]    
+    Htt_up_mask_val = y_val[:, 4]
+    Htt_down_mask_val = y_val[:, 5]
 
 
     # Preprocessing
@@ -171,11 +157,8 @@ def main(args):
 
     # Create model
     x_ph = tf.placeholder(tf.float32)
-    x_ph_sys = tf.placeholder(tf.float32)
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
-    train_vars_sys, f_sys = model(x_ph_sys, len(cfg.ml_variables), args.fold)
     w_ph = tf.placeholder(tf.float32)
-    w_ph_sys = tf.placeholder(tf.float32)
     
 
     ####                ####
@@ -194,12 +177,13 @@ def main(args):
     zero = tf.constant(0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
 
+    # nominal masks
     Htt_mask = tf.placeholder(tf.float32)
     Ztt_mask = tf.placeholder(tf.float32)
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
-    Htt_nom_mask = tf.placeholder(tf.float32)
+    # sys masks
     Htt_up_mask = tf.placeholder(tf.float32)
     Htt_down_mask = tf.placeholder(tf.float32)
 
@@ -210,20 +194,21 @@ def main(args):
             counts.append(Events)
         return tf.squeeze(tf.stack(counts))
 
+    # nominal
     Htt = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     Ztt = tf.cast(hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     W = tf.cast(hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     ttbar = tf.cast(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
-    Htt_nom = tf.cast(hist(f_sys, bins, Htt_nom_mask, w_ph_sys, batch_scale, fold_scale, 1), tf.float64)
-    Htt_up = tf.cast(hist(f_sys, bins, Htt_up_mask, w_ph_sys, batch_scale, fold_scale, 1), tf.float64)
-    Htt_down = tf.cast(hist(f_sys, bins, Htt_down_mask, w_ph_sys, batch_scale, fold_scale, 1), tf.float64)
+    # sys
+    Htt_up = tf.cast(hist(f, bins, Htt_up_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    Htt_down = tf.cast(hist(f, bins, Htt_down_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
     nll = zero
     nll_statsonly = zero
     for i in range(0, len(bins) - 1):
         # Likelihood
-        exp = mu * Htt_nom[i] + Ztt[i] + W[i] + ttbar[i]
+        exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
         sys = tf.maximum(theta, zero) * Htt_up[i] + tf.maximum(theta, zero) * Htt_down[i]
         obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
@@ -277,13 +262,10 @@ def main(args):
     for epoch in range(0, 10000):
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, w_ph: w_train,\
-                            x_ph_sys: x_sys_train, \
-                            w_ph_sys: w_sys_train, \
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
-                            Htt_nom_mask: Htt_nom_mask_train, \
                             Htt_up_mask: Htt_up_mask_train, \
                             Htt_down_mask: Htt_down_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
@@ -293,13 +275,10 @@ def main(args):
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
-                            x_ph_sys: x_sys_val, \
-                            w_ph_sys: w_sys_val, \
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
-                            Htt_nom_mask: Htt_nom_mask_val, \
                             Htt_up_mask: Htt_up_mask_val, \
                             Htt_down_mask: Htt_down_mask_val, \
                             batch_scale: (1 / test_size), \
