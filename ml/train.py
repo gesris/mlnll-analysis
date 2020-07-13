@@ -168,13 +168,10 @@ def main(args):
     # Create model
     x_ph = tf.placeholder(tf.float32)
     x_ph_sys = tf.placeholder(tf.float32)
-    train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold, reuse=tf.AUTO_REUSE)
-    train_vars_sys, f_sys = model(x_ph_sys, len(cfg.ml_variables), args.fold, reuse=tf.AUTO_REUSE)
+    train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
+    train_vars_sys, f_sys = model(x_ph_sys, len(cfg.ml_variables), args.fold)
     w_ph = tf.placeholder(tf.float32)
     w_ph_sys = tf.placeholder(tf.float32)
-
-
-    # Add loss treating systematics
     
 
     ####                ####
