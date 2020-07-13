@@ -295,13 +295,13 @@ def main(args):
                             batch_scale: (1 / test_size), \
                             fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
-            logger.info('\nHtt Total:      {}\
-                        \nHtt Up Total:   {}\
-                        \nHtt Down Total: {}\
-                        \nZtt Total:      {}\
-                        \nW Total:        {}\
-                        \nttbar Total:    {}\n'.format(np.sum(Htt_), np.sum(Htt_up_), np.sum(Htt_down_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
-            logger.info('\nHtt Hist:       {}\
+            logger.info('\nHtt Total:      {:.3f}\
+                        \nHtt Up Total:   {:.3f}\
+                        \nHtt Down Total: {:.3f}\
+                        \nZtt Total:      {:.3f}\
+                        \nW Total:        {:.3f}\
+                        \nttbar Total:    {:.3f}\n'.format(np.sum(Htt_), np.sum(Htt_up_), np.sum(Htt_down_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
+            logger.info('\nHtt Hist:       {:.3f}\
                         \nHtt Up Hist:    {}\
                         \nHtt Down Hist:  {}\
                         \nZtt Hist:       {}\
