@@ -165,15 +165,16 @@ def main(args):
     ####    NLL LOSS    ####
     ####                ####
 
+    # model parameters
     batch_scale = tf.placeholder(tf.float32)
     fold_scale = tf.placeholder(tf.float32)
     bins = cfg.analysis_binning
     logger.info("\nBins: {}".format(bins))
     upper_edges, lower_edges = bins[1:], bins[:-1]
 
-    theta = tf.constant(0.0, tf.float32)
+    # method parameters
+    theta = tf.constant(0.0, tf.float64)
     mu = tf.constant(1.0, tf.float64)
-
     zero = tf.constant(0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
 
@@ -187,6 +188,7 @@ def main(args):
     Htt_up_mask = tf.placeholder(tf.float32)
     Htt_down_mask = tf.placeholder(tf.float32)
 
+    # count function
     def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
         counts = []
         for right_edge, left_edge in zip(bins[1:], bins[:-1]):
@@ -194,16 +196,17 @@ def main(args):
             counts.append(Events)
         return tf.squeeze(tf.stack(counts))
 
-    # nominal
+    # nominal counts
     Htt = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     Ztt = tf.cast(hist(f, bins, Ztt_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     W = tf.cast(hist(f, bins, W_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     ttbar = tf.cast(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
-    # sys
+    # sys counts
     Htt_up = tf.cast(hist(f, bins, Htt_up_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
     Htt_down = tf.cast(hist(f, bins, Htt_down_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
+    # Calculation of NLL (with and without sys)
     nll = zero
     nll_statsonly = zero
     for i in range(0, len(bins) - 1):
@@ -215,7 +218,8 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
-    nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(theta)
+    nll -= tfp.distributions.Normal(loc=tf.float64(0), scale=tf.float64(1)).log_prob(theta)
+
 
 
     ####                ####
