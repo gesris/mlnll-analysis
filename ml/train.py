@@ -295,8 +295,18 @@ def main(args):
                             batch_scale: (1 / test_size), \
                             fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
-            logger.info('\nHtt:   {}\nHtt Up:   {}\nHtt Down:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Htt_up_), np.sum(Htt_down_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
-            logger.info('\nHtt:   {}\nHtt Up:   {}\nHtt Down:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Htt_up_, Htt_down_, Ztt_, W_, ttbar_))
+            logger.info('\nHtt Total:      {}\
+                        \nHtt Up Total:   {}\
+                        \nHtt Down Total: {}\
+                        \nZtt Total:      {}\
+                        \nW Total:        {}\
+                        \nttbar Total:    {}\n'.format(np.sum(Htt_), np.sum(Htt_up_), np.sum(Htt_down_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
+            logger.info('\nHtt Hist:       {}\
+                        \nHtt Up Hist:    {}\
+                        \nHtt Down Hist:  {}\
+                        \nZtt Hist:       {}\
+                        \nW Hist:         {}\
+                        \nttbar Hist:     {}\n'.format(Htt_, Htt_up_, Htt_down_, Ztt_, W_, ttbar_))
 
             ### feed loss values in lists for plot 
             loss_train_list.append(loss_train)
