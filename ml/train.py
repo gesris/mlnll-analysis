@@ -139,7 +139,7 @@ def main(args):
     ####
 
     x_sys, y_sys, w_sys = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)),
-            ['htt', 'ztt', 'w', 'ttbar', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
+            ['htt', 'ztt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold,
             make_categorical=True, use_class_weights=False)
     x_sys_train, x_sys_val, y_sys_train, y_sys_val, w_sys_train, w_sys_val = train_test_split(x_sys, y_sys, w_sys, test_size=test_size, random_state=1234)
     logger.info("Dataset Label: {}".format(y_sys))
