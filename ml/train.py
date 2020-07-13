@@ -219,7 +219,7 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraint 
-    nll -= tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32))
+    nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(theta), tf.float64)
 
 
 
