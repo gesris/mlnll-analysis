@@ -301,7 +301,8 @@ def main(args):
                         \nZtt Total:      {:.3f}\
                         \nW Total:        {:.3f}\
                         \nttbar Total:    {:.3f}\n'.format(np.sum(Htt_), np.sum(Htt_up_), np.sum(Htt_down_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
-            logger.info('\nHtt Hist:       {:.3f}\
+            np.set_printoptions(precision=3)
+            logger.info('\nHtt Hist:       {}\
                         \nHtt Up Hist:    {}\
                         \nHtt Down Hist:  {}\
                         \nZtt Hist:       {}\
