@@ -285,7 +285,7 @@ def main(args):
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val, Htt_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
+            loss_val, Htt_, Htt_up_, Htt_down_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Htt_up, Htt_down, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
@@ -295,8 +295,8 @@ def main(args):
                             batch_scale: (1 / test_size), \
                             fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
-            logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
-            logger.info('\nHtt:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Ztt_, W_, ttbar_))
+            logger.info('\nHtt:   {}\nHtt Up:   {}\nHtt Down:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(np.sum(Htt_), np.sum(Htt_up_), np.sum(Htt_down_), np.sum(Ztt_), np.sum(W_), np.sum(ttbar_)))
+            logger.info('\nHtt:   {}\nHtt Up:   {}\nHtt Down:   {}\nZtt:    {}\nW:  {}\nttbar:  {}\n'.format(Htt_, Htt_up_, Htt_down_, Ztt_, W_, ttbar_))
 
             ### feed loss values in lists for plot 
             loss_train_list.append(loss_train)
