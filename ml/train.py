@@ -270,7 +270,7 @@ def main(args):
     loss_val_list = []
     steps_list = []
 
-    for epoch in range(0, 10000):
+    for epoch in range(0, 20000):
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, w_ph: w_train,\
                             Htt_mask: Htt_mask_train, \
