@@ -124,8 +124,6 @@ def main(args):
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-
-    logger.info("\n\n{}\n\n".format(cfg.ggh_wg1['THU_ggH_Mig01Up']))
     
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
@@ -188,9 +186,8 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
-    # sys masks
-    Htt_up_mask = tf.placeholder(tf.float32)
-    Htt_down_mask = tf.placeholder(tf.float32)
+    # sys shift
+    mig01 = 10.02
 
     # count function
     def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
@@ -207,8 +204,8 @@ def main(args):
     ttbar = tf.cast(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
     # sys counts
-    Htt_up = tf.cast(hist(f, bins, Htt_up_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
-    Htt_down = tf.cast(hist(f, bins, Htt_down_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
+    Htt_up = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, mig01), tf.float64)
+    Htt_down = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1 / mig01), tf.float64)
 
     # Calculation of NLL (with and without sys)
     nll = zero

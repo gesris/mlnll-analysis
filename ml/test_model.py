@@ -43,10 +43,14 @@ def plot(signal, background, category, bins, bins_center):
     plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2, color="C1")
     plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, color="C2")
     plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, color="C3")
+    plt.hist(bins_center, weights= background[3], bins= bins, histtype="step", lw=2, color="C0")
+    plt.hist(bins_center, weights= background[4], bins= bins, histtype="step", lw=2, color="C0")
     plt.plot([0], [0], lw=2, color="C0", label="Htt")
     plt.plot([0], [0], lw=2, color="C1", label="Ztt")
     plt.plot([0], [0], lw=2, color="C2", label="W")
     plt.plot([0], [0], lw=2, color="C3", label="ttbar")
+    plt.plot([0], [0], lw=2, color="C0", label="Htt Up")
+    plt.plot([0], [0], lw=2, color="C0", label="Htt Down")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("$f$")
     plt.ylabel("Counts")
@@ -100,7 +104,7 @@ def main(args):
     #W_mask_feed = np.where(y_array == 2, 1, 0)
     #ttbar_mask_feed = np.where(y_array == 3, 1, 0)
 
-    # oly possible, wher make_categorical=True
+    # oly possible, when make_categorical=True
     Htt_mask_feed = y_array[:, 0]
     Ztt_mask_feed = y_array[:, 1]
     W_mask_feed = y_array[:, 2]
@@ -129,8 +133,10 @@ def main(args):
     bins_center = []
     for i in range(0, len(bins) - 1):
         bins_center.append(bins[i] + (bins[i + 1] - bins[i]) / 2)
-    background_category = ['Ztt', 'W', 'ttbar']
+    background_category = ['Ztt', 'W', 'ttbar', 'Htt Up', 'Htt Down']
     Htt = []
+    Htt_up = []
+    Htt_down = []
     Ztt = []
     W = []
     ttbar = []
@@ -139,12 +145,16 @@ def main(args):
     ttbar_weights = []
     ttbar_events_noweights = []
 
+    mig01 = 10.02
+
     for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
         # Bin edges
         up_ = tf.constant(up, tf.float32)
         down_ = tf.constant(down, tf.float32)
         
         Htt.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale))
+        Htt_up.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale * mig01))
+        Htt_down.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale / mig01))
         Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * fold_scale))
         W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * fold_scale))  
         ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * fold_scale))
@@ -158,7 +168,7 @@ def main(args):
     saver = tf.train.Saver()
     saver.restore(session, path)
     
-    Htt_counts, Ztt_counts, W_counts, ttbar_counts, ttbar_weights_, ttbar_labels_, ttbar_events_noweights_ = session.run([Htt, Ztt, W, ttbar, ttbar_weights, ttbar_labels, ttbar_events_noweights], \
+    Htt_counts, Ztt_counts, W_counts, ttbar_counts, Htt_up_counts, Htt_down_counts = session.run([Htt, Ztt, W, ttbar, Htt_up, Htt_down], \
                         feed_dict={x_ph: x_preproc, w_ph: w, \
                                     Htt_mask: Htt_mask_feed, \
                                     Ztt_mask: Ztt_mask_feed, \
@@ -171,10 +181,6 @@ def main(args):
     logger.info("W Counts: {}".format(W_counts))
     logger.info("ttbar Counts: {}\n\n".format(ttbar_counts))
 
-    logger.info("TTBAR LABELS: {}\n\n".format(ttbar_labels_))
-    logger.info("TTBAR WEIGHTS: {}\n\n".format(ttbar_weights_))
-    logger.info("TTBAR WEIGHT SUM: {}\n\n".format(np.sum(ttbar_weights_)))
-
     ### save counts into csv file
     # first empty existing file
     open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), "w").close()
@@ -184,7 +190,7 @@ def main(args):
         np.savetxt(file, [W_counts])
         np.savetxt(file, [ttbar_counts])
 
-    plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts], background_category, bins, bins_center)
+    plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts, Htt_up_counts, Htt_down_counts], background_category, bins, bins_center)
 
     # histogramme mit matplotlib machen!
     # abbrechen lassen, wenn counts mit der aussage von TF nicht übereinstimmen
