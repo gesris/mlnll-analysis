@@ -120,10 +120,12 @@ def main(args):
 
     #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold)
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'THU_ggH_Mig01Up', 'THU_ggH_Mig01Down'], args.fold)
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt'], args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
+
+    logger.info("\n\n{}\n\n".format(cfg.ggh_wg1))
     
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
@@ -133,15 +135,15 @@ def main(args):
     Ztt_mask_train = y_train_array[:, 1]
     W_mask_train = y_train_array[:, 2]
     ttbar_mask_train = y_train_array[:, 3]
-    Htt_up_mask_train = y_train[:, 4]
-    Htt_down_mask_train = y_train[:, 5]
+    #Htt_up_mask_train = y_train[:, 4]
+    #Htt_down_mask_train = y_train[:, 5]
 
     Htt_mask_val = y_val_array[:, 0]
     Ztt_mask_val = y_val_array[:, 1]
     W_mask_val = y_val_array[:, 2]
     ttbar_mask_val = y_val_array[:, 3]    
-    Htt_up_mask_val = y_val[:, 4]
-    Htt_down_mask_val = y_val[:, 5]
+    #Htt_up_mask_val = y_val[:, 4]
+    #Htt_down_mask_val = y_val[:, 5]
 
 
     # Preprocessing
@@ -278,8 +280,6 @@ def main(args):
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
                             ttbar_mask: ttbar_mask_train, \
-                            Htt_up_mask: Htt_up_mask_train, \
-                            Htt_down_mask: Htt_down_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
                             fold_scale: 2})
         # Validation
@@ -291,8 +291,6 @@ def main(args):
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
                             ttbar_mask: ttbar_mask_val, \
-                            Htt_up_mask: Htt_up_mask_val, \
-                            Htt_down_mask: Htt_down_mask_val, \
                             batch_scale: (1 / test_size), \
                             fold_scale: 2})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
