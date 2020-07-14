@@ -61,6 +61,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
+    mig01 = [] # Mig01 systemattics
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
@@ -117,6 +118,13 @@ def main(args):
     ####
     ####  Build nominal + sys dataset
     ####
+
+    path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
+    tree_ = 'mt_nominal/ntuple'
+    column_ = 'THU_ggH_Mig01'
+
+    test = tree2numpy(path_, tree_, column_)
+    logger.info("\n\n{}\n\n".format(test))
 
     #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold)
