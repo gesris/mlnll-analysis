@@ -125,7 +125,7 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
-    logger.info("\n\n{}\n\n".format(cfg.ggh_wg1))
+    logger.info("\n\n{}\n\n".format(cfg.ggh_wg1['THU_ggH_Mig01Up']))
     
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
