@@ -72,7 +72,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     # Systematics
     d_sys = tree2numpy(path, 'htt', ["THU_ggH_Mig01"])
     mig01s = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
-    logger.info("\n\nMig01: {}".format(mig01s))
         
     # Stack inputs
     xs = np.vstack(xs)
