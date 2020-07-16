@@ -58,7 +58,7 @@ def tree2numpy(path, tree, columns):
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
     columns = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
-    d_ = tree2numpy(path, classes[0], columns)
+    d_ = tree2numpy(path, classes[3], columns)
     logger.info("\n\nColumns: {}".format(len(d_["THU_ggH_Mig01"])))
     xs = [] # Inputs
     ys = [] # Targets
