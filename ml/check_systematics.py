@@ -59,6 +59,5 @@ for key in directory_.GetListOfKeys():
 
 tree_ = "ntuple"
 column_ = 'THU_ggH_Mig01'
-tree_.AsNumpy(column_)
 
 
