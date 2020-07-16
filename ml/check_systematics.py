@@ -54,7 +54,7 @@ file_ = ROOT.TFile(path_)
 tree_ = file_.Get("mt_nominal/ntuple")
 branch_ = tree_.GetBranch("THU_ggH_Mig01")
 
-file2_ = ROOT.RDataFrame(path_)
+file2_ = ROOT.RDataFrame(10)
 print(file2_.AsNumpy())
 
 
