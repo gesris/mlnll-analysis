@@ -68,7 +68,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
-    logger.info("\n\nWEIGHTS: {}\n{}".format(ws, np.len(ws)))
+    logger.info("\n\nWEIGHTS: {}\n{}".format(ws, len(ws)))
         
     # Stack inputs
     xs = np.vstack(xs)
