@@ -47,16 +47,18 @@ def diff_hists():
         print("Yield: {:.3f}       SquaredDiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
     
 
-#diff_hists()
-array = []
+diff_hists()
+
+'''
+# READING TREE ENTRIES OF SINGLE BRANCH FROM ROOT FILE
+
+mig01 = [] # Mig01 systemattics
 path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
 file_ = ROOT.TFile(path_)
 tree_ = file_.Get("mt_nominal/ntuple")
-branch_ = tree_.GetBranch("THU_ggH_Mig01")
-N = tree_.GetEntries()
 for i, event in enumerate(tree_):
-    array.append(event.THU_ggH_Mig01)
-print(array)
+    mig01.append(event.THU_ggH_Mig01)
+'''
 
 
 

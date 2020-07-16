@@ -57,18 +57,19 @@ def tree2numpy(path, tree, columns):
 
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
-    columns = cfg.ml_variables + [cfg.ml_weight]
+    columns = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
+    mig01s = []
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
+        mig01 = np.array(d["THU_ggH_Mig01"], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
-
-    logger.info("\n\nWEIGHTS: {}\n{}".format(ws, ws.shape))
+        mig01s.append(mig01)
         
     # Stack inputs
     xs = np.vstack(xs)
@@ -81,7 +82,11 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     # Stack weights
     ws = np.hstack(ws)
     logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
-    logger.info("\n\nWEIGHTS STACKED: {}".format(ws))
+
+    # Stack Mig01 systematic weights
+    mig01s = np.hstack(mig01s)
+    logger.debug('Mig01 systematic weights without class weights (shape, sum): {}, {}'.format(mig01s.shape, np.sum(mig01s)))
+
     # Multiply class weights to event weights
     if use_class_weights:
         sum_all = np.sum(ws)
@@ -94,7 +99,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
 
-    return xs, ys, ws
+    return xs, ys, ws, mig01s
 
 
 def model(x, num_variables, fold, reuse=False):
@@ -119,11 +124,12 @@ def main(args):
     ####  Build nominal + sys dataset
     ####
 
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
+    x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    
+    logger.info("Mig01 systematic weights: {}".format(mig01))
+
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
     y_val_array = np.array(y_val)
