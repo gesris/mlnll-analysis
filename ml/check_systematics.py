@@ -53,11 +53,8 @@ path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutum
 file_ = ROOT.TFile(path_)
 tree_ = file_.Get("mt_nominal/ntuple")
 branch_ = tree_.GetBranch("THU_ggH_Mig01")
-
-file2_ = ROOT.RDataFrame(10) \
-         .Define("x", "(int)rdfentry_") \
-         .Define("y", "1.f/(1.f+rdfentry_)")
-print(file2_.AsNumpy())
+N = tree_.GetEntries()
+print(N)
 
 
 
