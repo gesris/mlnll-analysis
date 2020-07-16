@@ -75,12 +75,12 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
     for v in cfg.ml_variables:
         variables.push_back(v)
     # .push_back is python-equiv to .append
-    variables.push_back("THU_ggH_Mig01")
     variables.push_back(cfg.ml_weight)
     df.Filter('event % 2 == {}'.format(fold))\
       .Filter(cutstr)\
       .Define(cfg.ml_weight, weightstr)\
       .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
+    variables.push_back("THU_ggH_Mig01")
     
 
 
