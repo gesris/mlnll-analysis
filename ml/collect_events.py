@@ -76,7 +76,7 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
         variables.push_back(v)      # .push_back is c++ equiv. to .append
     variables.push_back(cfg.ml_weight)
     variables.push_back("THU_ggH_Mig01")
-    df.Filter('event % 3 == {}'.format(fold))\
+    df.Filter('event % 1 == {}'.format(fold))\
       .Filter(cutstr)\
       .Define(cfg.ml_weight, weightstr)\
       .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
