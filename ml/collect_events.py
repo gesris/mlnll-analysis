@@ -80,10 +80,6 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
       .Define(cfg.ml_weight, weightstr)\
       .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
     variables.push_back("THU_ggH_Mig01")
-    df.Filter('event % 2 == {}'.format(fold))\
-      .Filter(cutstr)\
-      .Define("THU_ggH_Mig01", weightstr)\
-      .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
 
 
 def ggh():
