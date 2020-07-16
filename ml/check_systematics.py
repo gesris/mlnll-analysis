@@ -50,10 +50,15 @@ def diff_hists():
 #diff_hists()
 
 path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
+file_ = ROOT.TFile(path_)
+directory_ = file_.Get("mt_nominal")
+for key in directory_.GetListOfKeys():
+    name = key.GetName()
+    print(name)
+
+
 tree_ = "ntuple"
-file_ = ROOT.RDataFrame(tree_, path_)
 column_ = 'THU_ggH_Mig01'
-mig01 = []
-mig01.append(tree_.AsNumpy(column_))
+tree_.AsNumpy(column_)
 
 
