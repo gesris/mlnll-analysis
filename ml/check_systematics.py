@@ -54,7 +54,9 @@ file_ = ROOT.TFile(path_)
 directory_ = file_.Get("mt_nominal")
 for key in directory_.GetListOfKeys():
     name = key.GetName()
-    print(name)
+    if 'ntuple' in name:
+        for tree in name.GetListOfTrees:
+            print(tree)
 
 
 tree_ = "ntuple"
