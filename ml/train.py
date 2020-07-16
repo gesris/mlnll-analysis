@@ -131,7 +131,8 @@ def main(args):
     
     # Magnify Mig01 to have a bigger impact on training
     logger.info("\n\nMig01 Entries 1: {}".format(mig01))
-    mig01 = (mig01 - 1) * 10 + 1
+    mean_value = np.mean(mig01)
+    mig01 = (mig01 - mean_value) * 10 + mean_value
     logger.info("\n\nMig01 Entries 2: {}".format(mig01))
 
     # Process Mig01 to have same number of entries as other variables
