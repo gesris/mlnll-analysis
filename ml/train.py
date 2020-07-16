@@ -62,7 +62,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     logger.debug("Classes : {}".format(classes))
 
     d_ = tree2numpy(path, classes[0], columns)
-    logger.info("\n\nColumns: {}".format(d_[cfg.ml_weight]))
+    logger.info("\n\nWeights: {}".format(d_[cfg.ml_weight]))
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
