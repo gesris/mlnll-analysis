@@ -128,13 +128,6 @@ def main(args):
     ####  Build nominal + sys dataset
     ####
 
-    path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
-    file_ = ROOT.TFile(path_)
-    directory_ = 'mt_nominal'
-    tree_ = "mt_nominal/ntuple"
-    column_ = "THU_ggH_Mig01"
-    mig01 = []
-
     x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
