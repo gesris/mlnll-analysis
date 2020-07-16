@@ -75,6 +75,17 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
     for v in cfg.ml_variables:
         variables.push_back(v)      # .push_back is c++ equiv. to .append
     variables.push_back(cfg.ml_weight)
+    df.Filter('event % 2 == {}'.format(fold))\
+      .Filter(cutstr)\
+      .Define(cfg.ml_weight, weightstr)\
+      .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
+
+def write_dataset_test(d, workdir, name, group, fold, weightstr, cutstr):
+    df = ROOT.RDataFrame(d)
+    variables = ROOT.std.vector(ROOT.std.string)()
+    for v in cfg.ml_variables:
+        variables.push_back(v)      # .push_back is c++ equiv. to .append
+    variables.push_back(cfg.ml_weight)
     variables.push_back("THU_ggH_Mig01")
     df.Filter('event % 2 == {}'.format(fold))\
       .Filter(cutstr)\
@@ -115,7 +126,8 @@ def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
 
     # Collect nominal events
-    for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
+    #for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
+    for process in [qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
@@ -124,6 +136,17 @@ def main(args):
         logger.debug('Cut string: %s', cutstr)
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
+    
+    # Collect nominal events
+    for process in [ggh]:
+        files, selections, name, group = process()
+        cutstr, weightstr = collect_cuts_weights(selections)
+        d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
+        logger.info('Create dataset for %s with label %s, group %s and %u events', process, name, group, d.GetEntries())
+        logger.debug('Weight string: %s', weightstr)
+        logger.debug('Cut string: %s', cutstr)
+        for fold in [0, 1]:
+            write_dataset_test(d, args.workdir, name, group, fold, weightstr, cutstr)
 
     # Collect systematic shifts
     for sys in ['jecUncRelativeSampleYearUp', 'jecUncRelativeSampleYearDown']:
