@@ -55,7 +55,7 @@ tree_ = file_.Get("mt_nominal/ntuple")
 branch_ = tree_.GetBranch("THU_ggH_Mig01")
 N = tree_.GetEntries()
 for event in tree_:
-    print(event.GetBranch("THU_ggH_Mig01").GetEntries())
+    print(event.THU_ggH_Mig01)
 
 
 
