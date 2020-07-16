@@ -54,8 +54,10 @@ file_ = ROOT.TFile(path_)
 tree_ = file_.Get("mt_nominal/ntuple")
 branch_ = tree_.GetBranch("THU_ggH_Mig01")
 N = tree_.GetEntries()
-for i, event in enumerate(tree_):
-    print(i, event.THU_ggH_Mig01)
+#for i, event in enumerate(tree_):
+#    print(i, event.THU_ggH_Mig01)
+
+df = ROOT.RDataFrame(tree_, path_)
 
 
 
