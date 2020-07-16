@@ -69,12 +69,12 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
     
     # Systematics
-    logger.info("Classes: {}".format(classes))
-    columns_sys = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
-    d_sys = tree2numpy(path, classes[0], columns_sys)
+    #columns_sys = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
+    d_sys = tree2numpy(path, 'htt', 'THU_ggH_Mig01')
     mig01s = []
     mig01 = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
     mig01s.append(mig01)
+    logger.info("\n\nMig01: {}".format(mig01s))
         
     # Stack inputs
     xs = np.vstack(xs)

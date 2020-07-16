@@ -137,7 +137,7 @@ def main(args):
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
     
-    # Collect nominal events
+    # Collect nominal events woth mig01 systematic
     for process in [ggh]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
