@@ -68,16 +68,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
 
-    # Systematic
-    mig01 = [] # Mig01 systemattics
-    path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
-    file_ = ROOT.TFile(path_)
-    tree_ = file_.Get("mt_nominal/ntuple")
-    for i, event in enumerate(tree_):
-        mig01.append(event.THU_ggH_Mig01)
-
-    logger.info("\n\nWEIGHTS: {}".format(ws))
-    logger.info("\n\nMIG01: {}".format(mig01))
+    logger.info("\n\nWEIGHTS: {}\n{}".format(ws, np.len(ws)))
         
     # Stack inputs
     xs = np.vstack(xs)
