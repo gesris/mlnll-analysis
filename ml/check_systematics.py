@@ -52,7 +52,7 @@ array = []
 path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
 file_ = ROOT.TFile(path_)
 tree_ = file_.Get("mt_nominal/ntuple")
-print(tree_.GetBranch("THU_ggH_Mig01"))
+print(tree_.GetBranch().GetName())
 
 
 
