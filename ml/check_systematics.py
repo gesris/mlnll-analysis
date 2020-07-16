@@ -49,10 +49,11 @@ def diff_hists():
 
 #diff_hists()
 
-path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/mt_nominal.root'
+path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
 tree_ = "ntuple"
 file_ = ROOT.RDataFrame(tree_, path_)
 column_ = 'THU_ggH_Mig01'
-mig01 = tree_.AsNumpy(column_)
+mig01 = []
+mig01.append(tree_.AsNumpy(column_))
 
 
