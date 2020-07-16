@@ -61,14 +61,24 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
-    mig01 = [] # Mig01 systemattics
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
-    #logging.info("\n\nBefore stacking and multiplying: {}".format(ws))
+
+    # Systematic
+    mig01 = [] # Mig01 systemattics
+    path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
+    file_ = ROOT.TFile(path_)
+    tree_ = file_.Get("mt_nominal/ntuple")
+    for i, event in enumerate(tree_):
+        mig01.append(event.THU_ggH_Mig01)
+
+    logger.info("\n\nWEIGHTS: {}".format(ws))
+    logger.info("\n\nMIG01: {}".format(mig01))
+        
     # Stack inputs
     xs = np.vstack(xs)
     logger.debug('Input dataset (shape): {}'.format(xs.shape))
@@ -80,7 +90,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     # Stack weights
     ws = np.hstack(ws)
     logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
-
+    logger.info("\n\nWEIGHTS STACKED: {}".format(ws))
     # Multiply class weights to event weights
     if use_class_weights:
         sum_all = np.sum(ws)
@@ -88,7 +98,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
             mask = ys == i
             ws[mask] = ws[mask] / np.sum(ws[mask]) * sum_all
         logger.debug('Weights, with class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
-    logging.info("\n\nAfter stacking and multiplying: {}".format(ws))
     # Convert targets to categorical
     if make_categorical:
         ys = tf.keras.utils.to_categorical(ys)
@@ -120,15 +129,13 @@ def main(args):
     ####
 
     path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
-    tree_ = 'mt_nominal/ntuple'
-    column_ = 'THU_ggH_Mig01'
+    file_ = ROOT.TFile(path_)
+    directory_ = 'mt_nominal'
+    tree_ = "mt_nominal/ntuple"
+    column_ = "THU_ggH_Mig01"
+    mig01 = []
 
-    test = tree2numpy(path_, tree_, column_)
-    logger.info("\n\n{}\n\n".format(test))
-
-    #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
-    #x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt', 'htt_jecUncRelativeSampleYearUp', 'htt_jecUncRelativeSampleYearDown'], args.fold)
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), ['htt', 'ztt', 'w', 'tt'], args.fold)
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
