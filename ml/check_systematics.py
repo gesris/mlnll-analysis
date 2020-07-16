@@ -57,7 +57,7 @@ N = tree_.GetEntries()
 #for i, event in enumerate(tree_):
 #    print(i, event.THU_ggH_Mig01)
 
-df = ROOT.RDataFrame("mt_nominal/ntuple", path_)
+df = ROOT.RDataFrame("ntuple", path_)
 
 
 
