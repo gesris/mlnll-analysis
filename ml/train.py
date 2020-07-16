@@ -57,24 +57,24 @@ def tree2numpy(path, tree, columns):
 
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
-    columns = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
-    logger.debug("Columns : {}".format(columns))
-    logger.debug("Classes : {}".format(classes))
-
-    d_ = tree2numpy(path, classes[0], columns)
-    logger.info("\n\nWeights: {}".format(d_[cfg.ml_weight]))
+    columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
-    mig01s = []
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
-        mig01 = np.array(d["THU_ggH_Mig01"], dtype=np.float32)
-        mig01s.append(mig01)
+    
+    # Systematics
+    logger.info("Classes: {}".format(classes))
+    columns_sys = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
+    d_sys = tree2numpy(path, classes[0], columns_sys)
+    mig01s = []
+    mig01 = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
+    mig01s.append(mig01)
         
     # Stack inputs
     xs = np.vstack(xs)
