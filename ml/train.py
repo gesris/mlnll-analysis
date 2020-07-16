@@ -64,11 +64,9 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     mig01s = []
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
-        path_sys = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
-        d_sys = tree2numpy(path_sys, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
-        mig01 = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
+        mig01 = np.array(d["THU_ggH_Mig01"], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
         mig01s.append(mig01)
