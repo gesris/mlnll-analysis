@@ -129,7 +129,7 @@ def main(args):
 
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
-    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, mig01, test_size=test_size, random_state=1234)
+    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     logger.info("\n\nMig01 systematic weights: {}\nSize: {}".format(mig01, len(mig01)))
     logger.info("\n\nWeights: {}\nSize: {}".format(w, len(w)))
