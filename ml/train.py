@@ -70,7 +70,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     
     # Systematics
     #columns_sys = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
-    d_sys = tree2numpy(path, 'htt', "THU_ggH_Mig01")
+    d_sys = tree2numpy(path, 'htt', ["THU_ggH_Mig01"])
     mig01s = []
     mig01 = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
     mig01s.append(mig01)
