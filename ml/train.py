@@ -58,8 +58,11 @@ def tree2numpy(path, tree, columns):
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=False): #use_class_weight=True is default
     columns = cfg.ml_variables + [cfg.ml_weight, "THU_ggH_Mig01"]
-    #d_ = tree2numpy(path, classes[2], columns)
-    #logger.info("\n\nColumns: {}".format(d_[cfg.ml_weight]))
+    logger.info("Columns : {}".format(columns))
+    logger.info("Classes : {}".format(classes))
+
+    d_ = tree2numpy(path, classes[0], columns)
+    logger.info("\n\nColumns: {}".format(d_[cfg.ml_weight]))
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
@@ -70,8 +73,8 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         w = np.array(d[cfg.ml_weight], dtype=np.float32)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape) * i)
-    mig01 = np.array(d["THU_ggH_Mig01"], dtype=np.float32)
-    mig01s.append(mig01)
+        mig01 = np.array(d["THU_ggH_Mig01"], dtype=np.float32)
+        mig01s.append(mig01)
         
     # Stack inputs
     xs = np.vstack(xs)
