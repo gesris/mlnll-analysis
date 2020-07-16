@@ -73,6 +73,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     d_sys = tree2numpy(path, 'htt', ["THU_ggH_Mig01"])
     mig01s = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
     logger.info("\n\nMig01: {}".format(mig01s))
+
+    # Fit Mig01 into scheme
+    logger.info("\n\nRegular Size: {}".format(len(w)))
+    logger.info("Mig01 Size  : {}\n\n".format(len(mig01s)))
         
     # Stack inputs
     xs = np.vstack(xs)
