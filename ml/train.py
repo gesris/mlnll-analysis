@@ -73,10 +73,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     d_sys = tree2numpy(path, 'htt', ["THU_ggH_Mig01"])
     mig01s = np.array(d_sys["THU_ggH_Mig01"], dtype=np.float32)
     logger.info("\n\nMig01: {}".format(mig01s))
-
-    # Fit Mig01 into scheme
-    logger.info("\n\nRegular Size: {}".format(len(w)))
-    logger.info("Mig01 Size  : {}\n\n".format(len(mig01s)))
         
     # Stack inputs
     xs = np.vstack(xs)
@@ -132,11 +128,13 @@ def main(args):
     ####
 
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
+    mig01temp = mig01
     test_size = 0.25    # has to be used later for correct batch scale
+    mig01temp.append(np.ones(len(w) - len(mig01)))
+    logger.info("\n\nMig01 Length: {}".format(len(mig01temp)))
+    logger.info("Weight Length: {}".format(len(w)))
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    logger.info("\n\nMig01 systematic weights: {}\nSize: {}".format(mig01, len(mig01)))
-    logger.info("\n\nWeights: {}\nSize: {}".format(w, len(w)))
 
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
