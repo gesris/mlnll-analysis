@@ -130,7 +130,7 @@ def main(args):
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     mig01temp = mig01
     test_size = 0.25    # has to be used later for correct batch scale
-    mig01temp.append(np.ones(len(w) - len(mig01)))
+    np.vstack(mig01temp, np.ones(len(w) - len(mig01)))
     logger.info("\n\nMig01 Length: {}".format(len(mig01temp)))
     logger.info("Weight Length: {}".format(len(w)))
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
