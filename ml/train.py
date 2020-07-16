@@ -132,6 +132,7 @@ def main(args):
     # Magnify Mig01 to have a bigger impact on training
     logger.info("\n\nMig01 Entries 1: {}".format(mig01))
     mean_value = np.mean(mig01)
+    logger.info("\n\nMig01 Mean       {}".format(mean_value))
     mig01 = (mig01 - mean_value) * 10 + mean_value
     logger.info("\n\nMig01 Entries 2: {}".format(mig01))
 
