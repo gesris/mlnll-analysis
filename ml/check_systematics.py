@@ -47,6 +47,13 @@ def diff_hists():
         print("Yield: {:.3f}       SquaredDiffSum: {:.3f}      Name: {}".format(hyields[i], diff_sums[i], hnames[i]))
     
 
-diff_hists()
+#diff_hists()
+
+path_ = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
+file_ = ROOT.TFile(path_)
+directory_ = 'mt_nominal'
+tree_ = file_.Get("mt_nominal/ntuple")
+column_ = 'THU_ggH_Mig01'
+mig01 = tree_.AsNumpy(column_)
 
 
