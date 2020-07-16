@@ -129,28 +129,26 @@ def main(args):
 
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
-    x_train, x_val, y_train, y_val, w_train, w_val, mig01_train, mig01_val = train_test_split(x, y, w, mig01, test_size=test_size, random_state=1234)
+    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, mig01, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
-    logger.info("\n\nMig01 systematic weights: {}".format(mig01_train))
+    logger.info("\n\nMig01 systematic weights: {}\nSize: {}".format(mig01, len(mig01)))
+    logger.info("\n\nWeights: {}\nSize: {}".format(w, len(w)))
 
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
     y_val_array = np.array(y_val)
 
+    # Training masks
     Htt_mask_train = y_train_array[:, 0]
     Ztt_mask_train = y_train_array[:, 1]
     W_mask_train = y_train_array[:, 2]
     ttbar_mask_train = y_train_array[:, 3]
-    #Htt_up_mask_train = y_train[:, 4]
-    #Htt_down_mask_train = y_train[:, 5]
 
+    # Validation masks
     Htt_mask_val = y_val_array[:, 0]
     Ztt_mask_val = y_val_array[:, 1]
     W_mask_val = y_val_array[:, 2]
-    ttbar_mask_val = y_val_array[:, 3]    
-    #Htt_up_mask_val = y_val[:, 4]
-    #Htt_down_mask_val = y_val[:, 5]
-
+    ttbar_mask_val = y_val_array[:, 3]
 
     # Preprocessing
     preproc = StandardScaler()
@@ -163,11 +161,11 @@ def main(args):
         logger.info('Preprocessing parameter (mean, std): %s, %s', mean, std)
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
 
-
     # Create model
     x_ph = tf.placeholder(tf.float32)
     train_vars, f = model(x_ph, len(cfg.ml_variables), args.fold)
     w_ph = tf.placeholder(tf.float32)
+    mig01_ph = tf.placeholder(tf.float32)
     
     
 
