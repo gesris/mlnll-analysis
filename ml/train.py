@@ -128,12 +128,13 @@ def main(args):
     ####
 
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
-    mig01temp = mig01
     test_size = 0.25    # has to be used later for correct batch scale
+    
+    # Process Mig01 to have same number of entries as other variables
     mig01 = np.append(mig01, np.ones(len(w) - len(mig01)))
-    logger.info("\n\nMig01 Length: {}".format(len(mig01)))
-    logger.info("Weight Length: {}".format(len(w)))
-    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=test_size, random_state=1234)
+
+    # Split Variables into training and validation sets
+    x_train, x_val, y_train, y_val, w_train, w_val, mig01_train, mig01_val = train_test_split(x, y, w, mig01, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     # Build masks for each class Htt, Ztt, W and ttbar
@@ -212,8 +213,8 @@ def main(args):
     ttbar = tf.cast(hist(f, bins, ttbar_mask, w_ph, batch_scale, fold_scale, 1), tf.float64)
 
     # sys counts
-    Htt_up = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, mig01), tf.float64)
-    Htt_down = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1 / mig01), tf.float64)
+    Htt_up = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, mig01_ph), tf.float64)
+    Htt_down = tf.cast(hist(f, bins, Htt_mask, w_ph, batch_scale, fold_scale, 1 / mig01_ph), tf.float64)
 
     # Calculation of NLL (with and without sys)
     nll = zero
@@ -281,6 +282,7 @@ def main(args):
     for epoch in range(0, 20000):
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, w_ph: w_train,\
+                            mig01_ph: mig01_train, \
                             Htt_mask: Htt_mask_train, \
                             Ztt_mask: Ztt_mask_train, \
                             W_mask: W_mask_train, \
@@ -292,6 +294,7 @@ def main(args):
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val, Htt_, Htt_up_, Htt_down_, Ztt_, W_, ttbar_  = session.run([loss, Htt, Htt_up, Htt_down, Ztt, W, ttbar], feed_dict={x_ph: x_val_preproc, w_ph: w_val,\
+                            mig01_ph: mig01_val, \
                             Htt_mask: Htt_mask_val, \
                             Ztt_mask: Ztt_mask_val, \
                             W_mask: W_mask_val, \
