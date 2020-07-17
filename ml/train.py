@@ -214,10 +214,11 @@ def main(args):
     # Calculation of NLL (with and without sys)
     nll = zero
     nll_statsonly = zero
+    magnification = 10.
     for i in range(0, len(bins) - 1):
         # Likelihood
         exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
-        sys = tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) * 10 + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i]) * 10   # magnifying systematic shift by factor of 10
+        sys = (tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])) * magnification   # magnifying systematic shift by factor of 10
         obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
