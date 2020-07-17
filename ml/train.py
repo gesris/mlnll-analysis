@@ -198,9 +198,6 @@ def main(args):
     W_mask = tf.placeholder(tf.float32)
     ttbar_mask = tf.placeholder(tf.float32)
 
-    # sys shift
-    mig01 = 1.02
-
     # count function
     def hist(f, bins, masking, w_ph, batch_scale, fold_scale, custom_scale):
         counts = []
