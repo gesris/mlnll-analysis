@@ -129,7 +129,7 @@ def main(args):
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
 
-    # Process Mig01 to have same number of entries as other variables
+    # Adapt Mig01 to have same number of entries as other variables
     mig01 = np.append(mig01, np.ones(len(w) - len(mig01)))
 
     # Split Variables into training and validation sets
