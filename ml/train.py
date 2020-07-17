@@ -230,7 +230,7 @@ def main(args):
     for i in range(0, len(bins) - 1):
         # Likelihood
         exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
-        sys = tf.maximum(theta, zero) * Htt_up[i] + tf.maximum(theta, zero) * Htt_down[i]
+        sys = tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])
         obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
         nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
