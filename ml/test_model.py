@@ -79,9 +79,11 @@ def count_masking(x, up, down):
 
 def main(args):
     inv_fold = [1, 0][args.fold]
-    x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
-                            make_categorical=True, use_class_weights=False)
-    
+    #x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
+    #                        make_categorical=True, use_class_weights=False)
+    x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold)
+
+
     # Magnify Mig01 to have a bigger impact on training
     mean_value = np.mean(mig01)
     mig01 = (mig01 - mean_value) * 10 + mean_value
