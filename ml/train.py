@@ -128,17 +128,23 @@ def main(args):
 
     x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
     test_size = 0.25    # has to be used later for correct batch scale
+    logger.info("\n\nMig01: {}\nSize: {}".format(mig01, len(mig01)))
     
     # Magnify Mig01 to have a bigger impact on training
     mean_value = np.mean(mig01)
     mig01 = (mig01 - mean_value) * 10 + mean_value
+    logger.info("\n\nMig01 x10: {}\nSize: {}".format(mig01, len(mig01)))
 
     # Process Mig01 to have same number of entries as other variables
     mig01 = np.append(mig01, np.ones(len(w) - len(mig01)))
+    logger.info("\n\nMig01 x10 adapted: {}\nSize: {}".format(mig01, len(mig01)))
 
     # Split Variables into training and validation sets
     x_train, x_val, y_train, y_val, w_train, w_val, mig01_train, mig01_val = train_test_split(x, y, w, mig01, test_size=test_size, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
+    logger.info("\n\nMig01 Train: {}\nSize: {}".format(mig01, len(mig01_train)))
+    logger.info("\n\nMig01 Val: {}\nSize: {}".format(mig01, len(mig01_val)))
+    logger.info("\n\nMig01 Inverse: {}\nSize: {}".format(1 / mig01, len(mig01)))
 
     # Build masks for each class Htt, Ztt, W and ttbar
     y_train_array = np.array(y_train)
