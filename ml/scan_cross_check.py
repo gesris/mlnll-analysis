@@ -44,10 +44,12 @@ def main():
         Ztt = tf.constant(counts[1], tf.float64)
         W = tf.constant(counts[2], tf.float64)
         ttbar = tf.constant(counts[3], tf.float64)
-        return(Htt, Ztt, W, ttbar)
+        Htt_up = tf.constant(counts[4], tf.float64)
+        Htt_down = tf.constant(counts[5], tf.float64)
+        return(Htt, Ztt, W, ttbar, Htt_up, Htt_down)
     
 
-    def nll_value(mu, Htt, Ztt, W, ttbar):
+    def nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
         zero = tf.constant(0, tf.float64)
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
@@ -56,22 +58,24 @@ def main():
         for i in range(0, length):
             # Likelihood
             exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
-            sys = zero  # systematic has to be added later
+            sys = (tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])) * magnification   # magnifying systematic shift by factor of 10
             obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
             
             nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
         return nll_statsonly
 
 
-    def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar):
+
+    def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
         # empty file
         open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "w").close()
 
         # write new data into file
         mu1 = tf.constant(x, dtype=tf.float64)
         for i in tqdm(range(0, len(x))):
-            d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar) - nll_value(mu0, Htt, Ztt, W, ttbar)))]
+            d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar, Htt_up, Htt_down) - nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)))]
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "ab") as file:
                 np.savetxt(file, d_value)
 
@@ -92,11 +96,11 @@ def main():
         return diff, sigma_left, sigma_right 
                 
 
-    def second_derivative(mu, Htt, Ztt, W, ttbar):
-        return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu))
+    def second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+        return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down), mu), mu))
 
 
-    Htt, Ztt, W, ttbar = load_hists()
+    Htt, Ztt, W, ttbar, Htt_up, Htt_down = load_hists()
 
     ####
     #### Create data for parabola fit
@@ -106,7 +110,7 @@ def main():
         return a*(x-b)**2
 
     x = np.linspace(0.0, 2.0, 100)
-    a = second_derivative(mu, Htt, Ztt, W, ttbar)
+    a = second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
     y = f(x, a, 1)
     
 
@@ -114,7 +118,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
+    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
 
     ####
