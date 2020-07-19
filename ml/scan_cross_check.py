@@ -95,9 +95,8 @@ def main():
             dnll = 2 * (nll_val_nosys_var - nll_val_nosys)
             dnll_sys = 2 * (nll_val_sys_var - nll_val_sys)
 
-            config = ConfigProto()
-            config.gpu_options.allow_growth = True
-            session = InteractiveSession(config=config)
+            session = tf.Session()
+            session.run([tf.global_variables_initializer()])
             d_value_nosys, d_value_sys = session.run([dnll, dnll_sys])
             d_value = [d_value_nosys, d_value_sys]
 
