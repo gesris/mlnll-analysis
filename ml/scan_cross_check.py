@@ -4,6 +4,8 @@ import argparse
 import numpy as np
 np.random.seed(1234)
 import tensorflow.compat.v1 as tf
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
 import tensorflow_probability as tfp
 tf.disable_v2_behavior()
 tf.set_random_seed(1234)
@@ -93,7 +95,10 @@ def main():
             dnll = 2 * (nll_val_nosys_var - nll_val_nosys)
             dnll_sys = 2 * (nll_val_sys_var - nll_val_sys)
 
-            d_value_nosys, d_value_sys = tf.Session().run([dnll, dnll_sys])
+            config = ConfigProto()
+            config.gpu_options.allow_growth = True
+            session = InteractiveSession(config=config)
+            d_value_nosys, d_value_sys = session.run([dnll, dnll_sys])
             d_value = [d_value_nosys, d_value_sys]
 
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
