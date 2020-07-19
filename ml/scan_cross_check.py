@@ -88,8 +88,7 @@ def main():
             # NOSYS
             nll_val_nosys, nll_val_sys          = nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
             nll_val_nosys_var, nll_val_sys_var  = nll_value(mu1[i], Htt, Ztt, W, ttbar, Htt_up, Htt_down)
-            d_value_nosys = [tf.Session().run(2 * (nll_val_nosys_var - nll_val_nosys))]
-            d_value_sys = [tf.Session().run(2 * (nll_val_sys_var - nll_val_sys))]
+            d_value_nosys, d_value_sys = [tf.Session().run([2 * (nll_val_nosys_var - nll_val_nosys), 2 * (nll_val_sys_var - nll_val_sys)])]
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
                 np.savetxt(file, d_value_nosys)
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_sys.csv'.format(args.fold)), "ab") as file:
