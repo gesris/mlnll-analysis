@@ -54,6 +54,7 @@ def main():
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
+        theta = tf.Variable(0.0, dtype=tf.float32, trainable=True)
         length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         for i in range(0, length):
             # Likelihood
@@ -64,6 +65,15 @@ def main():
             nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
+
+        # minimize Theta
+        opt = tf.train.GradientDescentOptimizer(0.1).minimize(nll)
+        with tf.Session() as session:
+            session.run(tf.global_variables_initializer())
+            for i in range(0, 100):
+                print(session.run([theta, nll]))
+                session.run(opt)
+
         return nll_statsonly
 
 
