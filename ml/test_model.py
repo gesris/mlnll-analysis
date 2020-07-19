@@ -199,6 +199,8 @@ def main(args):
         np.savetxt(file, [Ztt_counts])
         np.savetxt(file, [W_counts])
         np.savetxt(file, [ttbar_counts])
+        np.savetxt(file, [Htt_up_counts])
+        np.savetxt(file, [Htt_down_counts])
 
     plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts, Htt_up_counts, Htt_down_counts], background_category, bins, bins_center)
 
