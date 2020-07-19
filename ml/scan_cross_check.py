@@ -109,7 +109,7 @@ def main():
     #def f(x, a, b):
     #    return a*(x-b)**2
 
-    #x = np.linspace(0.0, 2.0, 100)
+    x = np.linspace(0.0, 2.0, 100)
     #a = second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
     #y = f(x, a, 1)
     
@@ -134,7 +134,7 @@ def main():
 
     plt.figure()
     plt.plot(x, diff_nll)
-    plt.plot(x, y, color='k')
+    #plt.plot(x, y, color='k')
     plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
