@@ -72,11 +72,9 @@ def main():
         with tf.Session() as session:
             session.run(tf.global_variables_initializer())
             for i in range(20):
-                print(session.run([theta, nll]))
                 session.run(opt)
         
-        
-        return nll_statsonly
+        return nll_statsonly, nll
 
 
 
@@ -84,12 +82,17 @@ def main():
         # empty file
         open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "w").close()
 
-        # write new data into file
+        # write new data into file - NOSYS
+        nll_val_nosys, nll_val_sys          = nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+        nll_val_nosys_var, nll_val_sys_var  = nll_value(mu1[i], Htt, Ztt, W, ttbar, Htt_up, Htt_down)
         mu1 = tf.constant(x, dtype=tf.float64)
         for i in tqdm(range(0, len(x))):
-            d_value = [tf.Session().run(2 * (nll_value(mu1[i], Htt, Ztt, W, ttbar, Htt_up, Htt_down) - nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)))]
-            with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "ab") as file:
-                np.savetxt(file, d_value)
+            d_value_nosys = [tf.Session().run(2 * (nll_val_nosys_var - nll_val_nosys))]
+            d_value_sys = [tf.Session().run(2 * (nll_val_sys_var - nll_val_sys))]
+            with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
+                np.savetxt(file, d_value_nosys)
+            with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_sys.csv'.format(args.fold)), "ab") as file:
+                np.savetxt(file, d_value_sys)
 
 
     def scan_from_file(x):
