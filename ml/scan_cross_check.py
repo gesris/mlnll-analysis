@@ -30,6 +30,7 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 def main():
     mu = tf.constant(1.0, tf.float64)
+    theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
 
     def load_hists():
         with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), 'rU') as file:
@@ -49,13 +50,12 @@ def main():
         return(Htt, Ztt, W, ttbar, Htt_up, Htt_down)
     
 
-    def nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+    def nll_value(mu, theta, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
         magnification = 10.
         zero = tf.constant(0, tf.float64)
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
         length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         for i in range(0, length):
             # Likelihood
@@ -78,7 +78,7 @@ def main():
 
 
 
-    def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+    def create_dnll_file(mu0, theta, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
         # empty file
         open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "w").close()
 
@@ -86,8 +86,8 @@ def main():
         mu1 = tf.constant(x, dtype=tf.float64)
         for i in tqdm(range(0, len(x))):
             # NOSYS
-            nll_val_nosys, nll_val_sys          = nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
-            nll_val_nosys_var, nll_val_sys_var  = nll_value(mu1[i], Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+            nll_val_nosys, nll_val_sys          = nll_value(mu0, theta, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+            nll_val_nosys_var, nll_val_sys_var  = nll_value(mu1[i], theta, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
             d_value_nosys, d_value_sys = [tf.Session().run([2 * (nll_val_nosys_var - nll_val_nosys), 2 * (nll_val_sys_var - nll_val_sys)])]
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
                 np.savetxt(file, d_value_nosys)
@@ -133,7 +133,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+    create_dnll_file(1.0, theta, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
 
     ####
