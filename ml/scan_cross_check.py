@@ -113,10 +113,10 @@ def main():
             sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
-                if d_value <= 1.05 and d_value >= 0.95 and i > len(x) / 2:
-                    sigma_right = x[i] - 1
-                elif d_value <= 1.05 and d_value >= 0.95 and i < len(x) / 2:
-                    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
+                #if d_value <= 1.05 and d_value >= 0.95 and i > len(x) / 2:
+                #    sigma_right = x[i] - 1
+                #elif d_value <= 1.05 and d_value >= 0.95 and i < len(x) / 2:
+                #    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
                     #sigma_left = 1 - i * scaling
                 diff.append(d_value)
             sigma_left = sigma_left_list[0]
@@ -136,7 +136,7 @@ def main():
     #def f(x, a, b):
     #    return a*(x-b)**2
 
-    x = np.linspace(0.0, 2.0, 100)
+    x = np.linspace(0.0, 2.0, 30)
     #a = second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
     #y = f(x, a, 1)
     
@@ -152,8 +152,10 @@ def main():
     #### assign values from .csv file
     ####
 
-    diff_nll, sigma_left, sigma_right = scan_from_file(x, 'nosys')
-    diff_nll_sys, sigma_left_sys, sigma_right_sys = scan_from_file(x, 'sys')
+    #diff_nll, sigma_left, sigma_right = scan_from_file(x, 'nosys')
+    #diff_nll_sys, sigma_left_sys, sigma_right_sys = scan_from_file(x, 'sys')
+    diff_nll, _, _ = scan_from_file(x, 'nosys')
+    diff_nll_sys, _, _ = scan_from_file(x, 'sys')
 
 
     ####
@@ -164,15 +166,15 @@ def main():
     plt.plot(x, diff_nll)
     plt.plot(x, diff_nll_sys, color='k')
     #plt.plot(x, y, color='k')
-    plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
+    #plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
-    plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
-    plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
-    plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
-    plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
-    #plt.axhline(y=1., color='r')
+    #plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
+    #plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
+    #plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
+    #plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
+    plt.axhline(y=1., color='r')
     #plt.savefig("./scan_cross_check.png", bbox_inches="tight")
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check.png'.format(args.fold)), bbox_inches="tight")
 
