@@ -98,12 +98,11 @@ def main():
             session = tf.Session()
             session.run([tf.global_variables_initializer()])
             d_value_nosys, d_value_sys = session.run([dnll, dnll_sys])
-            d_value = [d_value_nosys, d_value_sys]
 
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
-                np.savetxt(file, d_value[0])
+                np.savetxt(file, [d_value_nosys])
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_sys.csv'.format(args.fold)), "ab") as file:
-                np.savetxt(file, d_value[1])
+                np.savetxt(file, [d_value_sys])
 
 
     def scan_from_file(x):
