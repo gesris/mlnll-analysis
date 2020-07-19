@@ -73,8 +73,10 @@ def main():
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         with tf.Session() as session:
             session.run(tf.global_variables_initializer())
+            print("---")
             for i in range(20):
                 session.run(opt)
+                print(session.run([theta, nll]))
         
         return nll_statsonly, nll
 
@@ -105,8 +107,8 @@ def main():
                 np.savetxt(file, [d_value_sys])
 
 
-    def scan_from_file(x):
-        with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), 'r') as file:
+    def scan_from_file(x, method):
+        with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_{}.csv'.format(args.fold, method)), 'r') as file:
             diff = []
             sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
@@ -150,7 +152,8 @@ def main():
     #### assign values from .csv file
     ####
 
-    diff_nll, sigma_left, sigma_right = scan_from_file(x)
+    diff_nll, sigma_left, sigma_right = scan_from_file(x, 'nosys')
+    diff_nll_sys, sigma_left_sys, sigma_right_sys = scan_from_file(x, 'sys')
 
 
     ####
@@ -159,6 +162,7 @@ def main():
 
     plt.figure()
     plt.plot(x, diff_nll)
+    plt.plot(x, diff_nll_sys, color='k')
     #plt.plot(x, y, color='k')
     plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
     plt.xlim((0, 2))
