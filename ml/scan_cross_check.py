@@ -55,7 +55,7 @@ def main():
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True, reuse=True)
+        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
         length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         for i in range(0, length):
             # Likelihood
