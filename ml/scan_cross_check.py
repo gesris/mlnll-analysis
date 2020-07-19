@@ -68,13 +68,8 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # minimize Theta
-        opt = tf.train.GradientDescentOptimizer(0.1).minimize(nll)
-        with tf.Session() as session:
-            session.run(tf.global_variables_initializer())
-            for i in range(0, 100):
-                print(session.run([theta, nll]))
-                session.run(opt)
-
+        mini = tfp.math.minimize(nll, num_steps=100, optimizer=tf.optimizers.Adam(learning_rate=0.1), trainable_variables=theta)
+        print(tf.Session().run([mini]))
         return nll_statsonly
 
 
