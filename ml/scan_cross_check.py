@@ -50,11 +50,12 @@ def main():
     
 
     def nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+        magnification = 10.
         zero = tf.constant(0, tf.float64)
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        theta = tf.Variable(0.0, dtype=tf.float32, trainable=True)
+        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
         length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         for i in range(0, length):
             # Likelihood
