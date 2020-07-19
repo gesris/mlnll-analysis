@@ -96,8 +96,8 @@ def main():
         return diff, sigma_left, sigma_right 
                 
 
-    def second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
-        return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down), mu), mu))
+    #def second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+    #    return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down), mu), mu))
 
 
     Htt, Ztt, W, ttbar, Htt_up, Htt_down = load_hists()
@@ -106,12 +106,12 @@ def main():
     #### Create data for parabola fit
     ####
 
-    def f(x, a, b):
-        return a*(x-b)**2
+    #def f(x, a, b):
+    #    return a*(x-b)**2
 
-    x = np.linspace(0.0, 2.0, 100)
-    a = second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
-    y = f(x, a, 1)
+    #x = np.linspace(0.0, 2.0, 100)
+    #a = second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+    #y = f(x, a, 1)
     
 
     ####
