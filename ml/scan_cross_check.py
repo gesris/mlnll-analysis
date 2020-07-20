@@ -83,8 +83,7 @@ def main():
                 loss = nll_
                 patience = max_patience
             elif patience == 0:
-                print(theta_, nll_)
-
+                logger.info("THETA: {}, NLL: {}".format(theta_, nll_))
                 break
             else:
                 patience -= 1
