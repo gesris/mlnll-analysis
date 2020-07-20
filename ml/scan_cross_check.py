@@ -82,14 +82,8 @@ def main():
             sigma_left_list = []
             for i, d_value_ in enumerate(reader(file)):
                 d_value = float(d_value_[0])
-                if d_value <= 1.05 and d_value >= 0.95 and i > len(x) / 2:
-                    sigma_right = x[i] - 1
-                elif d_value <= 1.05 and d_value >= 0.95 and i < len(x) / 2:
-                    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
-                    #sigma_left = 1 - i * scaling
                 diff.append(d_value)
-            sigma_left = sigma_left_list[0]
-        return diff, sigma_left, sigma_right 
+        return diff
                 
 
     def second_derivative(mu, Htt, Ztt, W, ttbar):
@@ -114,14 +108,15 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar)
+    x_nll = np.linspace(0., 2., 30)
+    create_dnll_file(1.0, x_nll, Htt, Ztt, W, ttbar)
 
 
     ####
     #### assign values from .csv file
     ####
 
-    diff_nll, sigma_left, sigma_right = scan_from_file(x)
+    diff_nll = scan_from_file(x)
 
 
     ####
@@ -129,17 +124,17 @@ def main():
     ####
 
     plt.figure()
-    plt.plot(x, diff_nll)
+    #plt.plot(x_nll, diff_nll)
     plt.plot(x, y, color='k')
-    plt.xlabel("r = 1.0 +{:.4f} -{:.4f}".format(sigma_right, sigma_left))
+    plt.xlabel("mu")
     plt.xlim((0, 2))
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
-    plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
-    plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
-    plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
-    plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
-    #plt.axhline(y=1., color='r')
+    #plt.axvline(x= 1. - sigma_left, ymax=1. / 9., color='r')
+    #plt.axvline(x= 1. + sigma_right, ymax=1. / 9., color='r')
+    #plt.axhline(y=1., xmin=0., xmax=(1.-sigma_left) / 2., color='r')
+    #plt.axhline(y=1., xmin=(1.+sigma_right) / 2., xmax=2. / 2., color='r')
+    plt.axhline(y=1., color='r')
     #plt.savefig("./scan_cross_check.png", bbox_inches="tight")
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check.png'.format(args.fold)), bbox_inches="tight")
 
