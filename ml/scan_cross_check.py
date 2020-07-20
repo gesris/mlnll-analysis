@@ -28,27 +28,25 @@ def setup_logging(output_file, level=logging.DEBUG):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
+def load_hists():
+    with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), 'rU') as file:
+        counts = []
+        for line in file:
+            lines = []
+            elements = line.split()
+            for i in range(0, len(elements)):
+                lines.append(float(elements[i]))
+            counts.append(lines)
+    Htt = tf.constant(counts[0], tf.float64)
+    Ztt = tf.constant(counts[1], tf.float64)
+    W = tf.constant(counts[2], tf.float64)
+    ttbar = tf.constant(counts[3], tf.float64)
+    Htt_up = tf.constant(counts[4], tf.float64)
+    Htt_down = tf.constant(counts[5], tf.float64)
+    return(Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
 def main():
-    mu = tf.constant(1.0, tf.float64)
-
-    def load_hists():
-        with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), 'rU') as file:
-            counts = []
-            for line in file:
-                lines = []
-                elements = line.split()
-                for i in range(0, len(elements)):
-                    lines.append(float(elements[i]))
-                counts.append(lines)
-        Htt = tf.constant(counts[0], tf.float64)
-        Ztt = tf.constant(counts[1], tf.float64)
-        W = tf.constant(counts[2], tf.float64)
-        ttbar = tf.constant(counts[3], tf.float64)
-        Htt_up = tf.constant(counts[4], tf.float64)
-        Htt_down = tf.constant(counts[5], tf.float64)
-        return(Htt, Ztt, W, ttbar, Htt_up, Htt_down)
-    
+    mu = tf.constant(1.0, tf.float64)    
 
     def nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
         magnification = 10.
@@ -56,7 +54,7 @@ def main():
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        theta = tf.Variable(1.0, dtype=tf.float64, trainable=True)
+        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
         total_bins = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         
         for i in range(0, total_bins):
@@ -69,13 +67,14 @@ def main():
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
-        # Minimize Theta
+        # Minimize NLL with regard to theta
         session = tf.Session()
         session.run(tf.global_variables_initializer())
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         max_patience = 10
         patience = max_patience
         nll_statsonly_, loss = session.run([nll_statsonly, nll])
+        
         running = True
         while running:
             session.run(opt)
