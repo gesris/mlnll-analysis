@@ -28,6 +28,7 @@ def setup_logging(output_file, level=logging.DEBUG):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
+
 def load_hists():
     with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), 'rU') as file:
         counts = []
@@ -45,54 +46,109 @@ def load_hists():
     Htt_down = tf.constant(counts[5], tf.float64)
     return(Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
+
+def scan_from_file(x, method):
+    with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_{}.csv'.format(args.fold, method)), 'r') as file:
+        diff = []
+        sigma_left_list = []
+        for i, d_value_ in enumerate(reader(file)):
+            d_value = float(d_value_[0])
+            #if d_value <= 1.05 and d_value >= 0.95 and i > len(x) / 2:
+            #    sigma_right = x[i] - 1
+            #elif d_value <= 1.05 and d_value >= 0.95 and i < len(x) / 2:
+            #    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
+                #sigma_left = 1 - i * scaling
+            diff.append(d_value)
+        #sigma_left = sigma_left_list[0]
+    return diff#, sigma_left, sigma_right
+
+def nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+    magnification = 10.
+    zero = tf.constant(0, tf.float64)
+    epsilon = tf.constant(1e-9, tf.float64)
+    nll = zero
+    nll_statsonly = zero
+    theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
+    total_bins = tf.Session().run(tf.squeeze(tf.shape(Htt)))
+    
+    for i in range(0, total_bins):
+        # Likelihood
+        exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
+        sys = (tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])) * magnification   # magnifying systematic shift by factor of 10
+        obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
+        
+        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+    nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
+
+    # Minimize NLL with regard to theta
+    session = tf.Session()
+    session.run([tf.global_variables_initializer()])
+    opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
+    max_patience = 10
+    patience = max_patience
+    nll_statsonly_, loss = session.run([nll_statsonly, nll])
+    
+    running = True
+    while running:
+        session.run(opt)
+        theta_, nll_ = session.run([theta, nll])
+        if nll_ < loss:
+            loss = nll_
+            patience = max_patience
+        elif patience == 0:
+            logger.info("THETA: {}, NLL: {}".format(theta_, nll_))
+            running = False
+        else:
+            patience -= 1
+    
+    return nll_statsonly_, nll_
+
 def main():
-    mu = tf.constant(1.0, tf.float64)    
+    # Calculating NLL
+    mu = tf.constant(1.0, tf.float64)   
+    Htt, Ztt, W, ttbar, Htt_up, Htt_down = load_hists() 
 
-    def nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
-        magnification = 10.
-        zero = tf.constant(0, tf.float64)
-        epsilon = tf.constant(1e-9, tf.float64)
-        nll = zero
-        nll_statsonly = zero
-        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
-        total_bins = tf.Session().run(tf.squeeze(tf.shape(Htt)))
+    magnification = 10.
+    zero = tf.constant(0, tf.float64)
+    epsilon = tf.constant(1e-9, tf.float64)
+    nll = zero
+    nll_statsonly = zero
+    theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
+    total_bins = tf.Session().run(tf.squeeze(tf.shape(Htt)))
+    
+    for i in range(0, total_bins):
+        # Likelihood
+        exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
+        sys = (tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])) * magnification   # magnifying systematic shift by factor of 10
+        obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
         
-        for i in range(0, total_bins):
-            # Likelihood
-            exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
-            sys = (tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])) * magnification   # magnifying systematic shift by factor of 10
-            obs = Htt[i] + Ztt[i] + W[i] + ttbar[i]
-            
-            nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
-            nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-        nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
+        nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+    nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
-        # Minimize NLL with regard to theta
-        config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
-        session = tf.Session(config=config)
-        session.run([tf.global_variables_initializer()])
-        opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
-        max_patience = 10
-        patience = max_patience
-        nll_statsonly_, loss = session.run([nll_statsonly, nll])
-        
-        running = True
-        while running:
-            session.run(opt)
-            theta_, nll_ = session.run([theta, nll])
-            if nll_ < loss:
-                loss = nll_
-                patience = max_patience
-            elif patience == 0:
-                logger.info("THETA: {}, NLL: {}".format(theta_, nll_))
-                running = False
-            else:
-                patience -= 1
-        
-        return nll_statsonly_, nll_
+    # Minimize NLL with regard to theta
+    session = tf.Session()
+    session.run([tf.global_variables_initializer()])
+    opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
+    max_patience = 10
+    patience = max_patience
+    nll_statsonly_, loss = session.run([nll_statsonly, nll])
+    
+    while True:
+        session.run(opt)
+        theta_, nll_ = session.run([theta, nll])
+        if nll_ < loss:
+            loss = nll_
+            patience = max_patience
+        elif patience == 0:
+            logger.info("THETA: {}, NLL: {}".format(theta_, nll_))
+            break
+        else:
+            patience -= 1
 
 
-    def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
+    '''def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
         # empty file
         open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list.csv'.format(args.fold)), "w").close()
 
@@ -117,30 +173,10 @@ def main():
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
                 np.savetxt(file, d_value_nosys)
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_sys.csv'.format(args.fold)), "ab") as file:
-                np.savetxt(file, d_value_sys)
-
-
-    def scan_from_file(x, method):
-        with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_{}.csv'.format(args.fold, method)), 'r') as file:
-            diff = []
-            sigma_left_list = []
-            for i, d_value_ in enumerate(reader(file)):
-                d_value = float(d_value_[0])
-                #if d_value <= 1.05 and d_value >= 0.95 and i > len(x) / 2:
-                #    sigma_right = x[i] - 1
-                #elif d_value <= 1.05 and d_value >= 0.95 and i < len(x) / 2:
-                #    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
-                    #sigma_left = 1 - i * scaling
-                diff.append(d_value)
-            #sigma_left = sigma_left_list[0]
-        return diff#, sigma_left, sigma_right 
-                
+                np.savetxt(file, d_value_sys)   '''             
 
     #def second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
     #    return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down), mu), mu))
-
-
-    Htt, Ztt, W, ttbar, Htt_up, Htt_down = load_hists()
 
     ####
     #### Create data for parabola fit
@@ -158,7 +194,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+    #create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
 
     ####
@@ -167,8 +203,8 @@ def main():
 
     #diff_nll, sigma_left, sigma_right = scan_from_file(x, 'nosys')
     #diff_nll_sys, sigma_left_sys, sigma_right_sys = scan_from_file(x, 'sys')
-    diff_nll = scan_from_file(x, 'nosys')
-    diff_nll_sys = scan_from_file(x, 'sys')
+    #diff_nll = scan_from_file(x, 'nosys')
+    #diff_nll_sys = scan_from_file(x, 'sys')
 
 
     ####
