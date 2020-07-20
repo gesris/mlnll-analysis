@@ -24,8 +24,22 @@ def save_to_csv(args):
         np.savetxt(file, [data['r']])
         np.savetxt(file, [data['deltaNLL']])
 
+def load_from_csv(args):
+    with open(os.path.join(args.workdir, 'scan_data_{}.csv'.format(args.method)), "rU") as file:
+        counts = []
+        for line in file:
+            lines = []
+            elements = line.split()
+            for i in range(0, len(elements)):
+                lines.append(float(elements[i]))
+            counts.append(lines)
+    r = counts[0]
+    deltaNLL = counts[1]
+    return(r, deltaNLL)
+
 def main(args):
     save_to_csv(args)
+    print(load_from_csv(args))
     
 
 if __name__ == '__main__':
