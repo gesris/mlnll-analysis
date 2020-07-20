@@ -75,12 +75,13 @@ def main():
             print("---")
             max_patience = 10
             patience = max_patience
-            loss = nll
+            loss = session.run([nll])
             while True:
                 session.run(opt)
-                print(session.run([theta, nll]))
+                theta_, nll_ = session.run([theta, nll])
+                print(theta_, nll_)
                 if nll < loss:
-                    loss = nll
+                    loss = nll_
                     patience = max_patience
                 elif patience == 0:
                     break
