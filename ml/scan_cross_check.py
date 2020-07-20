@@ -76,7 +76,8 @@ def main():
         max_patience = 10
         patience = max_patience
         nll_statsonly_, loss = session.run([nll_statsonly, nll])
-        while True:
+        running = True
+        while running:
             session.run(opt)
             theta_, nll_ = session.run([theta, nll])
             if nll_ < loss:
@@ -84,7 +85,7 @@ def main():
                 patience = max_patience
             elif patience == 0:
                 logger.info("THETA: {}, NLL: {}".format(theta_, nll_))
-                break
+                running = False
             else:
                 patience -= 1
         
