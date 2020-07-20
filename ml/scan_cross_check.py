@@ -80,7 +80,7 @@ def main():
                 session.run(opt)
                 theta_, nll_ = session.run([theta, nll])
                 print(theta_, nll_)
-                if nll < loss:
+                if nll_ < loss:
                     loss = nll_
                     patience = max_patience
                 elif patience == 0:
