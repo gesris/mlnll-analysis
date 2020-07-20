@@ -24,26 +24,8 @@ def save_to_csv(args):
         np.savetxt(file, [data['r'][1:]])
         np.savetxt(file, [data['deltaNLL'][1:]])
 
-def load_from_csv(args):
-    with open(os.path.join(args.workdir, 'scan_data_{}.csv'.format(args.method)), "rU") as file:
-        counts = []
-        for line in file:
-            lines = []
-            elements = line.split()
-            for i in range(0, len(elements)):
-                lines.append(float(elements[i]))
-            counts.append(lines)
-    r = counts[0]
-    deltaNLL = counts[1]
-    return(r, deltaNLL)
-
 def main(args):
     save_to_csv(args)
-    r, deltaNLL = load_from_csv(args)
-
-    plt.figure()
-    plt.plot(r, deltaNLL, color='k')
-    plt.savefig(os.path.join(args.workdir, 'test.png'), bbox_inches="tight")
     
 
 if __name__ == '__main__':
