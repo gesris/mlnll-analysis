@@ -75,7 +75,7 @@ def main():
             print("---")
             max_patience = 10
             patience = max_patience
-            loss = start_loss
+            loss = nll
             while True:
                 session.run(opt)
                 print(session.run([theta, nll]))
