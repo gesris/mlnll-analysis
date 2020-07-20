@@ -12,6 +12,6 @@ path = '/home/gristo/mlnll-analysis/output/4_bins_wsys_shapes/higgsCombine.Scan.
 df = ROOT.RDataFrame('limit', path)
 data = df.AsNumpy(['r', 'deltaNLL'])
 
-print(data)
+print(data['r'])
 #plt.plot(data['r'], 2 * data['deltaNLL'], '+')
 #plt.savefig('plot.png', bbox_inches='tight')
