@@ -69,7 +69,7 @@ def main():
 
         # Minimize NLL with regard to theta
         session = tf.Session()
-        session.run(tf.global_variables_initializer())
+        session.run([tf.global_variables_initializer()])
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         max_patience = 10
         patience = max_patience
