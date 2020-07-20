@@ -69,13 +69,23 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # Minimize Theta
-        opt = tf.train.GradientDescentOptimizer(0.1).minimize(nll, var_list=[theta])
-        with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)) as session:
+        opt = tf.train.AdamOptimizer.minimize(nll, var_list=[theta])
+        with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)) as session:
             session.run(tf.global_variables_initializer())
             print("---")
+            max_patience = 10
+            patience = max_patience
+            loss = start_loss
             for i in range(20):
                 session.run(opt)
                 print(session.run([theta, nll]))
+                if nll < loss:
+                    loss = nll
+                    patience = max_patience
+                elif patience == 0:
+                    break
+                else:
+                    patience -= 1
         
         return nll_statsonly, nll
 
