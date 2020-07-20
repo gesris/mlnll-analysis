@@ -56,7 +56,7 @@ def main():
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        theta = tf.Variable(10.0, dtype=tf.float64, trainable=True)
+        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
         length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         for i in range(0, length):
             # Likelihood
@@ -69,7 +69,7 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # Minimize Theta
-        opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
+        opt = tf.train.GradientDescentOptimizer().minimize(nll, var_list=[theta])
         with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)) as session:
             session.run(tf.global_variables_initializer())
             print("---")
