@@ -5,7 +5,6 @@ import numpy as np
 np.random.seed(1234)
 import tensorflow.compat.v1 as tf
 from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
 import tensorflow_probability as tfp
 tf.disable_v2_behavior()
 tf.set_random_seed(1234)
@@ -57,7 +56,7 @@ def main():
         epsilon = tf.constant(1e-9, tf.float64)
         nll = zero
         nll_statsonly = zero
-        theta = tf.Variable(0.0, dtype=tf.float64, trainable=True)
+        theta = tf.Variable(10.0, dtype=tf.float64, trainable=True)
         length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         for i in range(0, length):
             # Likelihood
@@ -88,7 +87,6 @@ def main():
         # write new data into file
         mu1 = tf.constant(x, dtype=tf.float64)
         for i in tqdm(range(0, len(x))):
-            # NOSYS
             nll_val_nosys, _ = nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
             _, nll_val_sys = nll_value(mu0, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
             nll_val_nosys_var, _  = nll_value(mu1[i], Htt, Ztt, W, ttbar, Htt_up, Htt_down)
