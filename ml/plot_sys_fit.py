@@ -40,7 +40,10 @@ def load_from_csv(args):
 def main(args):
     save_to_csv(args)
     r, deltaNLL = load_from_csv(args)
-    print(r)
+
+    plt.figure()
+    plt.plot(r, deltaNLL, color='k')
+    plt.savefig(os.path.join(args.workdir, 'test.png'), bbox_inches="tight")
     
 
 if __name__ == '__main__':
