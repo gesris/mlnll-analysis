@@ -74,7 +74,7 @@ def main():
 
         # Minimize Theta
         session.run(tf.global_variables_initializer())
-        opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
+        opt = tf.train.AdamOptimizer(0.1).minimize(nll, var_list=[theta])
         max_patience = 10
         patience = max_patience
         nll_statsonly_, loss = session.run([nll_statsonly, nll])
