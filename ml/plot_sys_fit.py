@@ -12,7 +12,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-def main():
+def main(args):
     path = os.path.join(args.workdir, 'higgsCombine.Scan.MultiDimFit.mH125.root')
     #path = '/home/gristo/mlnll-analysis/output/4_bins_wsys_shapes/higgsCombine.Scan.MultiDimFit.mH125.root'
     df = ROOT.RDataFrame('limit', path)
