@@ -148,7 +148,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    #create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
 
     ####
