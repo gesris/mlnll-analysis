@@ -57,7 +57,7 @@ def main():
         nll = zero
         nll_statsonly = zero
         theta = tf.Variable(1.0, dtype=tf.float64, trainable=True)
-        total_bins = tf.Session.run(tf.squeeze(tf.shape(Htt)))
+        total_bins = tf.Session().run(tf.squeeze(tf.shape(Htt)))
         
         for i in range(0, total_bins):
             # Likelihood
