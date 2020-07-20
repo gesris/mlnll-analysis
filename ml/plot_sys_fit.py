@@ -21,8 +21,8 @@ def save_to_csv(args):
     # Save as .csv
     open(os.path.join(args.workdir, 'scan_data_{}.csv'.format(args.method)), "w").close()
     with open(os.path.join(args.workdir, 'scan_data_{}.csv'.format(args.method)), "ab") as file:
-        np.savetxt(file, data['r'])
-        np.savetxt(file, data['deltaNLL'])
+        np.savetxt(file, [data['r']])
+        np.savetxt(file, [data['deltaNLL']])
 
 def main(args):
     save_to_csv(args)
