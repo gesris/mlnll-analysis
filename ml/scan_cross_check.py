@@ -59,8 +59,7 @@ def main():
         theta = tf.Variable(1.0, dtype=tf.float64, trainable=True)
 
         session = tf.Session()
-        session.run(tf.global_variables_initializer())
-        
+
         total_bins = session.run(tf.squeeze(tf.shape(Htt)))
         
         for i in range(0, total_bins):
@@ -74,6 +73,7 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # Minimize Theta
+        session.run(tf.global_variables_initializer())
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         max_patience = 10
         patience = max_patience
