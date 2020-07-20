@@ -39,7 +39,8 @@ def load_from_csv(args):
 
 def main(args):
     save_to_csv(args)
-    print(load_from_csv(args))
+    r, deltaNLL = load_from_csv(args)
+    print(r)
     
 
 if __name__ == '__main__':
