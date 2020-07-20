@@ -71,7 +71,7 @@ def main():
 
         # Minimize Theta
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
-        with tf.Session() as session:
+        with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)) as session:
             session.run(tf.global_variables_initializer())
             print("---")
             for i in range(20):
@@ -122,8 +122,8 @@ def main():
                 #    sigma_left_list.append(1 - x[i])  #choose value furthest away from 1
                     #sigma_left = 1 - i * scaling
                 diff.append(d_value)
-            sigma_left = sigma_left_list[0]
-        return diff, sigma_left, sigma_right 
+            #sigma_left = sigma_left_list[0]
+        return diff#, sigma_left, sigma_right 
                 
 
     #def second_derivative(mu, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
@@ -148,7 +148,7 @@ def main():
     #### only call this function, if there is no .csv file containing dnll-values
     ####
 
-    create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
+    #create_dnll_file(1.0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down)
 
 
     ####
@@ -157,8 +157,8 @@ def main():
 
     #diff_nll, sigma_left, sigma_right = scan_from_file(x, 'nosys')
     #diff_nll_sys, sigma_left_sys, sigma_right_sys = scan_from_file(x, 'sys')
-    diff_nll, _, _ = scan_from_file(x, 'nosys')
-    diff_nll_sys, _, _ = scan_from_file(x, 'sys')
+    diff_nll = scan_from_file(x, 'nosys')
+    diff_nll_sys = scan_from_file(x, 'sys')
 
 
     ####
