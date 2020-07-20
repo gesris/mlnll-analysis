@@ -57,10 +57,7 @@ def main():
         nll = zero
         nll_statsonly = zero
         theta = tf.Variable(1.0, dtype=tf.float64, trainable=True)
-
-        session = tf.Session()
-
-        total_bins = session.run(tf.squeeze(tf.shape(Htt)))
+        total_bins = tf.Session.run(tf.squeeze(tf.shape(Htt)))
         
         for i in range(0, total_bins):
             # Likelihood
@@ -73,8 +70,9 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # Minimize Theta
+        session = tf.Session()
         session.run(tf.global_variables_initializer())
-        opt = tf.train.AdamOptimizer(0.1).minimize(nll, var_list=[theta])
+        opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         max_patience = 10
         patience = max_patience
         nll_statsonly_, loss = session.run([nll_statsonly, nll])
