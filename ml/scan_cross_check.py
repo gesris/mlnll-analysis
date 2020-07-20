@@ -68,7 +68,8 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # Minimize NLL with regard to theta
-        session = tf.Session()
+        config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
+        session = tf.Session(config=config)
         session.run([tf.global_variables_initializer()])
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         max_patience = 10
