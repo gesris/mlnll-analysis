@@ -69,7 +69,7 @@ def main():
         nll -= tf.cast(tfp.distributions.Normal(loc=0, scale=1).log_prob(tf.cast(theta, tf.float32)), tf.float64)
 
         # Minimize Theta
-        opt = tf.train.AdamOptimizer.minimize(nll, var_list=[theta])
+        opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
         with tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)) as session:
             session.run(tf.global_variables_initializer())
             print("---")
