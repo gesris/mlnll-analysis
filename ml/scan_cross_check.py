@@ -57,8 +57,13 @@ def main():
         nll = zero
         nll_statsonly = zero
         theta = tf.Variable(1.0, dtype=tf.float64, trainable=True)
-        length = tf.Session().run(tf.squeeze(tf.shape(Htt)))
-        for i in range(0, length):
+
+        session = tf.Session()
+        session.run(tf.global_variables_initializer())
+        
+        total_bins = session.run(tf.squeeze(tf.shape(Htt)))
+        
+        for i in range(0, total_bins):
             # Likelihood
             exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
             sys = (tf.maximum(theta, zero) * (Htt_up[i] - Htt[i]) + tf.minimum(theta, zero) * (Htt[i] - Htt_down[i])) * magnification   # magnifying systematic shift by factor of 10
@@ -70,25 +75,23 @@ def main():
 
         # Minimize Theta
         opt = tf.train.AdamOptimizer().minimize(nll, var_list=[theta])
-        with tf.Session() as session:
-            session.run(tf.global_variables_initializer())
-            print("---")
-            max_patience = 10
-            patience = max_patience
-            loss = session.run([nll])
-            while True:
-                session.run(opt)
-                theta_, nll_ = session.run([theta, nll])
+        max_patience = 10
+        patience = max_patience
+        nll_statsonly_, loss = session.run([nll_statsonly, nll])
+        while True:
+            session.run(opt)
+            theta_, nll_ = session.run([theta, nll])
+            if nll_ < loss:
+                loss = nll_
+                patience = max_patience
+            elif patience == 0:
                 print(theta_, nll_)
-                if nll_ < loss:
-                    loss = nll_
-                    patience = max_patience
-                elif patience == 0:
-                    break
-                else:
-                    patience -= 1
+
+                break
+            else:
+                patience -= 1
         
-        return nll_statsonly, nll
+        return nll_statsonly_, nll_
 
 
     def create_dnll_file(mu0, x, Htt, Ztt, W, ttbar, Htt_up, Htt_down):
@@ -106,12 +109,12 @@ def main():
             dnll = 2 * (nll_val_nosys_var - nll_val_nosys)
             dnll_sys = 2 * (nll_val_sys_var - nll_val_sys)
 
-            session = tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12))
-            session.run([tf.global_variables_initializer()])
-            d_value_nosys_, d_value_sys_ = session.run([dnll, dnll_sys])
+            #session = tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12))
+            #session.run([tf.global_variables_initializer()])
+            #d_value_nosys_, d_value_sys_ = session.run([dnll, dnll_sys])
 
-            d_value_nosys = [d_value_nosys_]
-            d_value_sys = [d_value_sys_]
+            d_value_nosys = [dnll]
+            d_value_sys = [dnll_sys]
 
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
                 np.savetxt(file, d_value_nosys)
