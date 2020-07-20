@@ -97,14 +97,17 @@ def main():
             dnll = 2 * (nll_val_nosys_var - nll_val_nosys)
             dnll_sys = 2 * (nll_val_sys_var - nll_val_sys)
 
-            session = tf.Session()
+            session = tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12))
             session.run([tf.global_variables_initializer()])
-            d_value_nosys, d_value_sys = session.run([dnll, dnll_sys])
+            d_value_nosys_, d_value_sys_ = session.run([dnll, dnll_sys])
+
+            d_value_nosys = [d_value_nosys_]
+            d_value_sys = [d_value_sys_]
 
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_nosys.csv'.format(args.fold)), "ab") as file:
-                np.savetxt(file, [d_value_nosys])
+                np.savetxt(file, d_value_nosys)
             with open(os.path.join(args.workdir, 'model_fold{}/dnll_value_list_sys.csv'.format(args.fold)), "ab") as file:
-                np.savetxt(file, [d_value_sys])
+                np.savetxt(file, d_value_sys)
 
 
     def scan_from_file(x, method):
