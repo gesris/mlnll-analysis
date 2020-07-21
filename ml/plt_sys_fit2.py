@@ -32,6 +32,9 @@ def main(args):
     r_sys_sysimpl, deltaNLL_sys_sysimpl = load_from_csv(args.workdir3, 'sys_sysimpl')
     r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'nosys_sysimpl')
 
+    x = np.linspace(0, 2, 100)
+    hline = np.ones(len(x))
+
     plt.figure()
     plt.xlabel("mu")
     plt.xlim((0, 2))
@@ -39,7 +42,10 @@ def main(args):
     plt.ylim((0, 9))
     plt.plot(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, color='k')
     plt.plot(r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl, color='b')
-    plt.axhline(y=1., color='r')
+    plt.plot(x, hline, color='r')
+    idx = np.argwhere(np.diff(np.sign(deltaNLL_sys_nosysimpl - hline))).flatten()
+    plt.plot(x[idx], hline[idx], 'ro')
+    #plt.axhline(y=1., color='r')
     plt.plot([0], [0], color='k', label="stat + sys")
     plt.plot([0], [0], color='b', label="stat")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
