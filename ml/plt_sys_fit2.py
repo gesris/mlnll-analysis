@@ -33,12 +33,13 @@ def main(args):
     plt.figure()
     plt.plot(r, deltaNLL, color='k')
     plt.plot(r_sys, deltaNLL_sys, color='r')
-    plt.savefig(os.path.join('/home/gristo/', 'test_4bins.png'), bbox_inches="tight")
+    plt.savefig(os.path.join('/home/gristo/', 'test_{}.png'.format(args.binning)), bbox_inches="tight")
     
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('workdir1', help='Working directory for nonsys outputs')
     parser.add_argument('workdir2', help='Working directory for sys outputs')
+    parser.add_argument('binning', help='binning')
     args = parser.parse_args()
     main(args)
