@@ -244,7 +244,8 @@ def main(args):
     sd_loss_statsonly = get_constraint(nll_statsonly, [mu])
 
     # Combine losses
-    loss = sd_loss_statsonly
+    loss = sd_loss
+    #loss = sd_loss_statsonly
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
