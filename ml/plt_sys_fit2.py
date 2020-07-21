@@ -42,6 +42,7 @@ def main(args):
     plt.axhline(y=1., color='r')
     plt.plot([0], [0], color='k', label="stat + sys")
     plt.plot([0], [0], color='b', label="stat")
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_nosysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
     
     plt.figure()
@@ -54,6 +55,7 @@ def main(args):
     plt.axhline(y=1., color='r')
     plt.plot([0], [0], color='k', label="stat + sys")
     plt.plot([0], [0], color='b', label="stat")
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_sysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
     
 
