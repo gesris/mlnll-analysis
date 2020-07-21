@@ -38,8 +38,10 @@ def main(args):
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
     plt.plot(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, color='k')
-    plt.plot(r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl)
+    plt.plot(r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl, color='b')
     plt.axhline(y=1., color='r')
+    plt.plot([0], [0], color='k', label="stat + sys")
+    plt.plot([0], [0], color='b', label="stat")
     plt.savefig(os.path.join('/home/gristo/', 'scan_nosysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
     
     plt.figure()
@@ -48,8 +50,10 @@ def main(args):
     plt.ylabel("-2 Delta NLL")
     plt.ylim((0, 9))
     plt.plot(r_sys_sysimpl, deltaNLL_sys_sysimpl, color='k')
-    plt.plot(r_nosys_sysimpl, deltaNLL_nosys_sysimpl)
+    plt.plot(r_nosys_sysimpl, deltaNLL_nosys_sysimpl, color='b')
     plt.axhline(y=1., color='r')
+    plt.plot([0], [0], color='k', label="stat + sys")
+    plt.plot([0], [0], color='b', label="stat")
     plt.savefig(os.path.join('/home/gristo/', 'scan_sysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
     
 
