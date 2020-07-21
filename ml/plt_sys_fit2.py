@@ -31,8 +31,13 @@ def main(args):
     r_sys, deltaNLL_sys = load_from_csv(args.workdir2, 'sys')
 
     plt.figure()
+    plt.xlabel("mu")
+    plt.xlim((0, 2))
+    plt.ylabel("-2 Delta NLL")
+    plt.ylim((0, 9))
     plt.plot(r, deltaNLL, color='k')
-    plt.plot(r_sys, deltaNLL_sys, color='r')
+    plt.plot(r_sys, deltaNLL_sys)
+    plt.axhline(y=1., color='r')
     plt.savefig(os.path.join('/home/gristo/', 'test_{}.png'.format(args.binning)), bbox_inches="tight")
     
 
