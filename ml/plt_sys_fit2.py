@@ -38,7 +38,7 @@ def main(args):
     plt.plot(r, deltaNLL, color='k')
     plt.plot(r_sys, deltaNLL_sys)
     plt.axhline(y=1., color='r')
-    plt.savefig(os.path.join('/home/gristo/', 'test_{}.png'.format(args.binning)), bbox_inches="tight")
+    plt.savefig(os.path.join('/home/gristo/', 'scan_sysimpl_vs_nosysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
     
 
 if __name__ == '__main__':
