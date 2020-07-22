@@ -34,7 +34,7 @@ def main(args):
     r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'wsysimpl_nosys')
 
     # Preprocessing SYS NOSYSIMPL
-    f_deltaNLL_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl)
+    f_deltaNLL_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, s=0)
     x_r_sys_nosysimpl = np.arange(0.5, 1.5, 0.02)
     y_sys_nosysimpl = 1
     yreduced = np.array(deltaNLL_sys_nosysimpl) - y_sys_nosysimpl
@@ -42,7 +42,7 @@ def main(args):
     constraints_sys_nosysimpl = freduced.roots()
 
     # Preprocessing NOSYS NOSYSIMPL
-    f_deltaNLL_nosys_nosysimpl = interpolate.UnivariateSpline(r_nosys_nosysimpl)
+    f_deltaNLL_nosys_nosysimpl = interpolate.UnivariateSpline(r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl, s=0)
     x_r_nosys_nosysimpl = np.arange(0.5, 1.5, 0.02)
     y_nosys_nosysimpl = 1
     yreduced = np.array(deltaNLL_nosys_nosysimpl) - y_nosys_nosysimpl
@@ -50,7 +50,7 @@ def main(args):
     constraints_nosys_nosysimpl = freduced.roots()
 
     # Preprocessing SYS SYSIMPL
-    f_deltaNLL_sys_sysimpl = interpolate.UnivariateSpline(r_sys_sysimpl)
+    f_deltaNLL_sys_sysimpl = interpolate.UnivariateSpline(r_sys_sysimpl, deltaNLL_sys_sysimpl, s=0)
     x_r_sys_sysimpl = np.arange(0.5, 1.5, 0.02)
     y_sys_sysimpl = 1
     yreduced = np.array(deltaNLL_sys_sysimpl) - y_sys_sysimpl
@@ -58,7 +58,7 @@ def main(args):
     constraints_sys_sysimpl = freduced.roots()
 
     # Preprocessing NOSYS SYSIMPL
-    f_deltaNLL_nosys_sysimpl = interpolate.UnivariateSpline(r_nosys_sysimpl)
+    f_deltaNLL_nosys_sysimpl = interpolate.UnivariateSpline(r_nosys_sysimpl, deltaNLL_nosys_sysimpl, s=0)
     x_r_nosys_sysimpl = np.arange(0.5, 1.5, 0.02)
     y_nosys_sysimpl = 1
     yreduced = np.array(deltaNLL_nosys_sysimpl) - y_nosys_sysimpl
