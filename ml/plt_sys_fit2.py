@@ -41,7 +41,6 @@ def main(args):
     yreduced_sys_nosysimpl = np.array(deltaNLL_sys_nosysimpl) - y_sys_nosysimpl
     freduced_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, yreduced_sys_nosysimpl, s=0)
     constraints_sys_nosysimpl = freduced_sys_nosysimpl.roots()
-    print(constraints_sys_nosysimpl)
 
 
     ## Preprocessing NOSYS NOSYSIMPL
@@ -72,6 +71,11 @@ def main(args):
     yreduced_nosys_sysimpl = np.array(deltaNLL_nosys_sysimpl) - y_nosys_sysimpl
     freduced_nosys_sysimpl = interpolate.UnivariateSpline(r_nosys_sysimpl, yreduced_nosys_sysimpl, s=0)
     constraints_nosys_sysimpl = freduced_nosys_sysimpl.roots()
+
+    print(constraints_sys_nosysimpl)
+    print(constraints_nosys_nosysimpl)
+    print(constraints_sys_sysimpl)
+    print(constraints_nosys_sysimpl)
 
 
     plt.figure()
