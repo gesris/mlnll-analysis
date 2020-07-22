@@ -12,6 +12,7 @@ import ROOT
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+matplotlib.rc("font", size=16, family="serif")
 
 
 def load_from_csv(workdir, method):
