@@ -33,6 +33,9 @@ def main(args):
     r_sys_sysimpl, deltaNLL_sys_sysimpl = load_from_csv(args.workdir3, 'wsysimpl_sys')
     r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'wsysimpl_nosys')
 
+    print(deltaNLL_sys_nosysimpl)
+    print(r_sys_nosysimpl)
+
     ## Preprocessing SYS NOSYSIMPL
     f_deltaNLL_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, s=0)
     x_r_sys_nosysimpl = np.arange(0.0, 2.0, 0.02)
@@ -88,8 +91,8 @@ def main(args):
     plt.plot(x_r_sys_nosysimpl, f_deltaNLL_sys_nosysimpl(x_r_sys_nosysimpl), color='k')
     plt.plot(x_r_nosys_nosysimpl, f_deltaNLL_nosys_nosysimpl(x_r_nosys_nosysimpl), color='b')
     plt.axhline(y=1., color='r')
-    plt.plot([0], [0], color='k', label="stat + sys:    +{:.3f}/-{:.3f}".format(constraints_sys_nosysimpl[0], constraints_sys_nosysimpl[1]))
-    plt.plot([0], [0], color='b', label="stat           +{:.3f}/-{:.3f}".format(constraints_nosys_nosysimpl[0], constraints_nosys_nosysimpl[1]))
+    plt.plot([0], [0], color='k', label="stat + sys:    +{:.3f} / -{:.3f}".format(constraints_sys_nosysimpl[0], constraints_sys_nosysimpl[1]))
+    plt.plot([0], [0], color='b', label="stat:          +{:.3f} / -{:.3f}".format(constraints_nosys_nosysimpl[0], constraints_nosys_nosysimpl[1]))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_nosysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
@@ -103,8 +106,8 @@ def main(args):
     plt.plot(x_r_sys_sysimpl, f_deltaNLL_sys_sysimpl(x_r_sys_sysimpl), color='k')
     plt.plot(x_r_nosys_sysimpl, f_deltaNLL_nosys_sysimpl(x_r_nosys_sysimpl), color='b')
     plt.axhline(y=1., color='r')
-    plt.plot([0], [0], color='k', label="stat + sys:    +{:.3f}/-{:.3f}".format(constraints_sys_sysimpl[0], constraints_sys_sysimpl[1]))
-    plt.plot([0], [0], color='b', label="stat           +{:.3f}/-{:.3f}".format(constraints_nosys_sysimpl[0], constraints_nosys_sysimpl[1]))
+    plt.plot([0], [0], color='k', label="stat + sys:    +{:.3f} / -{:.3f}".format(constraints_sys_sysimpl[0], constraints_sys_sysimpl[1]))
+    plt.plot([0], [0], color='b', label="stat:           +{:.3f} / -{:.3f}".format(constraints_nosys_sysimpl[0], constraints_nosys_sysimpl[1]))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_sysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
