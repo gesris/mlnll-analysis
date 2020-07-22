@@ -29,8 +29,8 @@ def load_from_csv(workdir, method):
 def main(args):
     r_sys_nosysimpl, deltaNLL_sys_nosysimpl = load_from_csv(args.workdir1, 'nosysimpl_sys')
     r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl = load_from_csv(args.workdir2, 'nosysimpl_nosys')
-    r_sys_sysimpl, deltaNLL_sys_sysimpl = load_from_csv(args.workdir3, 'sysimpl_sys')
-    r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'sysimpl_nosys')
+    r_sys_sysimpl, deltaNLL_sys_sysimpl = load_from_csv(args.workdir3, 'wsysimpl_sys')
+    r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'wsysimpl_nosys')
 
     x = np.linspace(0, 2, 100)
     hline = np.ones(len(x))
