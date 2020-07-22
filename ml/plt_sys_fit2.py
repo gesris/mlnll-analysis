@@ -24,7 +24,7 @@ def load_from_csv(workdir, method):
                 lines.append(float(elements[i]))
             counts.append(lines)
     r = counts[0]
-    deltaNLL = nparray(counts[1]) * 2
+    deltaNLL = np.array(counts[1]) * 2
     return(r, deltaNLL)
 
 def main(args):
