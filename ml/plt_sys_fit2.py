@@ -33,8 +33,6 @@ def main(args):
     r_sys_sysimpl, deltaNLL_sys_sysimpl = load_from_csv(args.workdir3, 'wsysimpl_sys')
     r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'wsysimpl_nosys')
 
-    print(deltaNLL_nosys_nosysimpl)
-    print(r_sys_nosysimpl)
 
     ## Preprocessing SYS NOSYSIMPL
     f_deltaNLL_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, s=0)
@@ -43,7 +41,7 @@ def main(args):
     y_sys_nosysimpl = 1
     yreduced_sys_nosysimpl = np.array(deltaNLL_sys_nosysimpl) - y_sys_nosysimpl
     freduced_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, yreduced_sys_nosysimpl, s=0)
-    constraints_sys_nosysimpl = freduced_sys_nosysimpl.roots()
+    constraints_sys_nosysimpl = [ 1 - freduced_sys_nosysimpl.roots()[0], freduced_sys_nosysimpl.roots()[1] - 1 ]
 
 
     ## Preprocessing NOSYS NOSYSIMPL
@@ -53,7 +51,7 @@ def main(args):
     y_nosys_nosysimpl = 1
     yreduced_nosys_nosysimpl = np.array(deltaNLL_nosys_nosysimpl) - y_nosys_nosysimpl
     freduced_nosys_nosysimpl = interpolate.UnivariateSpline(r_nosys_nosysimpl, yreduced_nosys_nosysimpl, s=0)
-    constraints_nosys_nosysimpl = freduced_nosys_nosysimpl.roots()
+    constraints_nosys_nosysimpl = [ 1 - freduced_nosys_nosysimpl.roots()[0], freduced_nosys_nosysimpl.roots()[1] - 1 ]
 
 
     ## Preprocessing SYS SYSIMPL
@@ -63,7 +61,7 @@ def main(args):
     y_sys_sysimpl = 1
     yreduced_sys_sysimpl = np.array(deltaNLL_sys_sysimpl) - y_sys_sysimpl
     freduced_sys_sysimpl = interpolate.UnivariateSpline(r_sys_sysimpl, yreduced_sys_sysimpl, s=0)
-    constraints_sys_sysimpl = freduced_sys_sysimpl.roots()
+    constraints_sys_sysimpl = [ 1 - freduced_sys_sysimpl.roots()[0], freduced_sys_sysimpl.roots()[1] - 1 ]
 
 
     ## Preprocessing NOSYS SYSIMPL
@@ -73,12 +71,7 @@ def main(args):
     y_nosys_sysimpl = 1
     yreduced_nosys_sysimpl = np.array(deltaNLL_nosys_sysimpl) - y_nosys_sysimpl
     freduced_nosys_sysimpl = interpolate.UnivariateSpline(r_nosys_sysimpl, yreduced_nosys_sysimpl, s=0)
-    constraints_nosys_sysimpl = freduced_nosys_sysimpl.roots()
-
-    print(constraints_sys_nosysimpl)
-    print(constraints_nosys_nosysimpl)
-    print(constraints_sys_sysimpl)
-    print(constraints_nosys_sysimpl)
+    constraints_nosys_sysimpl = [ 1 - freduced_nosys_sysimpl.roots()[0], freduced_nosys_sysimpl.roots()[1] - 1 ]
 
 
     plt.figure()
