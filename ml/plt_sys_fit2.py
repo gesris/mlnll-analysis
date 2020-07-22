@@ -37,9 +37,9 @@ def main(args):
 
     plt.figure()
     plt.xlabel("mu")
-    plt.xlim((0, 2))
+    plt.xlim((0.5, 1.5))
     plt.ylabel("-2 Delta NLL")
-    plt.ylim((0, 9))
+    plt.ylim((0, 4.5))
     plt.plot(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, color='k')
     plt.plot(r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl, color='b')
     #plt.plot(x, hline, color='r')
@@ -53,9 +53,9 @@ def main(args):
     
     plt.figure()
     plt.xlabel("mu")
-    plt.xlim((0, 2))
+    plt.xlim((0.5, 1.5))
     plt.ylabel("-2 Delta NLL")
-    plt.ylim((0, 9))
+    plt.ylim((0, 4.5))
     plt.plot(r_sys_sysimpl, deltaNLL_sys_sysimpl, color='k')
     plt.plot(r_nosys_sysimpl, deltaNLL_nosys_sysimpl, color='b')
     plt.axhline(y=1., color='r')
