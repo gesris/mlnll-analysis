@@ -33,7 +33,7 @@ def main(args):
     r_sys_sysimpl, deltaNLL_sys_sysimpl = load_from_csv(args.workdir3, 'wsysimpl_sys')
     r_nosys_sysimpl, deltaNLL_nosys_sysimpl = load_from_csv(args.workdir4, 'wsysimpl_nosys')
 
-    print(deltaNLL_sys_nosysimpl)
+    print(deltaNLL_nosys_nosysimpl)
     print(r_sys_nosysimpl)
 
     ## Preprocessing SYS NOSYSIMPL
