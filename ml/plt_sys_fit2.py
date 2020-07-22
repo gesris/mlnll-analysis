@@ -83,10 +83,10 @@ def main(args):
     plt.plot(x_r_nosys_nosysimpl, f_deltaNLL_nosys_nosysimpl(x_r_nosys_nosysimpl), color='b')
     vscale = 1 / 4.5
     hscale = 1 / 2.
-    plt.axhline(y=1., xmin=0, xmax=(1 - constraints_sys_nosysimpl[0]) * hscale, color='r')
-    plt.axhline(y=1., xmin=(1 + constraints_sys_nosysimpl[1]) * hscale, xmax=2 * hscale, color='r')
-    plt.axhline(y=1., xmin=0, xmax=(1 - constraints_nosys_nosysimpl[0]) * hscale, color='r')
-    plt.axhline(y=1., xmin=(1 + constraints_nosys_nosysimpl[1]) * hscale, xmax=2 * hscale, color='r')
+    plt.axhline(y=1., xmin=0.5, xmax=(1 - constraints_sys_nosysimpl[0]) * hscale, color='r')
+    plt.axhline(y=1., xmin=(1 + constraints_sys_nosysimpl[1]) * hscale, xmax=1.5 * hscale, color='r')
+    plt.axhline(y=1., xmin=0.5, xmax=(1 - constraints_nosys_nosysimpl[0]) * hscale, color='r')
+    plt.axhline(y=1., xmin=(1 + constraints_nosys_nosysimpl[1]) * hscale, xmax=1.5 * hscale, color='r')
     plt.axvline(x=1 - constraints_sys_nosysimpl[0], ymax=1. * vscale, color='r')
     plt.axvline(x=1 + constraints_sys_nosysimpl[1], ymax=1. * vscale, color='r')
     plt.axvline(x=1 - constraints_nosys_nosysimpl[0], ymax=1. * vscale, color='r')
@@ -108,11 +108,11 @@ def main(args):
     plt.plot(x_r_sys_sysimpl, f_deltaNLL_sys_sysimpl(x_r_sys_sysimpl), color='orange')
     plt.plot(x_r_nosys_sysimpl, f_deltaNLL_nosys_sysimpl(x_r_nosys_sysimpl), color='b')
     vscale = 1 / 4.5
-    hscale = 1 / 2.
-    plt.axhline(y=1., xmin=0, xmax=(1 - constraints_sys_sysimpl[0]) * hscale, color='r')
-    plt.axhline(y=1., xmin=(1 + constraints_sys_sysimpl[1]) * hscale, xmax=2 * hscale, color='r')
-    plt.axhline(y=1., xmin=0, xmax=(1 - constraints_nosys_sysimpl[0]) * hscale, color='r')
-    plt.axhline(y=1., xmin=(1 + constraints_nosys_sysimpl[1]) * hscale, xmax=2 * hscale, color='r')
+    hscale = 1 / 1.
+    plt.axhline(y=1., xmin=0.5, xmax=(1 - constraints_sys_sysimpl[0]) * hscale, color='r')
+    plt.axhline(y=1., xmin=(1 + constraints_sys_sysimpl[1]) * hscale, xmax=1.5 * hscale, color='r')
+    plt.axhline(y=1., xmin=0.5, xmax=(1 - constraints_nosys_sysimpl[0]) * hscale, color='r')
+    plt.axhline(y=1., xmin=(1 + constraints_nosys_sysimpl[1]) * hscale, xmax=1.5 * hscale, color='r')
     plt.axvline(x=1 - constraints_sys_sysimpl[0], ymax=1. * vscale, color='r')
     plt.axvline(x=1 + constraints_sys_sysimpl[1], ymax=1. * vscale, color='r')
     plt.axvline(x=1 - constraints_nosys_sysimpl[0], ymax=1. * vscale, color='r')
