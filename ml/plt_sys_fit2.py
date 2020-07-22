@@ -93,8 +93,8 @@ def main(args):
     plt.axvline(x=1 + constraints_sys_nosysimpl[1], ymax=1. * vscale, color='#d62728')
     plt.axvline(x=1 - constraints_nosys_nosysimpl[0], ymax=1. * vscale, color='#d62728')
     plt.axvline(x=1 + constraints_nosys_nosysimpl[1], ymax=1. * vscale, color='#d62728')
-    plt.plot([0], [0], color='#ff7f0e', label="$\mu_{\mathrm{stat.} + \mathrm{sys.}}$ = 1.00(-{:.3f} +{:.3f})".format(constraints_sys_nosysimpl[1], constraints_sys_nosysimpl[0]))
-    plt.plot([0], [0], color='#1f77b4', label="$\mu_{\mathrm{stat.}}$ = 1.00(-{:.3f} +{:.3f})".format(constraints_nosys_nosysimpl[1], constraints_nosys_nosysimpl[0]))
+    plt.plot([0], [0], color='#ff7f0e', label="$\mu_{stat. + sys.}$"" = 1.00(-{:.3f} +{:.3f})".format(constraints_sys_nosysimpl[1], constraints_sys_nosysimpl[0]))
+    plt.plot([0], [0], color='#1f77b4', label="$\mu_{stat.}$ = 1.00(-{:.3f} +{:.3f})".format(constraints_nosys_nosysimpl[1], constraints_nosys_nosysimpl[0]))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_nosysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
