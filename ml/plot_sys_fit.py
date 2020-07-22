@@ -17,12 +17,14 @@ def save_to_csv(args):
     path = os.path.join(args.workdir, 'higgsCombine.Scan.MultiDimFit.mH125.root')
     df = ROOT.RDataFrame('limit', path)
     data = df.AsNumpy(['r', 'deltaNLL'])
+    data_array = np.array(data)
+    data_array[1] *= 2
 
     # Save as .csv
     open(os.path.join(args.workdir, 'scan_data_{}.csv'.format(args.method)), "w").close()
     with open(os.path.join(args.workdir, 'scan_data_{}.csv'.format(args.method)), "ab") as file:
-        np.savetxt(file, [data['r'][1:]])
-        np.savetxt(file, [data['deltaNLL'][1:]])
+        np.savetxt(file, [data_array['r'][1:]])
+        np.savetxt(file, [data_array['deltaNLL'][1:]])
 
 def main(args):
     save_to_csv(args)
