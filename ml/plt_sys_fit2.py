@@ -37,33 +37,33 @@ def main(args):
     f_deltaNLL_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, deltaNLL_sys_nosysimpl, s=0)
     x_r_sys_nosysimpl = np.arange(0.5, 1.5, 0.02)
     y_sys_nosysimpl = 1
-    yreduced = np.array(deltaNLL_sys_nosysimpl) - y_sys_nosysimpl
-    freduced = interpolate.UnivariateSpline(r_sys_nosysimpl, yreduced, s=0)
-    constraints_sys_nosysimpl = freduced.roots()
+    yreduced_sys_nosysimpl = np.array(deltaNLL_sys_nosysimpl) - y_sys_nosysimpl
+    freduced_sys_nosysimpl = interpolate.UnivariateSpline(r_sys_nosysimpl, yreduced_sys_nosysimpl, s=0)
+    constraints_sys_nosysimpl = freduced_sys_nosysimpl.roots()
 
     # Preprocessing NOSYS NOSYSIMPL
     f_deltaNLL_nosys_nosysimpl = interpolate.UnivariateSpline(r_nosys_nosysimpl, deltaNLL_nosys_nosysimpl, s=0)
     x_r_nosys_nosysimpl = np.arange(0.5, 1.5, 0.02)
     y_nosys_nosysimpl = 1
-    yreduced = np.array(deltaNLL_nosys_nosysimpl) - y_nosys_nosysimpl
-    freduced = interpolate.UnivariateSpline(r_nosys_nosysimpl, yreduced, s=0)
-    constraints_nosys_nosysimpl = freduced.roots()
+    yreduced_nosys_nosysimpl = np.array(deltaNLL_nosys_nosysimpl) - y_nosys_nosysimpl
+    freduced_nosys_nosysimpl = interpolate.UnivariateSpline(r_nosys_nosysimpl, yreduced_nosys_nosysimpl, s=0)
+    constraints_nosys_nosysimpl = freduced_nosys_nosysimpl.roots()
 
     # Preprocessing SYS SYSIMPL
     f_deltaNLL_sys_sysimpl = interpolate.UnivariateSpline(r_sys_sysimpl, deltaNLL_sys_sysimpl, s=0)
     x_r_sys_sysimpl = np.arange(0.5, 1.5, 0.02)
     y_sys_sysimpl = 1
-    yreduced = np.array(deltaNLL_sys_sysimpl) - y_sys_sysimpl
-    freduced = interpolate.UnivariateSpline(r_sys_sysimpl, yreduced, s=0)
-    constraints_sys_sysimpl = freduced.roots()
+    yreduced_sys_sysimpl = np.array(deltaNLL_sys_sysimpl) - y_sys_sysimpl
+    freduced_sys_sysimpl = interpolate.UnivariateSpline(r_sys_sysimpl, yreduced_sys_sysimpl, s=0)
+    constraints_sys_sysimpl = freduced_sys_sysimpl.roots()
 
     # Preprocessing NOSYS SYSIMPL
     f_deltaNLL_nosys_sysimpl = interpolate.UnivariateSpline(r_nosys_sysimpl, deltaNLL_nosys_sysimpl, s=0)
     x_r_nosys_sysimpl = np.arange(0.5, 1.5, 0.02)
     y_nosys_sysimpl = 1
-    yreduced = np.array(deltaNLL_nosys_sysimpl) - y_nosys_sysimpl
-    freduced = interpolate.UnivariateSpline(r_nosys_sysimpl, yreduced, s=0)
-    constraints_nosys_sysimpl = freduced.roots()
+    yreduced_nosys_sysimpl = np.array(deltaNLL_nosys_sysimpl) - y_nosys_sysimpl
+    freduced_nosys_sysimpl = interpolate.UnivariateSpline(r_nosys_sysimpl, yreduced_nosys_sysimpl, s=0)
+    constraints_nosys_sysimpl = freduced_nosys_sysimpl.roots()
 
     plt.figure()
     plt.xlabel("mu")
