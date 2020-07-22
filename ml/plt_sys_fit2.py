@@ -24,7 +24,7 @@ def load_from_csv(workdir, method):
                 lines.append(float(elements[i]))
             counts.append(lines)
     r = counts[0]
-    deltaNLL = counts[1]
+    deltaNLL = counts[1] * 2
     return(r, deltaNLL)
 
 def main(args):
