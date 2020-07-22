@@ -99,8 +99,8 @@ def main(args):
     plt.plot(1 + constraints_sys_nosysimpl[1], 1,  'ro')
     plt.plot(1 - constraints_nosys_nosysimpl[0], 1, 'ro')
     plt.plot(1 + constraints_nosys_nosysimpl[1], 1, 'ro')
-    plt.plot([0], [0], color='orange', label="stat + sys:                                 +{:.3f} / -{:.3f}".format(constraints_sys_nosysimpl[0], constraints_sys_nosysimpl[1]))
-    plt.plot([0], [0], color='b', label="stat:                                        +{:.3f} / -{:.3f}".format(constraints_nosys_nosysimpl[0], constraints_nosys_nosysimpl[1]))
+    plt.plot([0], [0], color='orange', label="stat + sys:                             +{:.3f} / -{:.3f}".format(constraints_sys_nosysimpl[0], constraints_sys_nosysimpl[1]))
+    plt.plot([0], [0], color='b', label="stat:                                      +{:.3f} / -{:.3f}".format(constraints_nosys_nosysimpl[0], constraints_nosys_nosysimpl[1]))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_nosysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
@@ -129,8 +129,8 @@ def main(args):
     plt.plot(1 + constraints_sys_sysimpl[1], 1,  'ro')
     plt.plot(1 - constraints_nosys_sysimpl[0], 1, 'ro')
     plt.plot(1 + constraints_nosys_sysimpl[1], 1, 'ro')
-    plt.plot([0], [0], color='orange', label="stat + sys:                                 +{:.3f} / -{:.3f}".format(constraints_sys_sysimpl[0], constraints_sys_sysimpl[1]))
-    plt.plot([0], [0], color='b', label="stat:                                        +{:.3f} / -{:.3f}".format(constraints_nosys_sysimpl[0], constraints_nosys_sysimpl[1]))
+    plt.plot([0], [0], color='orange', label="stat + sys:                             +{:.3f} / -{:.3f}".format(constraints_sys_sysimpl[0], constraints_sys_sysimpl[1]))
+    plt.plot([0], [0], color='b', label="stat:                                      +{:.3f} / -{:.3f}".format(constraints_nosys_sysimpl[0], constraints_nosys_sysimpl[1]))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_sysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
