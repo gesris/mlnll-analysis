@@ -49,7 +49,7 @@ def main(args):
     plt.plot([0], [0], color='k', label="stat + sys")
     plt.plot([0], [0], color='b', label="stat")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-    plt.savefig(os.path.join('/home/gristo/', 'scan_nosysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
+    plt.savefig(os.path.join('/home/gristo/', 'scan_{}_nosysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
     plt.figure()
     plt.xlabel("mu")
@@ -62,7 +62,7 @@ def main(args):
     plt.plot([0], [0], color='k', label="stat + sys")
     plt.plot([0], [0], color='b', label="stat")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-    plt.savefig(os.path.join('/home/gristo/', 'scan_sysimpl_{}.png'.format(args.binning)), bbox_inches="tight")
+    plt.savefig(os.path.join('/home/gristo/', 'scan_{}_sysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
 
 if __name__ == '__main__':
@@ -72,5 +72,6 @@ if __name__ == '__main__':
     parser.add_argument('workdir3', help='Working directory for sys_sysimpl outputs')
     parser.add_argument('workdir4', help='Working directory for nosys_sysimpl outputs')
     parser.add_argument('binning', help='binning')
+    parser.add_argument('systematic', help='systematic')
     args = parser.parse_args()
     main(args)
