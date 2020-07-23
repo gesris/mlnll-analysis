@@ -205,7 +205,7 @@ def main(args):
     Htt_down_array += diff_down
     logger.info('\nHtt Total:      {:.3f}\
                 \nHtt Up ARRAY:   {:.3f}\
-                \nHtt Down ARRAY: {:.3f}\n'.format(Htt_counts, Htt_up_array, Htt_down_array))
+                \nHtt Down ARRAY: {:.3f}\n'.format([Htt_counts], [Htt_up_array], [Htt_down_array]))
 
 
     ### save counts into csv file for scan_cross_check.py
