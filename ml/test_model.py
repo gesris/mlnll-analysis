@@ -201,8 +201,8 @@ def main(args):
     diff_up = (Htt_up_array - Htt_array) * mig01_scale
     diff_down = (Htt_array - Htt_down_array) * mig01_scale
 
-    Htt_up_array = Htt_array + diff_up
-    Htt_down_array = Htt_array - diff_down
+    Htt_up_array = np.max(Htt_array + diff_up, 0)
+    Htt_down_array = np.max(Htt_array - diff_down, 0)
     
 
     ### save counts into csv file for scan_cross_check.py
