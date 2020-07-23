@@ -80,6 +80,7 @@ def main(args):
     linewidth_narrow = 1.
     linewidth_wide = 2.
 
+    ## Plot NOSYSIMPL method
     plt.figure(figsize=(7,6))
     plt.xlabel("$\mu$")
     plt.xlim((x_limit[0], x_limit[1]))
@@ -101,6 +102,7 @@ def main(args):
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_nosysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
+    ## Plot SYSIMPL method
     plt.figure(figsize=(7,6))
     plt.xlabel("$\mu$")
     plt.xlim((x_limit[0], x_limit[1]))
