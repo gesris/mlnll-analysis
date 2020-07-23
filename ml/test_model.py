@@ -40,9 +40,9 @@ def setup_logging(output_file, level=logging.DEBUG):
 def plot(signal, background, category, bins, bins_center):
     plt.figure(figsize=(7, 6))
     plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2, color="C0")
-    plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2, color="C1")
-    plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, color="C2")
-    plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, color="C3")
+    #plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2, color="C1")
+    #plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, color="C2")
+    #plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, color="C3")
     plt.hist(bins_center, weights= background[3], bins= bins, histtype="step", lw=2, ls=':', color="C0")
     plt.hist(bins_center, weights= background[4], bins= bins, histtype="step", lw=2, ls='--', color="C0")
     plt.plot([0], [0], lw=2, color="C0", label="Htt")
@@ -54,7 +54,7 @@ def plot(signal, background, category, bins, bins_center):
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("$f$")
     plt.ylabel("Counts")
-    plt.yscale('log')
+    #plt.yscale('log')
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
 
@@ -198,8 +198,8 @@ def main(args):
     Htt_down_array = np.array(Htt_down_counts)
 
     mig01_scale = 100.
-    diff_up = (Htt_array - Htt_up_array) * mig01_scale
-    diff_down = (Htt_down_array - Htt_array) * mig01_scale
+    diff_up = (Htt_up_array - Htt_array) * mig01_scale
+    diff_down = (Htt_array - Htt_down_array) * mig01_scale
     logger.info("\n\nHTT: {} \nHTT UP: {} \nHTT DOWN: {} \nDIFF UP: {} \nDIFF DOWN: {}\n".format(Htt_array, Htt_up_array, Htt_down_array, diff_up, diff_down))
 
     Htt_up_array += diff_up
