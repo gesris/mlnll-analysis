@@ -75,7 +75,7 @@ def main():
     for i in x:
         mu1 = tf.constant(i, tf.float64)
         dnll_array.append(- 2 * (nll_value(mu, Htt, Ztt, W, ttbar) - nll_value(mu1, Htt, Ztt, W, ttbar)))
-    logger.info("\n\n\n", dnll_array)
+
     ## Interpolate DNLL data
     f_dnll_array = interpolate.UnivariateSpline(x, dnll_array, s=0)
     x_new = np.arange(0.0, 2.0, 0.02)
@@ -90,14 +90,14 @@ def main():
     #### Create data for parabola fit
     ####
 
-    def f(x, a, b):
-        return a*(x-b)**2
+    #def f(x, a, b):
+    #    return a*(x-b)**2
 
-    def second_derivative(mu, Htt, Ztt, W, ttbar):
-        return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu))
+    #def second_derivative(mu, Htt, Ztt, W, ttbar):
+    #    return tf.Session().run(tf.gradients(tf.gradients(nll_value(mu, Htt, Ztt, W, ttbar), mu), mu))
 
-    a = second_derivative(mu, Htt, Ztt, W, ttbar)
-    y = f(x, a, 1)
+    #a = second_derivative(mu, Htt, Ztt, W, ttbar)
+    #y = f(x, a, 1)
     
 
     ####
@@ -116,7 +116,7 @@ def main():
     plt.ylabel("-2 $\cdot \/ \Delta$NLL")
     plt.ylim((y_limit[0], y_limit[1]))
     plt.plot(x_new, f_dnll_array, color='C0', lw=linewidth_wide)
-    plt.plot(x, y, color='C1', lw=linewidth_wide)
+    #plt.plot(x, y, color='C1', lw=linewidth_wide)
     plt.plot([x_limit[0], constraints_xval[0]], [1, 1], 'k', lw=linewidth_narrow)
     plt.plot([constraints_xval[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
     vscale = 1 / y_limit[1]
