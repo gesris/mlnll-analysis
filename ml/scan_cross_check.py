@@ -67,7 +67,7 @@ def main():
             
             nll -= tfp.distributions.Poisson(tf.maximum(exp + sys, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-        return nll_statsonly
+        return tf.Session().run(nll_statsonly)
 
     ## Calculate DNLL
     x = np.linspace(0.0, 2.0, 30)
