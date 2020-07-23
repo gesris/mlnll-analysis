@@ -115,7 +115,7 @@ def main():
     plt.xlim((x_limit[0], x_limit[1]))
     plt.ylabel("-2 $\cdot \/ \Delta$NLL")
     plt.ylim((y_limit[0], y_limit[1]))
-    plt.plot(x_new, f_dnll_array, color='C0', lw=linewidth_wide)
+    plt.plot(x_new, f_dnll_array(x_new), color='C0', lw=linewidth_wide)
     #plt.plot(x, y, color='C1', lw=linewidth_wide)
     plt.plot([x_limit[0], constraints_xval[0]], [1, 1], 'k', lw=linewidth_narrow)
     plt.plot([constraints_xval[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
