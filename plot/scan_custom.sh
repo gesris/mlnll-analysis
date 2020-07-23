@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source utils/setup_lcg.sh
+source /work/gristo/mlnll-analysis/utils/setup_lcg.sh
 
 ### Drawing data to .csv
 
