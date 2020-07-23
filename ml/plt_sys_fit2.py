@@ -77,7 +77,7 @@ def main(args):
     y_limit = [0.0, 4.5]
     x_limit = [0.5, 1.5]
 
-    plt.figure(figsize=(6,7))
+    plt.figure(figsize=(6,6))
     plt.xlabel("$\mu$")
     plt.xlim((x_limit[0], x_limit[1]))
     plt.ylabel("-2 $\cdot \/ \Delta$NLL")
@@ -98,7 +98,7 @@ def main(args):
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join('/home/gristo/', 'scan_{}_nosysimpl_{}.png'.format(args.systematic, args.binning)), bbox_inches="tight")
     
-    plt.figure(figsize=(6,7))
+    plt.figure(figsize=(6,6))
     plt.xlabel("$\mu$")
     plt.xlim((x_limit[0], x_limit[1]))
     plt.ylabel("-2 $\cdot \/ \Delta$NLL")
