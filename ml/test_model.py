@@ -171,7 +171,8 @@ def main(args):
         
     ttbar_labels.append(ttbar_mask)
     ttbar_weights.append(ttbar_mask * w_ph)
-    
+
+
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
@@ -191,6 +192,19 @@ def main(args):
                 \nW Total:        {:.3f}\
                 \nttbar Total:    {:.3f}\n'.format(np.sum(Htt_counts), np.sum(Htt_up_counts), np.sum(Htt_down_counts), np.sum(Ztt_counts), np.sum(W_counts), np.sum(ttbar_counts)))
 
+    ## Postprozess scaling of nuisance
+    Htt_array = np.array(Htt_counts)
+    Htt_up_array = np.array(Htt_up_counts)
+    Htt_down_array = np.array(Htt_down_counts)
+
+    mig01_scale = 100.
+    diff_up = (Htt_up_array - Htt_array) * mig01_scale
+    diff_down = (Htt_array - Htt_down_array) * mig01_scale
+
+    Htt_up_array += diff_up
+    Htt_down_array += diff_down
+
+
     ### save counts into csv file for scan_cross_check.py
     # first empty existing file
     open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), "w").close()
@@ -202,7 +216,7 @@ def main(args):
         np.savetxt(file, [Htt_up_counts])
         np.savetxt(file, [Htt_down_counts])
 
-    plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts, Htt_up_counts, Htt_down_counts], background_category, bins, bins_center)
+    plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts, Htt_up_array, Htt_down_array], background_category, bins, bins_center)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
