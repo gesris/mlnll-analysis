@@ -198,8 +198,8 @@ def main(args):
     Htt_down_array = np.array(Htt_down_counts)
 
     mig01_scale = 100.
-    diff_up = (Htt_up_array - Htt_array) * mig01_scale
-    diff_down = (Htt_array - Htt_down_array) * mig01_scale
+    diff_up = (Htt_array - Htt_up_array) * mig01_scale
+    diff_down = (Htt_down_array - Htt_array) * mig01_scale
     logger.info("\n\nHTT: {} \nHTT UP: {} \nHTT DOWN: {} \nDIFF UP: {} \nDIFF DOWN: {}\n".format(Htt_array, Htt_up_array, Htt_down_array, diff_up, diff_down))
 
     Htt_up_array += diff_up
