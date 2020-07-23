@@ -200,7 +200,7 @@ def main(args):
     mig01_scale = 100.
     diff_up = (Htt_up_array - Htt_array) * mig01_scale
     diff_down = (Htt_array - Htt_down_array) * mig01_scale
-    logger.info("\n\nDIFF UP: {} \nDIFF DOWN: {}\n".format(diff_up, diff_down))
+    logger.info("\n\nHTT: {} \nHTT UP: {} \nHTT DOWN: {} \nDIFF UP: {} \nDIFF DOWN: {}\n".format(Htt_array, Htt_up_array, Htt_down_array, diff_up, diff_down))
 
     Htt_up_array += diff_up
     Htt_down_array += diff_down
