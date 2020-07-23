@@ -74,7 +74,7 @@ def main():
     dnll_array = []
     for i in x:
         mu1 = tf.constant(i, tf.float64)
-        dnll_array.append(- 2 * (nll_value(mu1, Htt, Ztt, W, ttbar) - nll_value(mu, Htt, Ztt, W, ttbar)))
+        dnll_array.append(- 2 * (nll_value(mu, Htt, Ztt, W, ttbar) - nll_value(mu1, Htt, Ztt, W, ttbar)))
     logger.info("\n\n\n", dnll_array)
     ## Interpolate DNLL data
     f_dnll_array = interpolate.UnivariateSpline(x, dnll_array, s=0)
