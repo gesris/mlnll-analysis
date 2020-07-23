@@ -214,7 +214,7 @@ def main(args):
     # Calculation of NLL (with and without sys)
     nll = zero
     nll_statsonly = zero
-    magnification = 10.
+    magnification = 100.
     for i in range(0, len(bins) - 1):
         # Likelihood
         exp = mu * Htt[i] + Ztt[i] + W[i] + ttbar[i]
