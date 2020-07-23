@@ -209,6 +209,7 @@ def main(args):
             Htt_up_array[i] = 0
         if Htt_down_array[i] < 0:
             Htt_down_array[i] = 0
+    logger.info("\n\nHTT UP: {}\nHTT DOWN: {}".format(Htt_up_array, Htt_down_array))
     
 
     ### save counts into csv file for scan_cross_check.py
