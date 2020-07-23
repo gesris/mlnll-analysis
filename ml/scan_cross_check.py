@@ -122,7 +122,7 @@ def main():
     vscale = 1 / y_limit[1]
     plt.axvline(x=constraints_xval[0], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
     plt.axvline(x=constraints_xval[1], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
-    plt.plot([0], [0], color='C0', label="$\mu_{}$         = 1.00 (-{:.3f} +{:.3f})".format('\mathrm{stat.}', constraints[1], constraints[0]))
+    plt.plot([0], [0], color='C0', label="$\mu$ = 1.00 (-{:.3f} +{:.3f})".format(constraints[1], constraints[0]))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check{}.png'.format(args.fold, args.fold)), bbox_inches="tight")
 
