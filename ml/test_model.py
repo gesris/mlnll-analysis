@@ -202,8 +202,8 @@ def main(args):
     diff_down = (Htt_array - Htt_down_array) * mig01_scale
     logger.info("\n\nHTT: {} \nHTT UP: {} \nHTT DOWN: {} \nDIFF UP: {} \nDIFF DOWN: {}\n".format(Htt_array, Htt_up_array, Htt_down_array, diff_up, diff_down))
 
-    Htt_up_array = htt_array + diff_up
-    Htt_down_array = htt_array - diff_down
+    Htt_up_array = Htt_array + diff_up
+    Htt_down_array = Htt_array - diff_down
     logger.info('\nHtt Total:      {}\
                 \nHtt Up ARRAY:   {}\
                 \nHtt Down ARRAY: {}\n'.format([Htt_counts], [Htt_up_array], [Htt_down_array]))
