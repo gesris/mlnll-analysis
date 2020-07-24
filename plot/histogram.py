@@ -17,8 +17,21 @@ def main(args):
     #filepath = '/work/gristo/mlnll-analysis/output/4_bins_mig01x100_nosysimpl_shapes_temp/cmb/common/htt_input_2018.root'
     dirpath = 'htt_mt_0_2018'
     nominal = 'ggH125'
-    up = 'ggH125_THU_ggH_Mig01Up'
-    down = 'ggH125_THU_ggH_Mig01Down'
+    up      = 'ggH125_THU_ggH_Mig01Up'
+    down    = 'ggH125_THU_ggH_Mig01Down'
+    qqH     = 'qqH125'
+    ztt     = 'ZTT'
+    zl    = 'ZL'
+    zj    = 'ZJ'
+    w     = 'W'
+    ttt   = 'TTT'
+    ttj   = 'TTJ'
+    ttl   = 'TTL'
+    vvj   = 'VVJ'
+    vvt   = 'VVT'
+    vvl   = 'VVL'
+    qcd   = 'QCD'
+
     tfile = ROOT.TFile(filepath, 'UPDATE')
     folder = tfile.Get(dirpath)
     folder.cd()
@@ -27,18 +40,18 @@ def main(args):
     h_nominal = folder.Get(nominal)
     h_up    = folder.Get(up)
     h_down  = folder.Get(down)
-    h_qqH   = folder.Get('qqH125')
-    h_ztt   = folder.Get('ZTT')
-    h_zl    = folder.Get('ZL')
-    h_zj    = folder.Get('ZJ')
-    h_w     = folder.Get('W')
-    h_ttt   = folder.Get('TTT')
-    h_ttj   = folder.Get('TTJ')
-    h_ttl   = folder.Get('TTL')
-    h_vvj   = folder.Get('VVJ')
-    h_vvt   = folder.Get('VVT')
-    h_vvl   = folder.Get('VVL')
-    h_qcd   = folder.Get('QCD')
+    h_qqH   = folder.Get(qqH)
+    h_ztt   = folder.Get(ztt)
+    h_zl    = folder.Get(zl)
+    h_zj    = folder.Get(zj)
+    h_w     = folder.Get(w)
+    h_ttt   = folder.Get(ttt)
+    h_ttj   = folder.Get(ttj)
+    h_ttl   = folder.Get(ttl)
+    h_vvj   = folder.Get(vvj)
+    h_vvt   = folder.Get(vvt)
+    h_vvl   = folder.Get(vvl)
+    h_qcd   = folder.Get(qcd)
     nbins = h_nominal.GetNbinsX()
     scale = args.scale
 
