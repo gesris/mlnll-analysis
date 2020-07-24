@@ -17,21 +17,8 @@ def main(args):
     #filepath = '/work/gristo/mlnll-analysis/output/4_bins_mig01x100_nosysimpl_shapes_temp/cmb/common/htt_input_2018.root'
     dirpath = 'htt_mt_0_2018'
     nominal = 'ggH125'
-    up      = 'ggH125_THU_ggH_Mig01Up'
-    down    = 'ggH125_THU_ggH_Mig01Down'
-    qqH     = 'qqH125'
-    ztt     = 'ZTT'
-    zl    = 'ZL'
-    zj    = 'ZJ'
-    w     = 'W'
-    ttt   = 'TTT'
-    ttj   = 'TTJ'
-    ttl   = 'TTL'
-    vvj   = 'VVJ'
-    vvt   = 'VVT'
-    vvl   = 'VVL'
-    qcd   = 'QCD'
-
+    up = 'ggH125_THU_ggH_Mig01Up'
+    down = 'ggH125_THU_ggH_Mig01Down'
     tfile = ROOT.TFile(filepath, 'UPDATE')
     folder = tfile.Get(dirpath)
     folder.cd()
@@ -40,18 +27,18 @@ def main(args):
     h_nominal = folder.Get(nominal)
     h_up    = folder.Get(up)
     h_down  = folder.Get(down)
-    h_qqH   = folder.Get(qqH)
-    h_ztt   = folder.Get(ztt)
-    h_zl    = folder.Get(zl)
-    h_zj    = folder.Get(zj)
-    h_w     = folder.Get(w)
-    h_ttt   = folder.Get(ttt)
-    h_ttj   = folder.Get(ttj)
-    h_ttl   = folder.Get(ttl)
-    h_vvj   = folder.Get(vvj)
-    h_vvt   = folder.Get(vvt)
-    h_vvl   = folder.Get(vvl)
-    h_qcd   = folder.Get(qcd)
+    h_qqH   = folder.Get('qqH125')
+    h_ztt   = folder.Get('ZTT')
+    h_zl    = folder.Get('ZL')
+    h_zj    = folder.Get('ZJ')
+    h_w     = folder.Get('W')
+    h_ttt   = folder.Get('TTT')
+    h_ttj   = folder.Get('TTJ')
+    h_ttl   = folder.Get('TTL')
+    h_vvj   = folder.Get('VVJ')
+    h_vvt   = folder.Get('VVT')
+    h_vvl   = folder.Get('VVL')
+    h_qcd   = folder.Get('QCD')
     nbins = h_nominal.GetNbinsX()
     scale = args.scale
 
@@ -91,14 +78,14 @@ def main(args):
         c_down = h_down.GetBinContent(i)
 
         ## Append content to arrays
-        Htt.append(np.max(c_nominal + c_qqH, 1e-2))
-        Htt_up.append(np.max(c_up + c_qqH, 1e-2))
-        Htt_down.append(np.max(c_down + c_qqH, 1e-2))
-        Ztt.append(np.max(c_zj + c_zl + c_ztt, 1e-2))
-        W.append(np.max(c_w, 1e-2))
-        ttbar.append(np.max(c_ttj + c_ttl + c_ttt, 1e-2))
-        vv.append(np.max(c_vvj + c_vvl + c_vvt, 1e-2))
-        qcd.append(np.max(c_qcd, 1e-2))
+        Htt.append(np.max(c_nominal + c_qqH, 1))
+        Htt_up.append(np.max(c_up + c_qqH, 1))
+        Htt_down.append(np.max(c_down + c_qqH, 1))
+        Ztt.append(np.max(c_zj + c_zl + c_ztt, 1))
+        W.append(np.max(c_w, 1))
+        ttbar.append(np.max(c_ttj + c_ttl + c_ttt, 1))
+        vv.append(np.max(c_vvj + c_vvl + c_vvt, 1))
+        qcd.append(np.max(c_qcd, 1))
     tfile.Close()    
 
     ## Plot configs
