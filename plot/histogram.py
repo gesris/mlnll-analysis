@@ -78,7 +78,7 @@ def main(args):
         c_down = h_down.GetBinContent(i)
 
         ## Append content to arrays
-        min_val = 1e-4
+        min_val = 1
         Htt.append(np.amax([c_nominal + c_qqH, min_val]))
         Htt_up.append(np.amax([c_up + c_qqH, min_val]))
         Htt_down.append(np.amax([c_down + c_qqH, min_val]))
@@ -101,9 +101,9 @@ def main(args):
     plt.hist(bins_center, weights=Htt, bins=bins, histtype="step", lw=2, color="C0")
     plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls=':', color="C0")
     plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls=':', color="C0")
-    plt.hist(bins_center, weights=Ztt, bins=bins, histtype="step", lw=2, ls=':', color="C1")
-    plt.hist(bins_center, weights=W, bins=bins, histtype="step", lw=2, ls=':', color="C2")
-    plt.hist(bins_center, weights=ttbar, bins=bins, histtype="step", lw=2, ls=':', color="C3")
+    plt.hist(bins_center, weights=Ztt, bins=bins, histtype="step", lw=2, ls='-', color="C1")
+    plt.hist(bins_center, weights=W, bins=bins, histtype="step", lw=2, ls='-', color="C2")
+    plt.hist(bins_center, weights=ttbar, bins=bins, histtype="step", lw=2, ls='-', color="C3")
     
     plt.plot([0], [0], lw=2, color="C0", label="Htt")
     plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
