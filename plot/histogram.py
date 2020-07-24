@@ -99,8 +99,8 @@ def main(args):
     ## Plot hists    
     plt.figure(figsize=(7, 6))
     plt.hist(bins_center, weights=Htt, bins=bins, histtype="step", lw=2, color="C0")
-    plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls=':', color="C0")
-    plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls=':', color="C0")
+    plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls='', color="C0")
+    plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls='--', color="C0")
     plt.hist(bins_center, weights=Ztt, bins=bins, histtype="step", lw=2, ls='-', color="C1")
     plt.hist(bins_center, weights=W, bins=bins, histtype="step", lw=2, ls='-', color="C2")
     plt.hist(bins_center, weights=ttbar, bins=bins, histtype="step", lw=2, ls='-', color="C3")
