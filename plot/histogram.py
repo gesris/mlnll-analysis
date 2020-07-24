@@ -78,14 +78,15 @@ def main(args):
         c_down = h_down.GetBinContent(i)
 
         ## Append content to arrays
-        Htt.append(np.amax([c_nominal + c_qqH, 1e-2]))
-        Htt_up.append(np.amax([c_up + c_qqH, 1e-2]))
-        Htt_down.append(np.amax([c_down + c_qqH, 1e-2]))
-        Ztt.append(np.amax([c_zj + c_zl + c_ztt, 1e-2]))
-        W.append(np.amax([c_w, 1e-2]))
-        ttbar.append(np.amax([c_ttj + c_ttl + c_ttt, 1e-2]))
-        vv.append(np.amax([c_vvj + c_vvl + c_vvt, 1e-2]))
-        qcd.append(np.amax([c_qcd, 1e-2]))
+        min_val = 1e-4
+        Htt.append(np.amax([c_nominal + c_qqH, min_val]))
+        Htt_up.append(np.amax([c_up + c_qqH, min_val]))
+        Htt_down.append(np.amax([c_down + c_qqH, min_val]))
+        Ztt.append(np.amax([c_zj + c_zl + c_ztt, min_val]))
+        W.append(np.amax([c_w, min_val]))
+        ttbar.append(np.amax([c_ttj + c_ttl + c_ttt, min_val]))
+        vv.append(np.amax([c_vvj + c_vvl + c_vvt, min_val]))
+        qcd.append(np.amax([c_qcd, min_val]))
     tfile.Close()    
 
     ## Plot configs
@@ -107,9 +108,9 @@ def main(args):
     plt.plot([0], [0], lw=2, color="C0", label="Htt")
     plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
     plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down")
-    plt.plot([0], [0], lw=2, color="C1", label="Ztt")
-    plt.plot([0], [0], lw=2, color="C2", label="W")
-    plt.plot([0], [0], lw=2, color="C3", label="ttbar")
+    plt.plot([0], [0], lw=2, ls='-', color="C1", label="Ztt")
+    plt.plot([0], [0], lw=2, ls='-', color="C2", label="W")
+    plt.plot([0], [0], lw=2, ls='-', color="C3", label="ttbar")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("$f$")
     plt.ylabel("Counts")
