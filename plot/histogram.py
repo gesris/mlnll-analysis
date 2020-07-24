@@ -100,13 +100,20 @@ def main(args):
     plt.hist(bins_center, weights=Htt, bins=bins, histtype="step", lw=2, color="C0")
     plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls=':', color="C0")
     plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls=':', color="C0")
+    plt.hist(bins_center, weights=Ztt, bins=bins, histtype="step", lw=2, ls=':', color="C1")
+    plt.hist(bins_center, weights=W, bins=bins, histtype="step", lw=2, ls=':', color="C2")
+    plt.hist(bins_center, weights=ttbar, bins=bins, histtype="step", lw=2, ls=':', color="C3")
+    
     plt.plot([0], [0], lw=2, color="C0", label="Htt")
     plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
     plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down")
+    plt.plot([0], [0], lw=2, color="C1", label="Ztt")
+    plt.plot([0], [0], lw=2, color="C2", label="W")
+    plt.plot([0], [0], lw=2, color="C3", label="ttbar")
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("$f$")
     plt.ylabel("Counts")
-    #plt.yscale('log')
+    plt.yscale('log')
     plt.savefig(os.path.join(args.workdir, 'histogram_combine.png'), bbox_inches = "tight")
 
 if __name__ == '__main__':
