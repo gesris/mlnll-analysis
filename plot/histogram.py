@@ -106,7 +106,7 @@ def main(args):
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("$f$")
     plt.ylabel("Counts")
-    plt.yscale('log')
+    #plt.yscale('log')
     plt.savefig(os.path.join(args.workdir, 'histogram_combine.png'), bbox_inches = "tight")
 
 if __name__ == '__main__':
