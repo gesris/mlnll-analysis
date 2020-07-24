@@ -120,7 +120,7 @@ def main(args):
 
     ## Plot hists Sigonly
     plt.figure(figsize=(7, 6))
-    plt.ylim((0, 1800))
+    plt.ylim((0, 2200 - len(Htt) * 100))
     plt.hist(bins_center, weights=Htt, bins=bins, histtype="step", lw=2, color="C0")
     plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls=':', color="C0")
     plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls='--', color="C0")
