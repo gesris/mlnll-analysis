@@ -69,7 +69,7 @@ def main(args):
         c_nominal = h_nominal.GetBinContent(i)
         c_up = h_up.GetBinContent(i)
         c_down = h_down.GetBinContent(i)
-        c_qqH = h_qqH.GetBincontent(i)
+        c_qqH = h_qqH.GetBinContent(i)
         c_ztt = h_ztt.GetBinContent(i)
         c_zl = h_zl.GetBinContent(i)
         c_zj = h_zj.GetBinContent(i)
