@@ -98,9 +98,10 @@ def main(args):
 
     ## Plot hists    
     plt.figure(figsize=(7, 6))
-    plt.hist(bins_center, weights=Htt, bins=bins, histtype="step", lw=2, color="C0")
-    plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls=':', color="C0")
-    plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls='--', color="C0")
+    signal_upscale = 100
+    plt.hist(bins_center, weights=Htt * signal_upscale, bins=bins, histtype="step", lw=2, color="C0")
+    plt.hist(bins_center, weights=Htt_up * signal_upscale, bins=bins, histtype="step", lw=2, ls=':', color="C0")
+    plt.hist(bins_center, weights=Htt_down * signal_upscale, bins=bins, histtype="step", lw=2, ls='--', color="C0")
     plt.hist(bins_center, weights=Ztt, bins=bins, histtype="step", lw=2, ls='-', color="C1")
     plt.hist(bins_center, weights=W, bins=bins, histtype="step", lw=2, ls='-', color="C2")
     plt.hist(bins_center, weights=ttbar, bins=bins, histtype="step", lw=2, ls='-', color="C3")
@@ -115,7 +116,7 @@ def main(args):
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("$f$")
     plt.ylabel("Counts")
-    plt.yscale('log')
+    #plt.yscale('log')
     plt.savefig(os.path.join(args.workdir, 'histogram_combine.png'), bbox_inches = "tight")
 
     ## Plot hists Sigonly
