@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../utils/setup_lcg.sh
+source utils/setup_lcg.sh
 
 WORKDIR=$1
 
