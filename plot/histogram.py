@@ -78,14 +78,14 @@ def main(args):
         c_down = h_down.GetBinContent(i)
 
         ## Append content to arrays
-        Htt.append(np.max(c_nominal + c_qqH, 1))
-        Htt_up.append(np.max(c_up + c_qqH, 1))
-        Htt_down.append(np.max(c_down + c_qqH, 1))
-        Ztt.append(np.max(c_zj + c_zl + c_ztt, 1))
-        W.append(np.max(c_w, 1))
-        ttbar.append(np.max(c_ttj + c_ttl + c_ttt, 1))
-        vv.append(np.max(c_vvj + c_vvl + c_vvt, 1))
-        qcd.append(np.max(c_qcd, 1))
+        Htt.append(np.amax([c_nominal + c_qqH, 1e-2]))
+        Htt_up.append(np.amax([c_up + c_qqH, 1e-2]))
+        Htt_down.append(np.amax([c_down + c_qqH, 1e-2]))
+        Ztt.append(np.amax([c_zj + c_zl + c_ztt, 1e-2]))
+        W.append(np.amax([c_w, 1e-2]))
+        ttbar.append(np.amax([c_ttj + c_ttl + c_ttt, 1e-2]))
+        vv.append(np.amax([c_vvj + c_vvl + c_vvt, 1e-2]))
+        qcd.append(np.amax([c_qcd, 1e-2]))
     tfile.Close()    
 
     ## Plot configs
