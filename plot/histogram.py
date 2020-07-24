@@ -90,7 +90,7 @@ def main(args):
     tfile.Close()    
 
     ## Plot configs
-    bins = cfg.analysis_binning
+    bins = np.linspace(0, 1, len(Htt) + 1)
     upper_edges, lower_edges = bins[1:], bins[:-1]
     bins_center = []
     for i in range(0, len(bins) - 1):
