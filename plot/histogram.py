@@ -98,17 +98,16 @@ def main(args):
 
     ## Plot hists    
     plt.figure(figsize=(7, 6))
-    signal_upscale = 100
-    plt.hist(bins_center, weights=np.array(Htt) * signal_upscale, bins=bins, histtype="step", lw=2, color="C0")
-    plt.hist(bins_center, weights=np.array(Htt_up) * signal_upscale, bins=bins, histtype="step", lw=2, ls=':', color="C0")
-    plt.hist(bins_center, weights=np.array(Htt_down) * signal_upscale, bins=bins, histtype="step", lw=2, ls='--', color="C0")
+    plt.hist(bins_center, weights=Htt, bins=bins, histtype="step", lw=2, color="C0")
+    plt.hist(bins_center, weights=Htt_up, bins=bins, histtype="step", lw=2, ls=':', color="C0")
+    plt.hist(bins_center, weights=Htt_down, bins=bins, histtype="step", lw=2, ls='--', color="C0")
     plt.hist(bins_center, weights=Ztt, bins=bins, histtype="step", lw=2, ls='-', color="C1")
     plt.hist(bins_center, weights=W, bins=bins, histtype="step", lw=2, ls='-', color="C2")
     plt.hist(bins_center, weights=ttbar, bins=bins, histtype="step", lw=2, ls='-', color="C3")
     
-    plt.plot([0], [0], lw=2, color="C0", label="Htt (x100)")
-    plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up (x100)")
-    plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down (x100)")
+    plt.plot([0], [0], lw=2, color="C0", label="Htt")
+    plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
+    plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down")
     plt.plot([0], [0], lw=2, ls='-', color="C1", label="Ztt")
     plt.plot([0], [0], lw=2, ls='-', color="C2", label="W")
     plt.plot([0], [0], lw=2, ls='-', color="C3", label="ttbar")
