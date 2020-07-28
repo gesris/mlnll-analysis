@@ -194,7 +194,7 @@ def application(workdir, folder, filename):
     dir_.cd()
     t = ROOT.TTree('ntuple', 'ntuple')
     val = array('f', [-999])
-    bval = t.Branch('ml_score', val, 'ml_score/F')
+    bval = t.Branch(cfg.analysis_variable, val, cfg.analysis_variable + '/F')
     for i in range(outputs.shape[0]):
         val[0] = outputs[i]
         t.Fill()

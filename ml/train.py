@@ -163,7 +163,7 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
 
     nll = 0.0
-    bins = np.linspace(0, 1, 5)
+    bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
