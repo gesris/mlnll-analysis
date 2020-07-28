@@ -26,6 +26,9 @@ echo "Trigger auto mount of CVMFS"
 ls /cvmfs
 ls /cvmfs/sft.cern.ch
 
+echo "Trigger auto mount of ceph"
+ls /ceph
+
 cd $SRCDIR
 echo "PWD:" $PWD
 source utils/setup_lcg.sh
