@@ -143,7 +143,7 @@ def application(workdir, folder, filename):
 
     # Load models
     def load_model(x, fold):
-        _, f = model(x, len(cfg.ml_variables), 1, fold)
+        _, f, _ = model(x, len(cfg.ml_variables), 1, fold)
         variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='model_fold{}'.format(fold))
         path = tf.train.latest_checkpoint(os.path.join(workdir, 'model_fold{}'.format(fold)))
         print('Load variables for fold {} from {}'.format(fold, path))
@@ -151,7 +151,7 @@ def application(workdir, folder, filename):
         saver.restore(session, path)
         return f
 
-    x_ph = tf.placeholder(tf.float32)
+    x_ph = tf.placeholder(tf.float64)
     model_fold0 = load_model(x_ph, 0)
     model_fold1 = load_model(x_ph, 1)
 
@@ -165,7 +165,7 @@ def application(workdir, folder, filename):
 
     # Convert to numpy and stack to input dataset
     npy = ROOT.RDataFrame(d).AsNumpy(cfg.ml_variables + ['event'])
-    inputs  = np.vstack([np.array(npy[k], dtype=np.float32) for k in cfg.ml_variables]).T
+    inputs  = np.vstack([np.array(npy[k], dtype=np.float64) for k in cfg.ml_variables]).T
 
     # Apply model of fold 0 to data of fold 1 and v.v.
     mask_fold0 = npy['event'] % 2 == 0
