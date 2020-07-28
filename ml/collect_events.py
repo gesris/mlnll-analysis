@@ -82,10 +82,10 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
 
 
 def ggh():
-    return cfg.files['ggh'], [cfg.channel, cfg.mc, cfg.htt, cfg.ggh], 'ggh', 'htt'
+    return cfg.files['ggh'], [cfg.channel, cfg.mc, cfg.htt, cfg.ggh], 'ggh', 'ggh'
 
 def qqh():
-    return cfg.files['qqh'], [cfg.channel, cfg.mc, cfg.htt, cfg.qqh], 'qqh', 'htt'
+    return cfg.files['qqh'], [cfg.channel, cfg.mc, cfg.htt, cfg.qqh], 'qqh', 'qqh'
 
 def ztt():
     return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.ztt], 'ztt', 'ztt'
@@ -108,12 +108,21 @@ def ttl():
 def ttj():
     return cfg.files['tt'], [cfg.channel, cfg.mc, cfg.tt, cfg.ttj], 'ttj', 'tt'
 
+def vvt():
+    return cfg.files['vv'], [cfg.channel, cfg.mc, cfg.vv, cfg.vvt], 'vvt', 'vv'
+
+def vvl():
+    return cfg.files['vv'], [cfg.channel, cfg.mc, cfg.vv, cfg.vvl], 'vvl', 'vv'
+
+def vvj():
+    return cfg.files['vv'], [cfg.channel, cfg.mc, cfg.vv, cfg.vvj], 'vvj', 'vv'
+
 
 def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
 
     # Collect nominal events
-    for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj]:
+    for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
@@ -124,6 +133,7 @@ def main(args):
             write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
 
     # Collect systematic shifts
+    '''
     for sys in ['jecUncRelativeSampleYearUp', 'jecUncRelativeSampleYearDown']:
         for process in [ggh, qqh]:
             files, selections, name, group = process()
@@ -131,6 +141,7 @@ def main(args):
             d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_' + sys)
             for fold in [0, 1]:
                 write_dataset(d, args.workdir, name + '_' + sys, group + '_' + sys, fold, weightstr, cutstr)
+    '''
 
 
 if __name__ == '__main__':
