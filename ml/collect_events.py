@@ -91,10 +91,10 @@ def ztt():
     return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.ztt], 'ztt', 'ztt'
 
 def zj():
-    return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.zj], 'zj', 'ztt'
+    return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.zj], 'zj', 'zl'
 
 def zl():
-    return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.zl], 'zl', 'ztt'
+    return cfg.files['dy'], [cfg.channel, cfg.mc, cfg.dy, cfg.zl], 'zl', 'zl'
 
 def w():
     return cfg.files['wjets'], [cfg.channel, cfg.mc, cfg.w], 'w', 'w'
