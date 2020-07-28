@@ -22,6 +22,7 @@ ls /cvmfs/sft.cern.ch
 
 echo "Trigger auto mount of ceph"
 ls /ceph
+ls /ceph/htautau
 
 cd $SRCDIR
 echo "PWD:" $PWD
