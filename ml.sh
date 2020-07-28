@@ -11,4 +11,5 @@ ml/dataset.sh $WORKDIR
 ml/train.sh $WORKDIR
 
 # Validate model
-ml/test.sh $WORKDIR
+# TODO: Missing any validation!
+#ml/test.sh $WORKDIR
