@@ -143,7 +143,7 @@ def application(workdir, folder, filename):
 
     # Load models
     def load_model(x, fold):
-        _, f = model(x, len(cfg.ml_variables), len(cfg.ml_classes), fold)
+        _, f = model(x, len(cfg.ml_variables), 1, fold)
         variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='model_fold{}'.format(fold))
         path = tf.train.latest_checkpoint(os.path.join(workdir, 'model_fold{}'.format(fold)))
         print('Load variables for fold {} from {}'.format(fold, path))
@@ -175,22 +175,14 @@ def application(workdir, folder, filename):
 
     outputs_fold0 = session.run(model_fold0,
             feed_dict={x_ph: preproc_fold0.transform(inputs[mask_fold0])})
-    scores_fold0 = np.max(outputs_fold0, axis=1)
-    indices_fold0 = np.argmax(outputs_fold0, axis=1)
 
     outputs_fold1 = session.run(model_fold1,
             feed_dict={x_ph: preproc_fold1.transform(inputs[mask_fold1])})
-    scores_fold1 = np.max(outputs_fold1, axis=1)
-    indices_fold1 = np.argmax(outputs_fold1, axis=1)
 
-    # Merge scores back together
-    scores = np.zeros(npy['event'].shape, dtype=np.float32)
-    scores[mask_fold0] = scores_fold0
-    scores[mask_fold1] = scores_fold1
-
-    indices = np.zeros(npy['event'].shape, dtype=np.float32)
-    indices[mask_fold0] = indices_fold0
-    indices[mask_fold1] = indices_fold1
+    # Merge outputs back together
+    outputs = np.zeros(npy['event'].shape, dtype=np.float32)
+    outputs[mask_fold0] = outputs_fold0
+    outputs[mask_fold1] = outputs_fold1
 
     # Write output file
     path = os.path.join(workdir, 'MLScores', filename, folder + '.root')
@@ -202,12 +194,9 @@ def application(workdir, folder, filename):
     dir_.cd()
     t = ROOT.TTree('ntuple', 'ntuple')
     val = array('f', [-999])
-    idx = array('f', [-999])
     bval = t.Branch('ml_score', val, 'ml_score/F')
-    bidx = t.Branch('ml_index', idx, 'ml_index/F')
-    for i in range(scores.shape[0]):
-        val[0] = scores[i]
-        idx[0] = indices[i]
+    for i in range(outputs.shape[0]):
+        val[0] = outputs[i]
         t.Fill()
     t.Write()
     f.Close()
