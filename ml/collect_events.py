@@ -117,6 +117,9 @@ def vvl():
 def vvj():
     return cfg.files['vv'], [cfg.channel, cfg.mc, cfg.vv, cfg.vvj], 'vvj', 'vv'
 
+def data():
+    return cfg.files['singlemuon'], [cfg.channel], 'data', 'data'
+
 
 def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
@@ -131,6 +134,19 @@ def main(args):
         logger.debug('Cut string: %s', cutstr)
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
+
+    # Collect events for QCD estimation
+    for process in [data, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
+        files, selections, name, group = process()
+        cutstr, weightstr = collect_cuts_weights(selections)
+        ssos = ('q_1*q_2<0')
+        if not ssos in cutstr:
+            logger.fatal('Cannot find SS/OS substring in cutstring')
+            raise Exception
+        cutstr_ss = cutstr.replace(ssos, 'q_1*q_2>0')
+        d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
+        for fold in [0, 1]:
+            write_dataset(d, args.workdir, name + '_ss', group + '_ss', fold, weightstr, cutstr_ss)
 
     # Collect systematic shifts
     '''
