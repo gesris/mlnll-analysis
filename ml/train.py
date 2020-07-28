@@ -11,6 +11,7 @@ from utils import config as cfg
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 tf.set_random_seed(1234)
+import tensorflow_probability as tfp
 
 
 import logging
@@ -20,8 +21,8 @@ logger = logging.getLogger('')
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
-            tf.cast(x > down, tf.float32) * tf.cast(x <= up, tf.float32),
-            tf.float32)
+            tf.cast(x > down, tf.float64) * tf.cast(x <= up, tf.float64),
+            tf.float64)
     mask = tf.squeeze(mask)
 
     def grad(dy):
@@ -61,10 +62,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     ws = [] # Event weights
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
-        xs.append(np.vstack([np.array(d[k], dtype=np.float32) for k in cfg.ml_variables]).T)
-        w = np.array(d[cfg.ml_weight], dtype=np.float32)
+        xs.append(np.vstack([np.array(d[k], dtype=np.float64) for k in cfg.ml_variables]).T)
+        w = np.array(d[cfg.ml_weight], dtype=np.float64)
         ws.append(w)
-        ys.append(np.ones(d[cfg.ml_weight].shape) * i)
+        ys.append(np.ones(d[cfg.ml_weight].shape, dtype=np.float64) * i)
 
     # Stack inputs
     xs = np.vstack(xs)
@@ -97,26 +98,38 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
 def model(x, num_variables, num_classes, fold, reuse=False):
     hidden_nodes = 100
     with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
-        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
-        b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer())
-        b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer())
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer())
-        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer())
+        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
+        b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer(), dtype=tf.float64)
+        w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
+        b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer(), dtype=tf.float64)
+        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
+        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer(), dtype=tf.float64)
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
     l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
     logits = tf.add(b3, tf.matmul(l2, w3))
-    f = tf.nn.softmax(logits)
+    f = tf.sigmoid(logits)
+    f = tf.squeeze(f)
 
-    return logits, f
+    return logits, f, [w1, b1, w2, b2, w3, b3]
 
 
 def main(args):
     # Build nominal dataset
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold)
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold,
+                            use_class_weights=False, make_categorical=False)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
+
+    # Scale to expectation in the full dataset
+    scale_train = 4.0 / 3.0 * 2.0 # train/test split + two fold
+    scale_val = 4.0 * 2.0
+    w_train = w_train * scale_train
+    w_val = w_val * scale_val
+    for i, name in enumerate(cfg.ml_classes):
+        s_train = np.sum(w_train[y_train == i])
+        s_val = np.sum(w_val[y_val == i])
+        logger.debug('Class / train / val: {} / {} / {}'.format(name, s_train, s_val))
 
     # Build dataset for systematic shifts
     """
@@ -141,23 +154,63 @@ def main(args):
         logger.info('Preprocessed data (mean, std): %s, %s', np.mean(x_train_preproc[:, i]), np.std(x_train_preproc[:, i]))
 
     # Create model
-    x_ph = tf.placeholder(tf.float32)
-    logits, f = model(x_ph, len(cfg.ml_variables), len(cfg.ml_classes), args.fold)
+    x_ph = tf.placeholder(tf.float64, shape=(None,len(cfg.ml_variables)))
+    logits, f, w_vars = model(x_ph, len(cfg.ml_variables), 1, args.fold)
 
-    # Add CE loss
-    y_ph = tf.placeholder(tf.float32)
-    w_ph = tf.placeholder(tf.float32)
-    ce_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_ph, logits=logits) * w_ph)
+    # Build NLL loss
+    y_ph = tf.placeholder(tf.float64, shape=(None,))
+    w_ph = tf.placeholder(tf.float64, shape=(None,))
 
-    # Add loss treating systematics
+    nll = 0.0
+    bins = np.linspace(0, 1, 5)
+    mu = tf.constant(1.0, tf.float64)
+    epsilon = tf.constant(1e-9, tf.float64)
+    for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
+        logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
+        up = tf.constant(up, tf.float64)
+        down = tf.constant(down, tf.float64)
+
+        # Processes
+        mask = count_masking(f, up, down)
+        procs = {}
+        for j, name in enumerate(cfg.ml_classes):
+            j = tf.constant(j, tf.float64)
+            procs[name] = tf.reduce_sum(mask * tf.cast(tf.equal(y_ph, j), tf.float64) * w_ph)
+
+        # Expectation
+        sig = 0
+        for p in ['ggh', 'qqh']:
+            sig += procs[p]
+
+        bkg = 0
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+            bkg += procs[p]
+
+        obs = sig + bkg
+        exp = mu * sig + bkg
+
+        # Nuisances
+        # TODO
+
+        # Likelihood
+        nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+
+    # Nuisance constraints
     # TODO
 
-    # Combine losses
-    loss = ce_loss
+    # Compute constraint of mu
+    def get_constraint(nll, params):
+        hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
+        inverse = tf.matrix_inverse(hessian)
+        covariance_poi = inverse[0][0]
+        constraint = tf.sqrt(covariance_poi)
+        return constraint
+
+    loss = get_constraint(nll, [mu])
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
-    minimize = optimizer.minimize(loss)
+    minimize = optimizer.minimize(loss, var_list=w_vars)
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
@@ -170,12 +223,10 @@ def main(args):
     min_loss = 1e9
     tolerance = 0.001
     step = 0
-    batch_size = 1000
-    validation_steps = int(x_train.shape[0] / batch_size)
+    validation_steps = 10
     while True:
-        idx = np.random.choice(x_train_preproc.shape[0], batch_size)
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc[idx], y_ph: y_train[idx], w_ph: w_train[idx]})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
