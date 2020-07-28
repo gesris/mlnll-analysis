@@ -116,7 +116,8 @@ def model(x, num_variables, num_classes, fold, reuse=False):
 
 def main(args):
     # Build nominal dataset
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), cfg.ml_classes, args.fold,
+    classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
@@ -126,7 +127,7 @@ def main(args):
     scale_val = 4.0 * 2.0
     w_train = w_train * scale_train
     w_val = w_val * scale_val
-    for i, name in enumerate(cfg.ml_classes):
+    for i, name in enumerate(classes):
         s_train = np.sum(w_train[y_train == i])
         s_val = np.sum(w_val[y_val == i])
         logger.debug('Class / train / val: {} / {} / {}'.format(name, s_train, s_val))
@@ -173,9 +174,14 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        for j, name in enumerate(cfg.ml_classes):
+        for j, name in enumerate(classes):
             j = tf.constant(j, tf.float64)
             procs[name] = tf.reduce_sum(mask * tf.cast(tf.equal(y_ph, j), tf.float64) * w_ph)
+
+        # QCD estimation
+        procs['qcd'] = procs['data_ss']
+        for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
+            procs['qcd'] -= procs[p + '_ss']
 
         # Expectation
         sig = 0
@@ -183,7 +189,7 @@ def main(args):
             sig += procs[p]
 
         bkg = 0
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
         obs = sig + bkg
