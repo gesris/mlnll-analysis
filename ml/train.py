@@ -165,6 +165,7 @@ def main(args):
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
+    nuisances = []
     epsilon = tf.constant(1e-9, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
@@ -174,17 +175,20 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
+        procs_sumw2 = {}
         for j, name in enumerate(classes):
-            j = tf.constant(j, tf.float64)
-            procs[name] = tf.reduce_sum(mask * tf.cast(tf.equal(y_ph, j), tf.float64) * w_ph)
+            proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
+            procs[name] = tf.reduce_sum(proc_w)
+            procs_sumw2[name] = tf.reduce_sum(proc_w * w_ph)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
+        procs_sumw2['qcd'] = procs['qcd']
 
-        # Expectation
+        # Nominal signal and background
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
@@ -193,17 +197,26 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        obs = sig + bkg
-        exp = mu * sig + bkg
+        # Bin-by-bin uncertainties
+        sys = 0.0
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+            theta = tf.constant(0.0, tf.float64)
+            shift = tf.sqrt(procs[p])
+            sys += theta * shift
+            nuisances += [theta]
 
-        # Nuisances
-        # TODO
+        # Expectations
+        obs = sig + bkg
+        exp = mu * sig + bkg + sys
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
 
     # Nuisance constraints
-    # TODO
+    for p in nuisances:
+        nll -= tfp.distributions.Normal(
+                loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+                ).log_prob(p)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -213,7 +226,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss = get_constraint(nll, [mu])
+    loss = get_constraint(nll, [mu] + nuisances)
 
     # Add minimization ops
     optimizer = tf.train.AdamOptimizer()
