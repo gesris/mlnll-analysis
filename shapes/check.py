@@ -42,7 +42,7 @@ def main(args):
         workdir = jobargs[2].strip()
         jobid = int(jobargs[0].strip())
         logger.info('Running locally with args (%s, %s)', jobid, workdir)
-        jobfunc(workdir, jobid)
+        jobfunc(workdir, jobid, nthreads=12)
 
 
 if __name__ == '__main__':

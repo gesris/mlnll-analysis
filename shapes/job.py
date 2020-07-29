@@ -5,7 +5,7 @@ import pickle
 from ntuple_processor import RunManager
 
 
-def job(workdir, jobid):
+def job(workdir, jobid, nthreads=1):
     print('Load graphs')
     graphs = pickle.load(open(os.path.join(workdir, 'graphs.pickle'), 'rb'))
     print('Select graph with base node:\n{}'.format(graphs[jobid]))
@@ -16,7 +16,7 @@ def job(workdir, jobid):
     print('Run job')
     r_manager.run_locally(
             os.path.join(workdir, 'shapes_files', 'shapes_{}.root'.format(jobid)),
-            nworkers=1, nthreads=1)
+            nworkers=1, nthreads=nthreads)
     print('Done')
 
 
