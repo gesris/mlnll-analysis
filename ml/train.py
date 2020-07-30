@@ -165,7 +165,7 @@ def main(args):
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
-    nuisances = []
+    nuisances = {}
     epsilon = tf.constant(1e-9, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
@@ -175,18 +175,15 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        procs_sumw2 = {}
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(proc_w * w_ph)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
-        procs_sumw2['qcd'] = procs['qcd']
 
         # Nominal signal and background
         sig = 0
@@ -197,13 +194,10 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # Bin-by-bin uncertainties
+        # Normalization uncertainties
         sys = 0.0
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-            theta = tf.constant(0.0, tf.float64)
-            shift = tf.sqrt(procs[p])
-            sys += theta * shift
-            nuisances += [theta]
+        for n in nuisances:
+            pass
 
         # Expectations
         obs = sig + bkg
@@ -213,10 +207,10 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
 
     # Nuisance constraints
-    for p in nuisances:
+    for n in nuisances:
         nll -= tfp.distributions.Normal(
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                ).log_prob(p)
+                ).log_prob(nuisances[n])
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -226,11 +220,16 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss = get_constraint(nll, [mu] + nuisances)
+    loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
+    loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
-    optimizer = tf.train.AdamOptimizer()
-    minimize = optimizer.minimize(loss, var_list=w_vars)
+    def get_minimize_op(loss):
+        optimizer = tf.train.AdamOptimizer()
+        return optimizer.minimize(loss, var_list=w_vars)
+
+    minimize_fullnll = get_minimize_op(loss_fullnll)
+    minimize_statsonly = get_minimize_op(loss_statsonly)
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
@@ -238,13 +237,23 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 5
+    patience = 10
     patience_count = patience
     min_loss = 1e9
     tolerance = 0.001
     step = 0
-    validation_steps = 10
+    validation_steps = 20
+    warmup_steps = 100
     while True:
+        if step < warmup_steps:
+            loss = loss_statsonly
+            minimize = minimize_statsonly
+            is_warmup = True
+        else:
+            loss = loss_fullnll
+            minimize = minimize_fullnll
+            is_warmup = False
+
         loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
 
@@ -254,17 +263,20 @@ def main(args):
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
-            if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
-                min_loss = loss_val
-                patience_count = patience
-                path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
-                logger.info('Save model to {}'.format(path))
+            if is_warmup:
+                logger.info('Warmup: {} / {}'.format(step, warmup_steps))
             else:
-                patience_count -= 1
+                if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
+                    min_loss = loss_val
+                    patience_count = patience
+                    path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
+                    logger.info('Save model to {}'.format(path))
+                else:
+                    patience_count -= 1
 
-            if patience_count == 0:
-                logger.info('Stop training')
-                break
+                if patience_count == 0:
+                    logger.info('Stop training')
+                    break
 
         step += 1
 
