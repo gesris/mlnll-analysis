@@ -17,7 +17,7 @@ else
     source /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/setup.sh
     source /home/wunsch/workspace/root/build_own_python/bin/thisroot.sh
     alias python=/home/wunsch/workspace/python/install/bin/python3.6
-    export PYTHONPATH=/home/wunsch/.local/lib/python3.6/site-packages/:$PYTHONPATH
+    export PYTHONPATH=/home/gristo/.local/lib/python3.6/site-packages/:$PYTHONPATH
 fi
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$PWD/Dumbledraw:$PYTHONPATH
