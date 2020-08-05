@@ -203,7 +203,6 @@ def main(args):
         sys = 0.0
         for n in nuisances:
             sys += tf.sqrt(nuisances[n])
-        logger.info("\n\nSYS: {}".format(sys))
 
         # Expectations
         obs = sig + bkg
