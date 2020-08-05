@@ -175,7 +175,7 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        bbb = tf.constant(2.0, tf.float32)
+        bbb = 0
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
