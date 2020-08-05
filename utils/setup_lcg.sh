@@ -13,15 +13,12 @@ then
     export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
     export PATH=/usr/local/cuda-10.0/bin:$PATH
     export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64:$LD_LIBRARY_PATH
-
-    # my additions
-    alias python=/home/wunsch/workspace/python/install/bin/python3.6
-    export PYTHONPATH=/home/gristo/.local/lib/python3.6/site-packages/:$PYTHONPATH
 else
     source /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/setup.sh
     source /home/wunsch/workspace/root/build_own_python/bin/thisroot.sh
     alias python=/home/wunsch/workspace/python/install/bin/python3.6
     export PYTHONPATH=/home/gristo/.local/lib/python3.6/site-packages/:$PYTHONPATH
 fi
+alias python=/home/wunsch/workspace/python/install/bin/python3.6
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$PWD/Dumbledraw:$PYTHONPATH
