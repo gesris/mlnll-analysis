@@ -249,6 +249,11 @@ def main(args):
     step = 0
     validation_steps = 20
     warmup_steps = 100
+
+    steps_list = []
+    loss_train_list = []
+    loss_val_list = []
+
     while True:
         if step < warmup_steps:
             loss = loss_statsonly
@@ -282,8 +287,19 @@ def main(args):
                 if patience_count == 0:
                     logger.info('Stop training')
                     break
-
+        
+        steps_list.append(step)
+        loss_train_list.append(loss_train)
+        loss_val_list.append(loss_val)
         step += 1
+
+    ## Plot minimization of loss
+    plt.figure()
+    plt.plot(steps_list, loss_train_list)
+    plt.plot(steps_list, loss_val_list)
+    plt.xlabel("Steps")
+    plt.ylabel("Loss")
+    plt.savefig(os.path.join(args.workdir, 'model_fold{}/minimization_fold{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
 
 if __name__ == '__main__':
