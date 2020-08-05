@@ -182,6 +182,7 @@ def main(args):
             
             # bbb
             bbb += tf.reduce_sum(proc_w**2)
+            logger.info("\n\nBBB: {}".format(bbb))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -201,7 +202,7 @@ def main(args):
         # Normalization uncertainties
         sys = 0.0
         for n in nuisances:
-            sys += tf.sqrt(bbb)
+            sys += bbb
 
         # Expectations
         obs = sig + bkg
