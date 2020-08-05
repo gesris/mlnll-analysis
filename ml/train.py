@@ -201,7 +201,7 @@ def main(args):
         # Normalization uncertainties
         sys = 0.0
         for n in nuisances:
-            sys += bbb
+            sys += tf.sqrt(bbb)
 
         # Expectations
         obs = sig + bkg
