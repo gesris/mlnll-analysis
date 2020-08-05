@@ -5,6 +5,8 @@
 WORKDIR=$1
 ANALYSISDIR=$2
 
+printf "\n\n## -----------  Running Condor Loop  ------------ ##\n\n"
+
 run=true
 step=0
 

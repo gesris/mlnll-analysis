@@ -175,9 +175,13 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
+        bbb = tf.constant(2.0, tf.float32)
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
+            
+            # bbb
+            bbb += tf.reduce_sum(proc_w**2)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -197,7 +201,7 @@ def main(args):
         # Normalization uncertainties
         sys = 0.0
         for n in nuisances:
-            pass
+            sys += bbb
 
         # Expectations
         obs = sig + bkg
