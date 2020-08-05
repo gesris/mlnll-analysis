@@ -4,6 +4,7 @@
 
 if uname -a | grep ekpdeepthought -q
 then
+    echo 1
     export CUDA_VISIBLE_DEVICES='3'
     source /home/wunsch/workspace/py3_venv_ubuntu/bin/activate
     source /home/wunsch/workspace/root/build_ubuntu/bin/thisroot.sh
@@ -14,6 +15,7 @@ then
     export PATH=/usr/local/cuda-10.0/bin:$PATH
     export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64:$LD_LIBRARY_PATH
 else
+    echo 2
     source /cvmfs/sft.cern.ch/lcg/views/LCG_96bpython3/x86_64-centos7-gcc9-opt/setup.sh
     source /home/wunsch/workspace/root/build_own_python/bin/thisroot.sh
     alias python=/home/wunsch/workspace/python/install/bin/python3.6
