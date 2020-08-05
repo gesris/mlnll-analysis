@@ -19,6 +19,5 @@ else
     alias python=/home/wunsch/workspace/python/install/bin/python3.6
     export PYTHONPATH=/home/gristo/.local/lib/python3.6/site-packages/:$PYTHONPATH
 fi
-alias python=/home/wunsch/workspace/python/install/bin/python3.6
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$PWD/Dumbledraw:$PYTHONPATH
