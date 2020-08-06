@@ -185,10 +185,12 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             
             # bbb
-            if name in ['ztt', 'zl', 'w', 'tt', 'vv']:
-                name = 0
-                name += tf.reduce_sum(proc_w**2)
-                nuisances[name] = name
+            #if name in ['ztt', 'zl', 'w', 'tt', 'vv']:
+            #    name = 0
+            #    name += tf.reduce_sum(proc_w**2)
+            #    nuisances[name] = name
+            #bbb += tf.reduce_sum(proc_w * proc_w)
+        #nuisances["bbb"] = bbb
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -208,7 +210,8 @@ def main(args):
         # Normalization uncertainties
         sys = 0.0
         for n in nuisances:
-            sys += tf.sqrt(nuisances[n])
+            #sys += tf.sqrt(nuisances[n])
+            pass
 
         # Expectations
         obs = sig + bkg
