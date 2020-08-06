@@ -118,7 +118,7 @@ def model(x, num_variables, num_classes, fold, reuse=False):
     return logits, f, [w1, b1, w2, b2, w3, b3]
 """
 
-def model(x, num_variables, fold, reuse=False):
+def model(x, num_variables, num_classes, fold, reuse=False):
     hidden_nodes = 100
     with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
         w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer())
