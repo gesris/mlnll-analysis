@@ -13,6 +13,7 @@ tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 import tensorflow_probability as tfp
 
+import matplotlib.pyplot as plt
 
 import logging
 logger = logging.getLogger('')
