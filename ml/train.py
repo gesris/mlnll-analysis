@@ -181,8 +181,9 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             
             # bbb
-            bbb += tf.reduce_sum(proc_w**2)
-        nuisances["bbb"] = bbb
+            name = 0
+            name += tf.reduce_sum(proc_w**2)
+            nuisances[name] = name
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
