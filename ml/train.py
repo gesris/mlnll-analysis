@@ -2,9 +2,11 @@ import os
 import argparse
 import pickle
 
-import ROOT
 import numpy as np
 np.random.seed(1234)
+import matplotlib
+import matplotlib.pyplot as plt
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from utils import config as cfg
@@ -13,8 +15,8 @@ tf.disable_v2_behavior()
 tf.set_random_seed(1234)
 import tensorflow_probability as tfp
 
-import matplotlib
-import matplotlib.pyplot as plt
+
+import ROOT
 
 import logging
 logger = logging.getLogger('')
