@@ -4,8 +4,8 @@ import pickle
 
 import numpy as np
 np.random.seed(1234)
-#import matplotlib
-#import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
