@@ -184,10 +184,10 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
-        with tf.Session() as sess:
-            logger.info("\n\nBIN {}:".format(i))
-            for entry in procs_sumw2:
-                logger.info("\n{}: {}".format(entry, procs_sumw2[entry].eval()))
+        logger.info("\n\nBIN {}:".format(i))
+        for entry in procs_sumw2:
+            logger.info("\n{}: {}".format(entry, tf.print(procs_sumw2[entry])))
+
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
