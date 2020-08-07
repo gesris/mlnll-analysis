@@ -186,7 +186,7 @@ def main(args):
 
         logger.info("\n\nBIN {}:".format(i))
         for entry in procs_sumw2:
-            logger.info("\n{}: {}".format(entry, tf.print(procs_sumw2[entry])))
+            logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
