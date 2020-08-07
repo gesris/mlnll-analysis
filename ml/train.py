@@ -184,8 +184,9 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
+        logger.info("\n\nBIN {}:".format(i))
         for entry in procs_sumw2:
-            logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
+            logger.info("\n{}: {}".format(entry, tf.Session().run(procs_sumw2[entry])))
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
@@ -254,7 +255,7 @@ def main(args):
     tolerance = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 100
+    warmup_steps = 0
 
     steps_list = []
     loss_train_list = []
