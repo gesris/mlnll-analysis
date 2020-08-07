@@ -98,25 +98,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
 
     return xs, ys, ws
 
-"""
-def model(x, num_variables, num_classes, fold, reuse=False):
-    hidden_nodes = 100
-    with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
-        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
-        b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer(), dtype=tf.float64)
-        w2 = tf.get_variable('w2', shape=(hidden_nodes, hidden_nodes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
-        b2 = tf.get_variable('b2', shape=(hidden_nodes), initializer=tf.constant_initializer(), dtype=tf.float64)
-        w3 = tf.get_variable('w3', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
-        b3 = tf.get_variable('b3', shape=(num_classes), initializer=tf.constant_initializer(), dtype=tf.float64)
-
-    l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
-    l2 = tf.tanh(tf.add(b2, tf.matmul(l1, w2)))
-    logits = tf.add(b3, tf.matmul(l2, w3))
-    f = tf.sigmoid(logits)
-    f = tf.squeeze(f)
-
-    return logits, f, [w1, b1, w2, b2, w3, b3]
-"""
 
 def model(x, num_variables, num_classes, fold, reuse=False):
     hidden_nodes = 100
@@ -186,7 +167,7 @@ def main(args):
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     theta = tf.constant(0.0, tf.float64)
-    nuisances = {}
+    nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
     zero = tf.constant(0.0, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
@@ -203,6 +184,8 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
+        for entry in procs_sumw2:
+            logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
@@ -224,7 +207,7 @@ def main(args):
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         theta = tf.constant(0.0, tf.float64)
-        nuisances["theta"] = theta
+        nuisance_param["bbb"] = theta
         sys = theta * shift
 
         # Expectations
@@ -235,10 +218,10 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
 
     # Nuisance constraints
-    for n in nuisances:
+    for n in nuisance_param:
         nll -= tfp.distributions.Normal(
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                ).log_prob(nuisances[n])
+                ).log_prob(nuisance_param[n])
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -248,7 +231,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
+    loss_fullnll = get_constraint(nll, [mu] + [nuisance_param[n] for n in nuisance_param])
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
