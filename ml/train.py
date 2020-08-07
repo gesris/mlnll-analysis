@@ -185,6 +185,7 @@ def main(args):
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
+    theta = tf.constant(0.0, tf.float64)
     nuisances = {}
     epsilon = tf.constant(1e-9, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
@@ -201,12 +202,12 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             
             # bbb
-            if name in ['ztt', 'zl', 'w', 'tt', 'vv']:
-                bbb_ = 0
-                bbb_ += tf.reduce_sum(proc_w**2)
-                nuisances[name] = bbb_
-            #bbb += tf.reduce_sum(proc_w * proc_w)
-        #nuisances["bbb"] = bbb
+            if name in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+                #bbb_ = 0
+                #bbb_ += tf.reduce_sum(proc_w**2)
+                #nuisances[name] = bbb_
+                bbb += tf.reduce_sum(proc_w * proc_w)
+        nuisances["bbb"] = bbb
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -231,7 +232,7 @@ def main(args):
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + sys
+        exp = mu * sig + bkg + theta * sys
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -250,7 +251,8 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
+    #loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
+    loss_fullnll = get_constraint(nll, [mu, theta])
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
