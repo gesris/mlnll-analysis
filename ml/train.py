@@ -201,10 +201,10 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             
             # bbb
-            #if name in ['ztt', 'zl', 'w', 'tt', 'vv']:
-                #bbb_ = 0
-                #bbb_ += tf.reduce_sum(proc_w**2)
-                #nuisances[name] = bbb_
+            if name in ['ztt', 'zl', 'w', 'tt', 'vv']:
+                bbb_ = 0
+                bbb_ += tf.reduce_sum(proc_w**2)
+                nuisances[name] = bbb_
             #bbb += tf.reduce_sum(proc_w * proc_w)
         #nuisances["bbb"] = bbb
 
@@ -226,8 +226,8 @@ def main(args):
         # Normalization uncertainties
         sys = 0.0
         for n in nuisances:
-            #sys += tf.sqrt(nuisances[n])
-            pass
+            sys += tf.sqrt(nuisances[n])
+            #pass
 
         # Expectations
         obs = sig + bkg
