@@ -188,6 +188,7 @@ def main(args):
     theta = tf.constant(0.0, tf.float64)
     nuisances = {}
     epsilon = tf.constant(1e-9, tf.float64)
+    zero = tf.constant(0.0, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -228,7 +229,7 @@ def main(args):
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + theta * sys
+        exp = mu * sig + bkg + sys
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -247,8 +248,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    #loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
-    loss_fullnll = get_constraint(nll, [mu, nuisances["theta"]])
+    loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
