@@ -223,7 +223,7 @@ def main(args):
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         theta = tf.constant(0.0, tf.float64)
-        nuisances.append(theta)
+        nuisances["theta"] = theta
         sys = theta * shift
 
         # Expectations
