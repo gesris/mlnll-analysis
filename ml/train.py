@@ -247,7 +247,8 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
+    #loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
+    loss_fullnll = get_constraint(nll, [mu, nuisances["theta"]])
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
@@ -298,6 +299,9 @@ def main(args):
             if is_warmup:
                 logger.info('Warmup: {} / {}'.format(step, warmup_steps))
             else:
+                steps_list.append(step)
+                loss_train_list.append(loss_train)
+                loss_val_list.append(loss_val)
                 if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                     min_loss = loss_val
                     patience_count = patience
@@ -309,10 +313,6 @@ def main(args):
                 if patience_count == 0:
                     logger.info('Stop training')
                     break
-        
-        steps_list.append(step)
-        loss_train_list.append(loss_train)
-        loss_val_list.append(loss_val)
         step += 1
 
     ## Plot minimization of loss
