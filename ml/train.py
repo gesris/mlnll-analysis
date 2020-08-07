@@ -196,18 +196,11 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        bbb = 0
+        procs_sumw2 = {}
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            
-            # bbb
-            if name in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-                #bbb_ = 0
-                #bbb_ += tf.reduce_sum(proc_w**2)
-                #nuisances[name] = bbb_
-                bbb += tf.reduce_sum(proc_w * proc_w)
-        nuisances["bbb"] = bbb
+            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -224,11 +217,14 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # Normalization uncertainties
-        sys = 0.0
-        for n in nuisances:
-            sys += tf.sqrt(nuisances[n])
-            #pass
+        # Bin by bin uncertainties
+        shift = 0.0
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+            shift += procs_sumw2[p]
+        shift = tf.sqrt(shift)
+        theta = tf.constant(0.0, tf.float64)
+        nuisances.append(theta)
+        sys = theta * shift
 
         # Expectations
         obs = sig + bkg
@@ -252,7 +248,7 @@ def main(args):
         return constraint
 
     #loss_fullnll = get_constraint(nll, [mu] + [nuisances[n] for n in nuisances])
-    loss_fullnll = get_constraint(nll, [mu, theta])
+    loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
