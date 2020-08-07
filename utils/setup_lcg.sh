@@ -4,7 +4,7 @@
 
 if uname -a | grep ekpdeepthought -q
 then
-    export CUDA_VISIBLE_DEVICES='2'
+    export CUDA_VISIBLE_DEVICES='3'
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
     source /home/wunsch/workspace/root/build_ubuntu/bin/thisroot.sh
     export PATH=/usr/local/cuda-8.0/bin:$PATH
