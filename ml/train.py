@@ -214,11 +214,12 @@ def main(args):
         shift = tf.sqrt(shift)
         theta = tf.constant(0.0, tf.float64)
         nuisance_param["bbb"] = theta
-        sys = theta * shift
+        #sys = theta * shift
+        sys = zero
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + sys
+        exp = mu * sig + bkg + sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
