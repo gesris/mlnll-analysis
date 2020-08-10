@@ -129,7 +129,7 @@ def main(args):
     
     bincontent_ = session.run([bincontent], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
-    logger.info("\n\nBINCONTENT: {}".format(bincontent_['1']))
+    logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
     def plot(bincontent, bins, bins_center):
         plt.figure(figsize=(7, 6))
