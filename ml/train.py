@@ -204,7 +204,7 @@ def main(args):
             bkg += procs[p]
         
         for element in procs:
-            logger.info("\n\nBIN CONTENT".format(float(procs[element])))
+            logger.info("\n\nBIN CONTENT".format(procs[element].item()))
 
         # Bin by bin uncertainties
         shift = 0.0
