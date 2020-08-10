@@ -133,16 +133,20 @@ def main(args):
 
     def plot(bincontent, bins, bins_center):
         plt.figure(figsize=(7, 6))
-        for element in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+        color = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
+        for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
             content = []
+            # bincontent is an array with a single entry as the whole dictionary, therefore bincontent[0]
             for id, classes in bincontent[0].items():
                 content.append(classes[element])
-            if element in ['ggh', 'qqh']:
-                plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color="C0")
-                plt.plot([0], [0], lw=2, color="C0", label=element)
-            else:
-                plt.hist(bins_center, weights= content, bins= bins, ls="--", histtype="step", lw=2)
-                plt.plot([0], [0], lw=2, ls="--", label=element)
+            #if element in ['ggh', 'qqh']:
+            #    plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color="C0")
+            #    plt.plot([0], [0], lw=2, color="C0", label=element)
+            #else:
+            #    plt.hist(bins_center, weights= content, bins= bins, ls="--", histtype="step", lw=2)
+            #    plt.plot([0], [0], lw=2, ls="--", label=element)
+            plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color=color[i])
+            plt.plot([0], [0], lw=2, color=color[i], label=element)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
         plt.ylabel("Counts")
