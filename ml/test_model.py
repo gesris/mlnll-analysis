@@ -65,8 +65,8 @@ def plot(process, bins, bins_center):
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
-            tf.cast(x > down, tf.float32) * tf.cast(x <= up, tf.float32),
-            tf.float32)
+            tf.cast(x > down, tf.float64) * tf.cast(x <= up, tf.float64),
+            tf.float64)
     mask = tf.squeeze(mask)
 
     def grad(dy):
