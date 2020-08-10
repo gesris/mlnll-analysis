@@ -223,7 +223,7 @@ def main(args):
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-    print(bincontent)
+    logger.info("BINCONTENT: {}".format(bincontent))
     # Nuisance constraints
     for n in nuisance_param:
         nll -= tfp.distributions.Normal(
