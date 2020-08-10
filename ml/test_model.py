@@ -131,7 +131,7 @@ def main(args):
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
     
 
-def plot(bincontent, bins, bins_center):
+    def plot(bincontent, bins, bins_center):
         plt.figure(figsize=(7, 6))
         for element in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             content = []
@@ -149,6 +149,7 @@ def plot(bincontent, bins, bins_center):
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
+    plot(bincontent_, bins, bins_center)
 
 
 if __name__ == '__main__':
