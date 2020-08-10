@@ -185,9 +185,9 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
-        #logger.info("\n\nBIN {}:".format(i))
-        #for entry in procs_sumw2:
-        #    logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
+        logger.info("\n\nBIN {}:".format(i))
+        for entry in procs_sumw2:
+            logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -266,8 +266,6 @@ def main(args):
     loss_train_list = []
     loss_val_list = []
 
-    bincontent_ph = tf.placeholder(tf.float64)
-    bincontent_array = bincontent_ph
     while True:
         if step < warmup_steps:
             loss = loss_statsonly
@@ -278,9 +276,8 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, bincontent_ = session.run([loss, minimize, bincontent_array],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, bincontent_ph: bincontent})
-        logger.info("\n\nBINCONTENT: {}".format(bincontent_))
+        loss_train, _ = session.run([loss, minimize],
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
