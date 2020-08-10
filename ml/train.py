@@ -170,7 +170,7 @@ def main(args):
     nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
     zero = tf.constant(0.0, tf.float64)
-    bincontent = {}
+    bincontent = []
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -184,11 +184,10 @@ def main(args):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
-            logger.info("{}: BINCONTENT: {}".format(name, procs[name]))
 
-        logger.info("\n\nBIN {}:".format(i))
-        for entry in procs_sumw2:
-            logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
+        #logger.info("\n\nBIN {}:".format(i))
+        #for entry in procs_sumw2:
+        #    logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -204,8 +203,10 @@ def main(args):
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-        
-        bincontent[i] = procs
+
+        bincontent.append([i])
+        for p in procs:
+            bincontent.append([procs[p]])
 
         # Bin by bin uncertainties
         shift = 0.0
@@ -222,7 +223,7 @@ def main(args):
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-
+    print(bincontent)
     # Nuisance constraints
     for n in nuisance_param:
         nll -= tfp.distributions.Normal(
