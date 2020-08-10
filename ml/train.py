@@ -223,8 +223,6 @@ def main(args):
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-    for i in range(0, len(bincontent[:])):
-        logger.info("BINCONTENT: {}".format(bincontent[i]))
     # Nuisance constraints
     for n in nuisance_param:
         nll -= tfp.distributions.Normal(
@@ -278,8 +276,10 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, bincontent_ = session.run([loss, minimize, bincontent],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+        for i in range(0, len(bincontent_[:])):
+            logger.info("BINCONTENT: {}".format(bincontent_[i]))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
