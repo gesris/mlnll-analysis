@@ -202,7 +202,7 @@ def main(args):
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-            logger.infor("\n\nBKG: {}".format(bkg))
+            logger.info("\n\nBKG: {}".format(bkg))
         
 
         # Bin by bin uncertainties
