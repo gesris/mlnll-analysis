@@ -133,8 +133,8 @@ def main(args):
 
     def plot(bincontent, bins, bins_center):
         plt.figure(figsize=(7, 6))
-        for n in process:
-            plt.hist(bins_center, weights= process[n], bins= bins, histtype="step", lw=2, color="C0")
+        for n in bincontent:
+            plt.hist(bins_center, weights= bincontent[n], bins= bins, histtype="step", lw=2, color="C0")
             plt.plot([0], [0], lw=2, color="C0", label=n)
 
         plt.plot([0], [0], lw=2, color="C0", label="Htt")
