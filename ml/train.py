@@ -206,7 +206,7 @@ def main(args):
 
         bincontent.append([i])
         for p in procs:
-            bincontent.append([procs[p]])
+            bincontent[i].append([procs[p]])
 
         # Bin by bin uncertainties
         shift = 0.0
