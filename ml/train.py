@@ -278,8 +278,7 @@ def main(args):
 
         loss_train, _, bincontent_ = session.run([loss, minimize, bincontent],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
-        for i in range(0, len(bincontent_[:])):
-            logger.info("BINCONTENT: {}".format(bincontent_[i]))
+        logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
