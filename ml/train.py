@@ -185,9 +185,9 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
-        logger.info("\n\nBIN {}:".format(i))
-        for entry in procs:
-            logger.info("\n{}: {}".format(entry, procs[entry]))
+        #logger.info("\n\nBIN {}:".format(i))
+        #for entry in procs:
+        #    logger.info("\n{}: {}".format(entry, procs[entry]))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -276,8 +276,13 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, procs_ = session.run([loss, minimize, procs],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+
+        for i in range(8):
+            logger.info("\n\nBIN {}:".format(i))
+            for entry in procs_:
+                logger.info("\n{}: {}".format(entry, procs_[entry]))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
