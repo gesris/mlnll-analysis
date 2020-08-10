@@ -186,8 +186,8 @@ def main(args):
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
         logger.info("\n\nBIN {}:".format(i))
-        for entry in procs_sumw2:
-            logger.info("\n{}: {}".format(entry, procs_sumw2[entry]))
+        for entry in procs:
+            logger.info("\n{}: {}".format(entry, procs[entry]))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
