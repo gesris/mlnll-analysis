@@ -266,6 +266,8 @@ def main(args):
     loss_train_list = []
     loss_val_list = []
 
+    bincontent_ph = tf.placeholder(tf.float64)
+    bincontent_array = bincontent_ph
     while True:
         if step < warmup_steps:
             loss = loss_statsonly
@@ -276,8 +278,8 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, bincontent_ = session.run([loss, minimize, bincontent],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+        loss_train, _, bincontent_ = session.run([loss, minimize, bincontent_array],
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, bincontent_ph: bincontent})
         logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
         if step % validation_steps == 0:
