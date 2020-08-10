@@ -199,10 +199,12 @@ def main(args):
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
+            #bincontent.append(sig)
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
+            #bincontent.append(bkg)
 
         bincontent.append([i])
         for p in procs:
@@ -276,13 +278,14 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, procs_ = session.run([loss, minimize, procs],
+        loss_train, _, procs_ = session.run([loss, minimize, bincontent],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
 
-        for i in range(8):
-            logger.info("\n\nBIN {}:".format(i))
-            for entry in procs_:
-                logger.info("\n{}: {}".format(entry, procs_[entry]))
+        logger.info("\n{}".format(procs_))
+        #for i in range(8):
+        #    logger.info("\n\nBIN {}:".format(i))
+        #    for entry in procs_:
+        #        logger.info("\n{}: {}".format(entry, procs_[entry]))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
