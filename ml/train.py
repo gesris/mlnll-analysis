@@ -183,6 +183,7 @@ def main(args):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+            logger.info("\n\n{}: BINCONTENT: {}".format(name, procs[name]))
 
         logger.info("\n\nBIN {}:".format(i))
         for entry in procs_sumw2:
@@ -202,7 +203,6 @@ def main(args):
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-            logger.info("\n\nBKG: {}".format(bkg))
         
 
         # Bin by bin uncertainties
