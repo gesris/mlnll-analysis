@@ -198,11 +198,11 @@ def main(args):
         # Nominal signal and background
         sig = 0
         for p in ['ggh', 'qqh']:
-            sig += procs[p]
+            sig += procs[p] * 2.6
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-            bkg += procs[p]
+            bkg += procs[p] * 2.6
 
         # Bin by bin uncertainties
         shift = 0.0
