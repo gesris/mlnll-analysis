@@ -199,16 +199,13 @@ def main(args):
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
-            #bincontent.append(sig)
+            bincontent.append(sig)
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-            #bincontent.append(bkg)
+            bincontent.append(bkg)
 
-        bincontent.append([i])
-        for p in procs:
-            bincontent[i].append([procs[p]])
 
         # Bin by bin uncertainties
         shift = 0.0
