@@ -199,13 +199,10 @@ def main(args):
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
-            bincontent.append(sig)
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-            bincontent.append(bkg)
-
 
         # Bin by bin uncertainties
         shift = 0.0
@@ -222,6 +219,8 @@ def main(args):
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+    bincontent.append(sig)
+    bincontent.append(bkg)
     # Nuisance constraints
     for n in nuisance_param:
         nll -= tfp.distributions.Normal(
