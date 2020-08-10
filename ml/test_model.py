@@ -130,12 +130,12 @@ def main(args):
     bincontent_ = session.run([bincontent], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
     
-    for binnumber in bincontent_:
-        logger.info("\n BIN: {}".format(binnumber))
-        for classes in bincontent_[binnumber]:
-            logger.info("{}: {}".format(classes, bincontent_[binnumber][classes]))
+    #for binnumber in bincontent_:
+    #    logger.info("\n BIN: {}".format(binnumber))
+    #    for classes in bincontent_[binnumber]:
+    #        logger.info("{}: {}".format(classes, bincontent_[binnumber][classes]))
     
-    #logger.info("\n\nBINCONTENT: {}".format(bincontent_))
+    logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
     def plot(bincontent, bins, bins_center):
         plt.figure(figsize=(7, 6))
