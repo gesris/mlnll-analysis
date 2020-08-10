@@ -202,9 +202,8 @@ def main(args):
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
+            logger.infor("\n\nBKG: {}".format(bkg))
         
-        for element in procs:
-            logger.info("\n\nBIN CONTENT".format(procs[element].eval(session=tf.Session())))
 
         # Bin by bin uncertainties
         shift = 0.0
