@@ -130,10 +130,10 @@ def main(args):
     bincontent_ = session.run([bincontent], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
     
-    for binnumber, classes in bincontent_.items():
-        logger.info("\n BIN: {}".format(binnumber))
-        for content in classes:
-            logger.info("{}: {}".format(content, classes[content]))
+    for binnumber in bincontent_:
+        logger.info("\n BIN: {}".format(bincontent_[binnumber]))
+        for classes in bincontent_[binnumber]:
+            logger.info("{}: {}".format(classes, bincontent_[binnumber][classes]))
     
     #logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
