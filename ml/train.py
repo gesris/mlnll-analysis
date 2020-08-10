@@ -169,9 +169,6 @@ def main(args):
     theta = tf.constant(0.0, tf.float64)
     nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
-    zero = tf.constant(0.0, tf.float64)
-    signal = []
-    background = []
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -186,10 +183,6 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
             procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
 
-        #logger.info("\n\nBIN {}:".format(i))
-        #for entry in procs:
-        #    logger.info("\n{}: {}".format(entry, procs[entry]))
-
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
@@ -200,12 +193,10 @@ def main(args):
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
-        signal.append(sig)
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-        background.append(bkg)
 
         # Bin by bin uncertainties
         shift = 0.0
@@ -214,8 +205,7 @@ def main(args):
         shift = tf.sqrt(shift)
         theta = tf.constant(0.0, tf.float64)
         nuisance_param["bbb"] = theta
-        #sys = theta * shift
-        sys = zero
+        sys = theta * shift
 
         # Expectations
         obs = sig + bkg
@@ -276,15 +266,8 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, signal_, background_ = session.run([loss, minimize, signal, background],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
-
-        logger.info("\n{}".format(signal_))
-        logger.info("\n{}".format(background_))
-        #for i in range(8):
-        #    logger.info("\n\nBIN {}:".format(i))
-        #    for entry in procs_:
-        #        logger.info("\n{}: {}".format(entry, procs_[entry]))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
