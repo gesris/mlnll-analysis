@@ -82,9 +82,9 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
 
     bins = np.array(cfg.analysis_binning)
-    #zero = tf.constant(0.0, tf.float64)
-    signal = []
-    background = []
+    bins_center = []
+    for left, right in zip(bins[1:], bins[:-1]):
+        bins_center.append(left + (right - left) / 2)
 
     bincontent = {}
 
@@ -114,13 +114,13 @@ def main(args):
         for p in ['ggh', 'qqh']:
             sig += procs[p]
             counts[p] = procs[p]
-        signal.append(sig)
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
             counts[p] = procs[p]
-        background.append(bkg)
+
+        # Add total content to nested dictionary
         bincontent[i] = counts
     
     session = tf.Session(config=config)
@@ -130,30 +130,25 @@ def main(args):
     bincontent_ = session.run([bincontent], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
     
-    #for binnumber in bincontent_:
-    #    logger.info("\n BIN: {}".format(binnumber))
-    #    for classes in bincontent_[binnumber]:
-    #        logger.info("{}: {}".format(classes, bincontent_[binnumber][classes]))
-    
-    logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
-    def plot(bincontent, bins, bins_center):
+def plot(bincontent, bins, bins_center):
         plt.figure(figsize=(7, 6))
-        for n in bincontent:
-            plt.hist(bins_center, weights= bincontent[n], bins= bins, histtype="step", lw=2, color="C0")
-            plt.plot([0], [0], lw=2, color="C0", label=n)
-
-        plt.plot([0], [0], lw=2, color="C0", label="Htt")
-        plt.plot([0], [0], lw=2, color="C1", label="Ztt")
-        plt.plot([0], [0], lw=2, color="C2", label="W")
-        plt.plot([0], [0], lw=2, color="C3", label="ttbar")
-        plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
-        plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down")
+        for element in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+            content = []
+            for id, classes in bincontent.items():
+                content.append(classes[element])
+            if element in ['ggh', 'qqh']:
+                plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color="C0")
+                plt.plot([0], [0], lw=2, color="C0", label=element)
+            else:
+                plt.hist(bins_center, weights= content, bins= bins, ls="--", histtype="step", lw=2)
+                plt.plot([0], [0], lw=2, ls="--", label=element)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
         plt.ylabel("Counts")
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
+
 
 
 if __name__ == '__main__':
