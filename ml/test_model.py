@@ -37,31 +37,6 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def plot(process, bins, bins_center):
-    plt.figure(figsize=(7, 6))
-    for n in process:
-        plt.hist(bins_center, weights= process[n], bins= bins, histtype="step", lw=2, color="C0")
-        plt.plot([0], [0], lw=2, color="C0", label=n)
-
-    #plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2, color="C0")
-    #plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2, color="C1")
-    #plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, color="C2")
-    #plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, color="C3")
-    #plt.hist(bins_center, weights= background[3], bins= bins, histtype="step", lw=2, ls=':', color="C0")
-    #plt.hist(bins_center, weights= background[4], bins= bins, histtype="step", lw=2, ls='--', color="C0")
-    plt.plot([0], [0], lw=2, color="C0", label="Htt")
-    plt.plot([0], [0], lw=2, color="C1", label="Ztt")
-    plt.plot([0], [0], lw=2, color="C2", label="W")
-    plt.plot([0], [0], lw=2, color="C3", label="ttbar")
-    plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
-    plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down")
-    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-    plt.xlabel("$f$")
-    plt.ylabel("Counts")
-    plt.yscale('log')
-    plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
-
-
 @tf.custom_gradient
 def count_masking(x, up, down):
     mask = tf.cast(
@@ -154,9 +129,26 @@ def main(args):
     
     bincontent_ = session.run([bincontent], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
-    logger.info("\n\nBINCONTENT: {}".format(bincontent_))
+    logger.info("\n\nBINCONTENT: {}".format(bincontent_[1, 'ggh']))
 
-    #plot(bins, bins_center)
+    def plot(bincontent, bins, bins_center):
+        plt.figure(figsize=(7, 6))
+        for n in process:
+            plt.hist(bins_center, weights= process[n], bins= bins, histtype="step", lw=2, color="C0")
+            plt.plot([0], [0], lw=2, color="C0", label=n)
+
+        plt.plot([0], [0], lw=2, color="C0", label="Htt")
+        plt.plot([0], [0], lw=2, color="C1", label="Ztt")
+        plt.plot([0], [0], lw=2, color="C2", label="W")
+        plt.plot([0], [0], lw=2, color="C3", label="ttbar")
+        plt.plot([0], [0], lw=2, ls=':', color="C0", label="Htt Up")
+        plt.plot([0], [0], lw=2, ls='--', color="C0", label="Htt Down")
+        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+        plt.xlabel("$f$")
+        plt.ylabel("Counts")
+        plt.yscale('log')
+        plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
