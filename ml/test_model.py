@@ -37,14 +37,18 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
-def plot(signal, background, category, bins, bins_center):
+def plot(process, bins, bins_center):
     plt.figure(figsize=(7, 6))
-    plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2, color="C0")
-    plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2, color="C1")
-    plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, color="C2")
-    plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, color="C3")
-    plt.hist(bins_center, weights= background[3], bins= bins, histtype="step", lw=2, ls=':', color="C0")
-    plt.hist(bins_center, weights= background[4], bins= bins, histtype="step", lw=2, ls='--', color="C0")
+    for n in process:
+        plt.hist(bins_center, weights= process[n], bins= bins, histtype="step", lw=2, color="C0")
+        plt.plot([0], [0], lw=2, color="C0", label=n)
+
+    #plt.hist(bins_center, weights= signal, bins= bins, histtype="step", lw=2, color="C0")
+    #plt.hist(bins_center, weights= background[0], bins= bins, histtype="step", lw=2, color="C1")
+    #plt.hist(bins_center, weights= background[1], bins= bins, histtype="step", lw=2, color="C2")
+    #plt.hist(bins_center, weights= background[2], bins= bins, histtype="step", lw=2, color="C3")
+    #plt.hist(bins_center, weights= background[3], bins= bins, histtype="step", lw=2, ls=':', color="C0")
+    #plt.hist(bins_center, weights= background[4], bins= bins, histtype="step", lw=2, ls='--', color="C0")
     plt.plot([0], [0], lw=2, color="C0", label="Htt")
     plt.plot([0], [0], lw=2, color="C1", label="Ztt")
     plt.plot([0], [0], lw=2, color="C2", label="W")
@@ -78,152 +82,79 @@ def count_masking(x, up, down):
 
 
 def main(args):
-    inv_fold = [1, 0][args.fold]
-    #x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold,
-    #                        make_categorical=True, use_class_weights=False)
-    x, y, w, mig01 = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(inv_fold)), cfg.ml_classes, inv_fold)
-
-
-    # Magnify Mig01 to have a bigger impact on training
-    #mean_value = np.mean(mig01)
-    #mig01 = (mig01 - mean_value) * 10 + mean_value
-
-    # Process Mig01 to have same number of entries as other variables
-    mig01 = np.append(mig01, np.ones(len(w) - len(mig01)))
-    
-    preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
-    x_preproc = preproc.transform(x)
-
-    ####
-    #### Prepare masking
-    ####
-
-    y_array = np.array(y)
+    classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+                            use_class_weights=False, make_categorical=False)
 
     fold_factor = 2.
-    logger.info("\n\nHTT SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 0] == 1])))
-    logger.info("\n\nZTT SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 1] == 1])))
-    logger.info("\n\nW SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 2] == 1])))
-    logger.info("\n\nTTBAR SUMWEIGHTS: {}".format(fold_factor * np.sum(w[y_array[:, 3] == 1])))
+    w = w * fold_factor    
 
-    
-    # only possible, wher make_categorical=False
-    #Htt_mask_feed = np.where(y_array == 0, 1, 0)
-    #Ztt_mask_feed = np.where(y_array == 1, 1, 0)
-    #W_mask_feed = np.where(y_array == 2, 1, 0)
-    #ttbar_mask_feed = np.where(y_array == 3, 1, 0)
-
-    # oly possible, when make_categorical=True
-    Htt_mask_feed = y_array[:, 0]
-    Ztt_mask_feed = y_array[:, 1]
-    W_mask_feed = y_array[:, 2]
-    ttbar_mask_feed = y_array[:, 3]
-
-    x_ph = tf.placeholder(tf.float32)
-    w_ph = tf.placeholder(tf.float32)
-    mig01_ph = tf.placeholder(tf.float32)
-    fold_scale = tf.placeholder(tf.float32)
-    Htt_mask = tf.placeholder(tf.float32)
-    Ztt_mask = tf.placeholder(tf.float32)
-    W_mask = tf.placeholder(tf.float32)
-    ttbar_mask = tf.placeholder(tf.float32)
+    preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
+    x_preproc = preproc.transform(x)
 
     
     ####
     #### Load model
     ####
 
-    _, f = model(x_ph, len(cfg.ml_variables), args.fold)
+    x_ph = tf.placeholder(tf.float64, shape=(None,len(cfg.ml_variables)))
+    _, f, _ = model(x_ph, len(cfg.ml_variables), 1, args.fold)
     path = tf.train.latest_checkpoint(os.path.join(args.workdir, 'model_fold{}'.format(args.fold)))
     logger.debug('Load model {}'.format(path))
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
     
-    bins = cfg.analysis_binning
-    upper_edges, lower_edges = bins[1:], bins[:-1]
-    bins_center = []
-    for i in range(0, len(bins) - 1):
-        bins_center.append(bins[i] + (bins[i + 1] - bins[i]) / 2)
-    background_category = ['Ztt', 'W', 'ttbar', 'Htt Up', 'Htt Down']
-    Htt = []
-    Htt_up = []
-    Htt_down = []
-    Ztt = []
-    W = []
-    ttbar = []
+    y_ph = tf.placeholder(tf.float64, shape=(None,))
+    w_ph = tf.placeholder(tf.float64, shape=(None,))
+
+    bins = np.array(cfg.analysis_binning)
+    #zero = tf.constant(0.0, tf.float64)
+    signal = []
+    background = []
+
+    bincontent = {}
+
+    for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
+        logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
+        up = tf.constant(up, tf.float64)
+        down = tf.constant(down, tf.float64)
+
+        # Processes
+        mask = count_masking(f, up, down)
+        procs = {}
+        procs_sumw2 = {}
+        for j, name in enumerate(classes):
+            proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
+            procs[name] = tf.reduce_sum(proc_w)
+            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+
+        # QCD estimation
+        procs['qcd'] = procs['data_ss']
+        for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
+            procs['qcd'] -= procs[p + '_ss']
+        procs['qcd'] = tf.maximum(procs['qcd'], 0)
+
+        # Nominal signal and background
+        sig = 0
+        for p in ['ggh', 'qqh']:
+            sig += procs[p]
+            bincontent[p + i] = procs[p]
+        signal.append(sig)
+
+        bkg = 0
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+            bkg += procs[p]
+            bincontent[p + i] = procs[p]
+        background.append(bkg)
     
-    ttbar_labels = []
-    ttbar_weights = []
-    ttbar_events_noweights = []
-
-    for i, up, down in zip(range(len(upper_edges)), upper_edges, lower_edges):
-        # Bin edges
-        up_ = tf.constant(up, tf.float32)
-        down_ = tf.constant(down, tf.float32)
-        
-        Htt.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale))
-        Htt_up.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale * mig01_ph))
-        Htt_down.append(tf.reduce_sum(count_masking(f, up_, down_) * Htt_mask * w_ph * fold_scale / mig01_ph))
-        Ztt.append(tf.reduce_sum(count_masking(f, up_, down_) * Ztt_mask * w_ph * fold_scale))
-        W.append(tf.reduce_sum(count_masking(f, up_, down_) * W_mask * w_ph * fold_scale))  
-        ttbar.append(tf.reduce_sum(count_masking(f, up_, down_) * ttbar_mask * w_ph * fold_scale))
-
-        ttbar_events_noweights.append(tf.reduce_sum(count_masking(f, up_, down_)))
-        
-    ttbar_labels.append(ttbar_mask)
-    ttbar_weights.append(ttbar_mask * w_ph)
-
-
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
     
-    Htt_counts, Ztt_counts, W_counts, ttbar_counts, Htt_up_counts, Htt_down_counts = session.run([Htt, Ztt, W, ttbar, Htt_up, Htt_down], \
-                        feed_dict={x_ph: x_preproc, w_ph: w, mig01_ph: mig01, \
-                                    Htt_mask: Htt_mask_feed, \
-                                    Ztt_mask: Ztt_mask_feed, \
-                                    W_mask: W_mask_feed, \
-                                    ttbar_mask: ttbar_mask_feed,\
-                                    fold_scale: 2.})
-    # Printing out Histograms
-    logger.info('\nHtt Total:      {:.3f}\
-                \nHtt Up Total:   {:.3f}\
-                \nHtt Down Total: {:.3f}\
-                \nZtt Total:      {:.3f}\
-                \nW Total:        {:.3f}\
-                \nttbar Total:    {:.3f}\n'.format(np.sum(Htt_counts), np.sum(Htt_up_counts), np.sum(Htt_down_counts), np.sum(Ztt_counts), np.sum(W_counts), np.sum(ttbar_counts)))
+    bincontent_ = session.run([bincontent], \
+                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
+    logger.info("\n\nBINCONTENT: {}".format(bincontent_))
 
-    ## Postprozess scaling of nuisance
-    Htt_array = np.array(Htt_counts)
-    Htt_up_array = np.array(Htt_up_counts)
-    Htt_down_array = np.array(Htt_down_counts)
-
-    mig01_scale = 100.
-    diff_up = (Htt_up_array - Htt_array) * mig01_scale
-    diff_down = (Htt_array - Htt_down_array) * mig01_scale
-
-    Htt_up_array = Htt_array + diff_up
-    Htt_down_array = Htt_array - diff_down
-
-    for i in range(0, len(Htt_up_array)):
-        if Htt_up_array[i] < 0:
-            Htt_up_array[i] = 0
-        if Htt_down_array[i] < 0:
-            Htt_down_array[i] = 0
-    logger.info("\n\nHTT UP: {}\nHTT DOWN: {}".format(Htt_up_array, Htt_down_array))
-    
-
-    ### save counts into csv file for scan_cross_check.py
-    # first empty existing file
-    open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), "w").close()
-    with open(os.path.join(args.workdir, 'model_fold{}/hists.csv'.format(args.fold)), "ab") as file:
-        np.savetxt(file, [Htt_counts])
-        np.savetxt(file, [Ztt_counts])
-        np.savetxt(file, [W_counts])
-        np.savetxt(file, [ttbar_counts])
-        np.savetxt(file, [Htt_up_counts])
-        np.savetxt(file, [Htt_down_counts])
-
-    plot(Htt_counts, [Ztt_counts, W_counts, ttbar_counts, Htt_up_array, Htt_down_array], background_category, bins, bins_center)
+    #plot(bins, bins_center)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
