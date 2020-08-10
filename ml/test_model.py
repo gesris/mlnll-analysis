@@ -114,6 +114,7 @@ def main(args):
     bincontent = {}
 
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
+        counts = {}
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
         down = tf.constant(down, tf.float64)
@@ -137,14 +138,15 @@ def main(args):
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
-            bincontent[p + i] = procs[p]
+            counts[p] = procs[p]
         signal.append(sig)
 
         bkg = 0
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
-            bincontent[p + i] = procs[p]
+            counts[p] = procs[p]
         background.append(bkg)
+        bincontent[i] = counts
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
