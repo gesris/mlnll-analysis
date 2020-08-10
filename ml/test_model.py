@@ -131,11 +131,11 @@ def main(args):
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
     
 
-    def plot(bincontent, bins, bins_center):
+    def plot(binconten_, bins, bins_center):
         plt.figure(figsize=(7, 6))
         for element in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             content = []
-            for id, classes in bincontent.items():
+            for id, classes in bincontent_.items():
                 content.append(classes[element])
             if element in ['ggh', 'qqh']:
                 plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color="C0")
