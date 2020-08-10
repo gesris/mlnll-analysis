@@ -131,7 +131,7 @@ def main(args):
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
     
     for binnumber in bincontent_:
-        logger.info("\n BIN: {}".format(bincontent_[binnumber]))
+        logger.info("\n BIN: {}".format(binnumber))
         for classes in bincontent_[binnumber]:
             logger.info("{}: {}".format(classes, bincontent_[binnumber][classes]))
     
