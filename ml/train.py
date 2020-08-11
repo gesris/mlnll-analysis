@@ -213,10 +213,13 @@ def main(args):
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     # Nuisance constraints
-    for n in nuisance_param:
-        nll -= tfp.distributions.Normal(
+    #for n in nuisance_param:
+    #    nll -= tfp.distributions.Normal(
+    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+    #            ).log_prob(nuisance_param[n])
+    nll -= tfp.distributions.Normal(
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                ).log_prob(nuisance_param[n])
+                ).log_prob(theta)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -266,9 +269,8 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, nuisance_ = session.run([loss, minimize, theta],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
-        logger.info("NUISANCE Param: {}".format(nuisance_))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
