@@ -203,7 +203,6 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
-        theta = tf.constant(0.0, tf.float64)
         nuisance_param["bbb"] = theta
         sys = theta * shift
 
