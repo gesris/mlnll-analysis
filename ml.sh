@@ -12,4 +12,4 @@ ml/train.sh $WORKDIR
 
 # Validate model
 # TODO: Missing any validation!
-#ml/test_model.sh $WORKDIR
+ml/test_model.sh $WORKDIR
