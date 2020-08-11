@@ -145,7 +145,7 @@ def main(args):
             #else:
             #    plt.hist(bins_center, weights= content, bins= bins, ls="--", histtype="step", lw=2)
             #    plt.plot([0], [0], lw=2, ls="--", label=element)
-            plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color=color[i])
+            plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
             plt.plot([0], [0], lw=2, color=color[i], label=element)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
