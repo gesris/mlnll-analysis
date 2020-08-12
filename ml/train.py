@@ -269,8 +269,9 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, shift_, sys_ = session.run([loss, minimize, shift, sys],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+        logger.info("\nSHIFT: {} \nSYS: {}".format(shift_, sys_))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
