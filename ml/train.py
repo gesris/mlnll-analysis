@@ -277,7 +277,7 @@ def main(args):
     steps_list = []
 
     for epoch in range(0, 20000):
-        loss_train, _, theta_, sys_ = session.run([loss, minimize, theta, sys],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, w_ph: w_train,\
                             mig01_ph: mig01_train, \
                             Htt_mask: Htt_mask_train, \
@@ -286,7 +286,6 @@ def main(args):
                             ttbar_mask: ttbar_mask_train, \
                             batch_scale: (1 / (1 - test_size)), \
                             fold_scale: 2})
-        logger.info("\nTHETA: {}\nSYS: {}".format(theta_, sys_))
         # Validation
         if step % 10 == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
