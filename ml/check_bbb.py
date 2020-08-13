@@ -13,7 +13,7 @@ def write_hists_names_yields():
         print("{}: {}".format(name, h.GetBinError(1)))
     return hists, hnames,
 
-hists, hnames = write_hists_names_yields()
+write_hists_names_yields()
 
 
 
