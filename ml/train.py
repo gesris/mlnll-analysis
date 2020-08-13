@@ -276,9 +276,10 @@ def main(args):
 
         loss_train, _, tot_procssumw2_, tot_procs_ = session.run([loss, minimize, tot_procssumw2, tot_procs],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
-            
-        logger.info("\nPROCS:\n{}".format(tot_procs_))
-        logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_))
+        
+        for i in range(8):
+            logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
+            logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_[i]))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
