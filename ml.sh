@@ -8,8 +8,8 @@ WORKDIR=$1
 #ml/dataset.sh $WORKDIR
 
 # Train model
-#ml/train.sh $WORKDIR
+ml/train.sh $WORKDIR
 
 # Validate model
 # TODO: Missing any validation!
-ml/test_model.sh $WORKDIR
+#ml/test_model.sh $WORKDIR
