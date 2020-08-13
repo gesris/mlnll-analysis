@@ -280,7 +280,7 @@ def main(args):
         #for i in range(8):
         #    logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
         #    logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
-        logger.info("PROCW: {}".format(proc_w_))
+        #logger.info("PROCW: {}".format(proc_w_))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
