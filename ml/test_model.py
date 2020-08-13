@@ -135,8 +135,9 @@ def main(args):
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
 
     for i in range(8):
+            logger.info("BIN{}".format(i))
             logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-            logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
+            logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_[i]))
     
 
     def plot(bincontent, bins, bins_center):
