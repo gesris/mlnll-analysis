@@ -274,12 +274,13 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, tot_procssumw2_, tot_procs_ = session.run([loss, minimize, tot_procssumw2, tot_procs],
+        loss_train, _, tot_procssumw2_, tot_procs_, proc_w_ = session.run([loss, minimize, tot_procssumw2, tot_procs, proc_w],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
         
-        for i in range(8):
-            logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-            logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
+        #for i in range(8):
+        #    logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
+        #    logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
+        logger.info("PROCW: {}".format(proc_w_))
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
