@@ -135,22 +135,22 @@ def main(args):
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
 
     ## Printing bbb uncertainty for every class    
-    #for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
-    #    content = []
-    #    for id, classes in tot_procssumw2_.items():
-    #        content.append(np.sqrt(classes[element]))
-    #    content = np.array(content)
-    #    np.set_printoptions(precision=3)
-    #    print("{}: {}".format(element, content))
-    
-    ## Printing bbb uncertainty for every class    
-    for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh', 'qcd']):
+    for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
         content = []
-        for id, classes in tot_procs_.items():
+        for id, classes in tot_procssumw2_.items():
             content.append(np.sqrt(classes[element]))
         content = np.array(content)
         np.set_printoptions(precision=3)
         print("{}: {}".format(element, content))
+    
+    ## Printing bbb uncertainty for every class    
+    #for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh', 'qcd']):
+    #    content = []
+    #    for id, classes in tot_procs_.items():
+    #        content.append(np.sqrt(classes[element]))
+    #    content = np.array(content)
+    #    np.set_printoptions(precision=3)
+    #    print("{}: {}".format(element, content))
     
 
     def plot(bincontent, bins, bins_center):
