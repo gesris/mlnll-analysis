@@ -139,13 +139,13 @@ def main(args):
     #        logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
     #        logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_[i]))
     
-    for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']):
+    for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
         content = []
         for id, classes in tot_procssumw2_.items():
             content.append(np.sqrt(classes[element]))
         content = np.array(content)
         np.set_printoptions(precision=3)
-        logger.info("{}: {}".format(element, content))
+        print("{}: {}".format(element, content))
     
 
     def plot(bincontent, bins, bins_center):
