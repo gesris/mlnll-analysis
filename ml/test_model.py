@@ -134,14 +134,17 @@ def main(args):
     bincontent_, tot_procs_, tot_procssumw2_ = session.run([bincontent, tot_procs, tot_procssumw2], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
 
-    ## Printing bbb uncertainty for every class    
+    ## Printing bbb uncertainty for every class 
+    summe = 0   
     for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
         content = []
         for id, classes in tot_procssumw2_.items():
             content.append(np.sqrt(classes[element]))
         content = np.array(content)
         np.set_printoptions(precision=3)
+        summe += np.sum(content)
         print("{}: {}".format(element, content))
+    print("TOTAL SUM OF ALL UNC: {}".format(summe))
     
     ## Printing bbb uncertainty for every class    
     #for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh', 'qcd']):
