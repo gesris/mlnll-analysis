@@ -18,6 +18,7 @@ def write_hists_names_yields():
         elif name in ['ZJ']:
             zl = d.Get('ZL')
             zl.Add(d.Get(name))
+            
     for key in d.GetListOfKeys():
         name = key.GetName()
         if name in ['W', 'ZTT', 'ZL', 'TTT', 'VVT', 'ggH125', 'qqH125']:
