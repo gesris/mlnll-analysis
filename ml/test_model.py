@@ -127,8 +127,11 @@ def main(args):
     saver = tf.train.Saver()
     saver.restore(session, path)
     
-    bincontent_ = session.run([bincontent], \
+    bincontent_, procs_sumw2_ = session.run([bincontent, procs_sumw2], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
+    
+    for name in procs_sumw2_:
+        logger.info("{}, PROCSSUMWSQ: {}".format(name, procs_sumw2_[name]))
     
 
     def plot(bincontent, bins, bins_center):
