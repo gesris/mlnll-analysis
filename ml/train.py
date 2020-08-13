@@ -169,8 +169,6 @@ def main(args):
     theta = tf.constant(0.0, tf.float64)
     nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
-    tot_procs = {}
-    tot_procssumw2 = {}
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -211,9 +209,6 @@ def main(args):
         # Expectations
         obs = sig + bkg
         exp = mu * sig + bkg + sys 
-
-        tot_procs[i] = procs
-        tot_procssumw2[i] = procs_sumw2
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -274,13 +269,9 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, tot_procssumw2_, tot_procs_ = session.run([loss, minimize, tot_procssumw2, tot_procs],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
         
-        for i in range(8):
-            logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-            logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
-
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))

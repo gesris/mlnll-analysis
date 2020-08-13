@@ -87,6 +87,8 @@ def main(args):
         bins_center.append(left + (right - left) / 2)
 
     bincontent = {}
+    tot_procs = {}
+    tot_procssumw2 = {}
 
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         counts = {}
@@ -122,13 +124,19 @@ def main(args):
 
         # Add total content to nested dictionary
         bincontent[i] = counts
+        tot_procs[i] = procs
+        tot_procssumw2[i] = procs_sumw2
     
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
     
-    bincontent_ = session.run([bincontent], \
+    bincontent_, tot_procs_, tot_procssumw2_ = session.run([bincontent, tot_procs, tot_procssumw2], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
+
+    for i in range(8):
+            logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
+            logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
     
 
     def plot(bincontent, bins, bins_center):
@@ -153,7 +161,7 @@ def main(args):
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
-    plot(bincontent_, bins, bins_center)
+    #plot(bincontent_, bins, bins_center)
 
 
 if __name__ == '__main__':
