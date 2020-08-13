@@ -134,10 +134,18 @@ def main(args):
     bincontent_, tot_procs_, tot_procssumw2_ = session.run([bincontent, tot_procs, tot_procssumw2], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
 
-    for i in range(8):
-            logger.info("BIN{}".format(i))
-            logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-            logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_[i]))
+    #for i in range(8):
+    #        logger.info("BIN{}".format(i))
+    #        logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
+    #        logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_[i]))
+    
+    for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
+        content = []
+        for id, classes in tot_procssumw2.items():
+            content.append(classes[element])
+        content = np.array(content)
+        np.set_printoptions(precision=3)
+        logger.info("{}: {}".format(element, content))
     
 
     def plot(bincontent, bins, bins_center):
