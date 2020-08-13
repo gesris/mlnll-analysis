@@ -7,9 +7,9 @@ def write_hists_names_yields():
     f = ROOT.TFile(path)
     d = f.Get('htt_mt_0_2018')
 
-    for key in d.GetListOfKeys():
-        name = key.GetName()
-        print("{}: {}".format(name, key.GetBinError(1)))
+    for classes in d:
+        #name = key.GetName()
+        print("{}: {}".format(classes, key.GetBinError(1)))
     #return hists, hnames,
 
 write_hists_names_yields()
