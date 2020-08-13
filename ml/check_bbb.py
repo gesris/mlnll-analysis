@@ -11,7 +11,7 @@ def write_hists_names_yields():
         name = key.GetName()
         h = d.Get(name)
         errors = []
-        for i in range(1, 9):
+        for i in range(1, 10):
             errors.append(h.GetBinError(i))
         errors = np.array(errors)
         np.set_printoptions(precision=3)
