@@ -11,7 +11,6 @@ def write_hists_names_yields():
         name = key.GetName()
         h = d.Get(name)
         print("{}: {}".format(name, h.GetBinError(1)))
-    return hists, hnames,
 
 write_hists_names_yields()
 
