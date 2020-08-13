@@ -13,6 +13,7 @@ def write_hists_names_yields():
         errors = []
         for i in range(1, 9):
             errors.append(h.GetBinError(i))
+        errors = np.array(errors)
         np.set_printoptions(precision=3)
         print("{}: {}".format(name, errors))
 
