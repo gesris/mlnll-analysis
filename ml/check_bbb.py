@@ -10,7 +10,10 @@ def write_hists_names_yields():
     for key in d.GetListOfKeys():
         name = key.GetName()
         h = d.Get(name)
-        print("{}: {}".format(name, h.GetBinError(1)))
+        errors = []
+        for i in range(8):
+            errors.append(h.GetBinError(i))
+        print("{}: {}".format(name, errors))
 
 write_hists_names_yields()
 
