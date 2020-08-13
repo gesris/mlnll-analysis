@@ -134,14 +134,19 @@ def main(args):
     bincontent_, tot_procs_, tot_procssumw2_ = session.run([bincontent, tot_procs, tot_procssumw2], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w})
 
-    #for i in range(8):
-    #        logger.info("BIN{}".format(i))
-    #        logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-    #        logger.info("\nPROCSSUMW2:\n{}".format(tot_procssumw2_[i]))
+    ## Printing bbb uncertainty for every class    
+    #for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
+    #    content = []
+    #    for id, classes in tot_procssumw2_.items():
+    #        content.append(np.sqrt(classes[element]))
+    #    content = np.array(content)
+    #    np.set_printoptions(precision=3)
+    #    print("{}: {}".format(element, content))
     
-    for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
+    ## Printing bbb uncertainty for every class    
+    for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh', 'qcd']):
         content = []
-        for id, classes in tot_procssumw2_.items():
+        for id, classes in tot_procs_.items():
             content.append(np.sqrt(classes[element]))
         content = np.array(content)
         np.set_printoptions(precision=3)
