@@ -183,7 +183,8 @@ def main(args):
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+            #procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+            procs_sumw2[name] = tf.square(tf.reduce_sum(proc_w))
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -274,13 +275,13 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, tot_procssumw2_, tot_procs_, proc_w_ = session.run([loss, minimize, tot_procssumw2, tot_procs, proc_w],
+        loss_train, _, tot_procssumw2_, tot_procs_ = session.run([loss, minimize, tot_procssumw2, tot_procs],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
         
-        #for i in range(8):
-        #    logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-        #    logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
-        #logger.info("PROCW: {}".format(proc_w_))
+        for i in range(8):
+            logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
+            logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
+
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
