@@ -284,7 +284,7 @@ def main(args):
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
-            print("TOTAL SHIFT: {}".format(shift_))
+            logger.info("TOTAL SHIFT: {}".format(shift_))
 
             if is_warmup:
                 logger.info('Warmup: {} / {}'.format(step, warmup_steps))
