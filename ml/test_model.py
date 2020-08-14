@@ -178,7 +178,7 @@ def main(args):
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
-    #plot(bincontent_, bins, bins_center)
+    plot(bincontent_, bins, bins_center)
 
 
 if __name__ == '__main__':
