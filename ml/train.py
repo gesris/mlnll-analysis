@@ -167,6 +167,7 @@ def main(args):
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     theta = tf.constant(0.0, tf.float64)
+    one = tf.constant(1.0, tf.float64)
     nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
     tot_shift = []
@@ -212,7 +213,7 @@ def main(args):
         # Expectations
         obs = sig + bkg
         #exp = mu * sig + bkg + sys 
-        exp = mu * sig + tf.maximum(1, bkg * ((bkg + shift) / bkg)**theta) * tf.minimum(1, bkg * ((bkg - shift) / bkg)**theta)
+        exp = mu * sig + tf.maximum(one, bkg * ((bkg + shift) / bkg)**theta) * tf.minimum(one, bkg * ((bkg - shift) / bkg)**theta)
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
