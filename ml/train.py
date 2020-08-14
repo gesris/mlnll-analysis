@@ -274,8 +274,6 @@ def main(args):
 
         loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
-
-        print("TOTAL SHIFT: {}".format(shift_))
         
 
         if step % validation_steps == 0:
@@ -283,6 +281,8 @@ def main(args):
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
+
+            print("TOTAL SHIFT: {}".format(shift_))
 
             if is_warmup:
                 logger.info('Warmup: {} / {}'.format(step, warmup_steps))
