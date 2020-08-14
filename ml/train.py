@@ -169,6 +169,7 @@ def main(args):
     theta = tf.constant(0.0, tf.float64)
     nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
+    tot_shift = []
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -205,6 +206,8 @@ def main(args):
         shift = tf.sqrt(shift)
         nuisance_param["bbb"] = theta
         sys = theta * 2 * shift
+
+        tot_shift.append(shift)
 
         # Expectations
         obs = sig + bkg
@@ -269,8 +272,10 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _ = session.run([loss, minimize],
+        loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+
+        print("TOTAL SHIFT: {}".format(shift_))
         
 
         if step % validation_steps == 0:
