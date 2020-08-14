@@ -103,7 +103,7 @@ def main(args):
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+            procs_sumw2[name] = tf.reduce_sum(proc_w**2)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
