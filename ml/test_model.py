@@ -162,7 +162,7 @@ def main(args):
         for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
             content = []
             # bincontent is an array with a single entry as the whole dictionary, therefore bincontent[0]
-            for id, classes in bincontent_[0].items():
+            for id, classes in bincontent[0].items():
                 content.append(classes[element])
             #if element in ['ggh', 'qqh']:
             #    plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color="C0")
