@@ -206,14 +206,14 @@ def main(args):
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         nuisance_param["bbb"] = theta
-        #sys = theta * shift
+        sys = theta * shift
 
         tot_shift.append(shift)
 
         # Expectations
         obs = sig + bkg
-        #exp = mu * sig + bkg + sys 
-        exp = mu * sig + tf.maximum(one, bkg * ((bkg + shift) / bkg)**theta) * tf.minimum(one, bkg * ((bkg - shift) / bkg)**theta)
+        exp = mu * sig + bkg + sys 
+        #exp = mu * sig + tf.maximum(one, bkg * ((bkg + shift) / bkg)**theta) * tf.minimum(one, bkg * ((bkg - shift) / bkg)**theta)
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
