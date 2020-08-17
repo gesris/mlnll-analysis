@@ -162,6 +162,7 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
+    scale_ph = tf.placeholder(tf.float64)
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
@@ -183,7 +184,7 @@ def main(args):
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w / scale_ph) * scale_ph)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -275,13 +276,13 @@ def main(args):
             is_warmup = False
 
         loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train})
         
 
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
 
             logger.info("TOTAL SHIFT: {}".format(shift_))
