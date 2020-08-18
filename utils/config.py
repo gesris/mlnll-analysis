@@ -12,7 +12,7 @@ ntuples_base = path.join(basepath, 'ntuples')
 
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
-ml_score_base = ['/work/gristo/third_mlnll-analysis/output/2_bins_bbb/MLScores']
+ml_score_base = ['/work/gristo/third_mlnll-analysis/output/2_bins_bbb_noqcd/MLScores']
 
 # File list
 files = {
