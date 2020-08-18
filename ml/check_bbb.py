@@ -29,6 +29,9 @@ def write_hists_names_yields():
             errors = np.array(errors)
             np.set_printoptions(precision=3)
             print("{}: {}".format(name, errors))
+        for element in errors:
+            tot_error += np.sum(errors)
+        print("TOT SUM SHIFT: {}".format(tot_error))
 
 write_hists_names_yields()
 
