@@ -20,13 +20,13 @@ def write_hists_names_yields():
             zl.Add(d.Get(name))
             
     errors = []        
+    errors = np.array(errors)
     for key in d.GetListOfKeys():
         name = key.GetName()
         if name in ['W', 'ZTT', 'ZL', 'TTT', 'VVT', 'ggH125', 'qqH125']:
             h = d.Get(name)
             for i in range(1, 9):
                 errors.append(h.GetBinError(i))
-            errors = np.array(errors)
             np.set_printoptions(precision=3)
             print("{}: {}".format(name, errors))
     tot_error = 0
