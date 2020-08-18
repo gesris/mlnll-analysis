@@ -33,7 +33,7 @@ def write_hists_names_yields():
     tot_error = 0
     for element in tot:
         tot_error += np.sum(element)
-    print("TOT SUM ERROR: {}".format(tot_error))
+    print("TOT SUM ERROR: {}".format(tot))
 
 write_hists_names_yields()
 
