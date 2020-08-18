@@ -18,10 +18,9 @@ def write_hists_names_yields():
         elif name in ['ZJ']:
             zl = d.Get('ZL')
             zl.Add(d.Get(name))
-    
+    tot_error = 0
     for key in d.GetListOfKeys():
         name = key.GetName()
-        tot_error = 0
         if name in ['W', 'ZTT', 'ZL', 'TTT', 'VVT', 'ggH125', 'qqH125']:
             h = d.Get(name)
             errors = []
