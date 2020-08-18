@@ -21,16 +21,16 @@ def write_hists_names_yields():
             
     for key in d.GetListOfKeys():
         name = key.GetName()
+        errors = []
         if name in ['W', 'ZTT', 'ZL', 'TTT', 'VVT', 'ggH125', 'qqH125']:
             h = d.Get(name)
-            errors = []
             for i in range(1, 9):
                 errors.append(h.GetBinError(i))
             errors = np.array(errors)
             np.set_printoptions(precision=3)
             print("{}: {}".format(name, errors))
         for element in errors:
-            tot_error += np.sum(errors)
+            tot_error += np.sum(element)
         print("TOT SUM SHIFT: {}".format(tot_error))
 
 write_hists_names_yields()
