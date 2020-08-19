@@ -278,7 +278,21 @@ def main(args):
         loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train})
         
+        ## Breakup condition
+        if is_warmup == False:
+            if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
+                min_loss = loss_val
+                patience_count = patience
+                path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
+                logger.info('Save model to {}'.format(path))
+            else:
+                patience_count -= 1
 
+            if patience_count == 0:
+                logger.info('Stop training')
+                break
+
+        ## Display / Plot
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
@@ -293,18 +307,6 @@ def main(args):
                 steps_list.append(step)
                 loss_train_list.append(loss_train)
                 loss_val_list.append(loss_val)
-                #if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
-                if min_loss > loss_val:
-                    min_loss = loss_val
-                    patience_count = patience
-                    path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
-                    logger.info('Save model to {}'.format(path))
-                else:
-                    patience_count -= 1
-
-                if patience_count == 0:
-                    logger.info('Stop training')
-                    break
         step += 1
 
     ## Plot minimization of loss
