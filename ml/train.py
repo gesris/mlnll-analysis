@@ -253,13 +253,13 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 10
+    patience = 30
     patience_count = patience
     min_loss = 1e9
     tolerance = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 30
+    warmup_steps = 0
 
     steps_list = []
     loss_train_list = []
@@ -293,7 +293,8 @@ def main(args):
                 steps_list.append(step)
                 loss_train_list.append(loss_train)
                 loss_val_list.append(loss_val)
-                if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss < tolerance:
+                #if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
+                if min_loss > loss_val:
                     min_loss = loss_val
                     patience_count = patience
                     path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
