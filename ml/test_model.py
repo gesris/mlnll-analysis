@@ -137,7 +137,7 @@ def main(args):
 
     ## Printing bbb uncertainty for every class 
     summe = 0   
-    for i, element in enumerate(['w', 'ztt', 'zl', 'tt', 'vv', 'ggh', 'qqh']):
+    for i, element in enumerate(['w']):
         content = []
         for id, classes in tot_procssumw2_.items():
             content.append(np.sqrt(classes[element]))

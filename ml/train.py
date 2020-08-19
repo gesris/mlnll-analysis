@@ -203,7 +203,8 @@ def main(args):
 
         # Bin by bin uncertainties
         shift = 0.0
-        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+        #for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['w']:
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         nuisance_param["bbb"] = theta
@@ -253,7 +254,7 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 30
+    patience = 20
     patience_count = patience
     min_loss = 1e9
     tolerance = 0.001
