@@ -118,8 +118,7 @@ def main(args):
             counts[p] = procs[p]
 
         bkg = 0
-        #for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
             counts[p] = procs[p]
 
