@@ -293,7 +293,7 @@ def main(args):
                 steps_list.append(step)
                 loss_train_list.append(loss_train)
                 loss_val_list.append(loss_val)
-                if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
+                if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss < tolerance:
                     min_loss = loss_val
                     patience_count = patience
                     path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
