@@ -279,7 +279,10 @@ def main(args):
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train})
         
         ## Breakup condition
-        if is_warmup == False:
+        if is_warmup:
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val})
+        else:
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
