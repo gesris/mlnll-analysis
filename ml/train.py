@@ -203,7 +203,7 @@ def main(args):
 
         # Bin by bin uncertainties
         shift = 0.0
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         nuisance_param["bbb"] = theta

@@ -3,7 +3,7 @@ import numpy as np
 
 
 def write_hists_names_yields():
-    path = '/work/gristo/third_mlnll-analysis/output/2_bins_bbb_noqcd_shapes/cmb/common/htt_input_2018.root'
+    path = '/work/gristo/third_mlnll-analysis/output/2_bins_bbb_shapes/cmb/common/htt_input_2018.root'
     f = ROOT.TFile(path)
     d = f.Get('htt_mt_0_2018')
 
