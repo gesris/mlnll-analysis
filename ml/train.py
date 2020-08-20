@@ -273,7 +273,8 @@ def main(args):
             is_warmup = True
         else:
             loss = loss_fullnll
-            minimize = minimize_fullnll
+            #minimize = minimize_fullnll
+            minimize = minimize_statsonly
             is_warmup = False
 
         loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
