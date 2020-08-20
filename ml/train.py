@@ -237,7 +237,8 @@ def main(args):
         return constraint
 
     #loss_fullnll = get_constraint(nll, [mu] + [nuisance_param[n] for n in nuisance_param])
-    loss_fullnll = get_constraint(nll, [mu, theta])
+    #loss_fullnll = get_constraint(nll, [mu, theta])
+    loss_fullnll = get_constraint(nll, [mu])
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
@@ -273,8 +274,7 @@ def main(args):
             is_warmup = True
         else:
             loss = loss_fullnll
-            #minimize = minimize_fullnll
-            minimize = minimize_statsonly
+            minimize = minimize_fullnll
             is_warmup = False
 
         loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
