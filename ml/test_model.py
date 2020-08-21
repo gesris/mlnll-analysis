@@ -151,13 +151,13 @@ def main(args):
             nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
         # Nuisance constraints
-        for n in nuisance_param:
-            nll -= tfp.distributions.Normal(
-                    loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                    ).log_prob(nuisance_param[n])
-        #nll -= tfp.distributions.Normal(
+        #for n in nuisance_param:
+        #    nll -= tfp.distributions.Normal(
         #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-        #            ).log_prob(theta)
+        #            ).log_prob(nuisance_param[n])
+        nll -= tfp.distributions.Normal(
+                    loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+                    ).log_prob(theta)
         return nll, nll_statsonly, bincontent, tot_procssumw2
 
 
