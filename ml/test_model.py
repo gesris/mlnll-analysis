@@ -2,6 +2,7 @@ import os
 import argparse
 import pickle
 
+from tqdm import tqdm
 import numpy as np
 np.random.seed(1234)
 from scipy import interpolate
@@ -206,8 +207,9 @@ def main(args):
     x = np.linspace(0.0, 2.0, 30)
     dnll_array = []
     dnll_array_stat = []
-    for i in x:
-        mu1 = tf.constant(i, tf.float64)
+    print("\n## Calculating DNLL ##")
+    for i, element in tqdm(enumerate(x)):
+        mu1 = tf.constant(element, tf.float64)
         nll1_ = session.run(nll_value(mu1), \
             feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
         nll0, nll0_stat, _, _ = nll0_
