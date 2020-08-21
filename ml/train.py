@@ -162,16 +162,14 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    scale_ph = tf.placeholder(tf.float64)
+    scale_ph = tf.placeholder(tf.float64, shape=())
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     theta = tf.constant(0.0, tf.float64)
-    one = tf.constant(1.0, tf.float64)
-    nuisance_param = {}
+    nuisances = []
     epsilon = tf.constant(1e-9, tf.float64)
-    tot_shift = []
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -183,14 +181,15 @@ def main(args):
         procs_sumw2 = {}
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w / scale_ph) * scale_ph)
+            procs[name] = tf.reduce_sum(proc_w) * scale_ph
+            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) * scale_ph
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
+        procs_sumw2['qcd'] = procs['qcd']
 
         # Nominal signal and background
         sig = 0
@@ -202,31 +201,25 @@ def main(args):
             bkg += procs[p]
 
         # Bin by bin uncertainties
-        shift = 0.0
-        #for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-        for p in ['w']:
-            shift += procs_sumw2[p]
-        shift = tf.sqrt(shift)
-        nuisance_param["bbb"] = theta
-        sys = theta * shift
-
-        tot_shift.append(shift)
+        sys = tf.constant(0.0, tf.float64)
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+            n = tf.constant(0.0, tf.float64)
+            nuisances.append(n)
+            sys += n * tf.sqrt(procs_sumw2[p])
 
         # Expectations
         obs = sig + bkg
         exp = mu * sig + bkg + sys 
-        #exp = mu * sig + tf.maximum(one, bkg * ((bkg + shift) / bkg)**theta) * tf.minimum(one, bkg * ((bkg - shift) / bkg)**theta)
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+    
     # Nuisance constraints
-    #for n in nuisance_param:
-    #    nll -= tfp.distributions.Normal(
-    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #            ).log_prob(nuisance_param[n])
-    nll -= tfp.distributions.Normal(
+    for n in nuisances:
+        nll -= tfp.distributions.Normal(
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                ).log_prob(theta)
+                ).log_prob(n)
+
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -237,7 +230,7 @@ def main(args):
         return constraint
 
     #loss_fullnll = get_constraint(nll, [mu] + [nuisance_param[n] for n in nuisance_param])
-    loss_fullnll = get_constraint(nll, [mu, theta])
+    loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
@@ -276,7 +269,7 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
+        loss_train, _ = session.run([loss, minimize],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train})
         
         ## Breakup condition
@@ -302,8 +295,6 @@ def main(args):
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
-
-            logger.info("TOTAL SHIFT: {}".format(shift_))
 
             if is_warmup:
                 logger.info('Warmup: {} / {}'.format(step, warmup_steps))
