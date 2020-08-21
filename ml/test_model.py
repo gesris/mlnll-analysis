@@ -82,10 +82,7 @@ def main(args):
         bins_center.append(left + (right - left) / 2)
     
 
-    ## Calculate NLL
-    #mu0 = tf.constant([1.0], tf.float64)
-    mu0 = [1.0]
-    
+    ## Calculate NLL    
     def nll_value(mu):
         nll_tot = []
         nll_tot_stat = []
@@ -168,18 +165,16 @@ def main(args):
 
 
     ## Calculating bbb-unc. and bincontent for histogram
-    _, _, bincontent, tot_procssumw2 = nll_value(mu0)
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
 
-    x = np.linspace(0.0, 2.0, 30)
-    #mu1 = tf.constant(x, tf.float64)
-    mu1 = x
+    mu0 = [1.0]
+    mu1 = np.linspace(0.0, 2.0, 30)
+    _, _, bincontent, tot_procssumw2 = nll_value(mu0)
     bincontent_, tot_procssumw2_, nll0_, nll1_ = session.run([bincontent, tot_procssumw2, nll_value(mu0), nll_value(mu1)], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
 
-    logger.info("\n\nNLL1: {}".format(nll1_))
     dnll_array = []
     dnll_array_stat = []
     nll0_tot, nll0_tot_stat, _ , _ = nll0_
@@ -220,26 +215,6 @@ def main(args):
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
         logger.info("saving histogram in {}/model_fold{}".format(args.workdir, args.fold))
     plot(bincontent_, bins, bins_center)
-
-    
-    ## Calculate DNLL
-    #session = tf.Session(config=config)
-    #saver = tf.train.Saver()
-    #saver.restore(session, path)
-    
-    #x = np.linspace(0.0, 2.0, 30)
-    #dnll_array = []
-    #dnll_array_stat = []
-    #print("\n## Calculating DNLL ##")
-    #for i, element in tqdm(enumerate(x)):
-    #    mu1 = tf.constant(element, tf.float64)
-    #    nll1_ = session.run(nll_value(mu1), \
-    #        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
-    #    nll0, nll0_stat, _, _ = nll0_
-    #    nll1, nll1_stat, _, _ = nll1_
-    #    dnll_array.append(-2 * (nll0 - nll1))
-    #    dnll_array_stat.append(-2 * (nll0_stat - nll1_stat))
-
 
 
     ## Plot scan
