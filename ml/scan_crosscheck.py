@@ -86,6 +86,7 @@ def main(args):
     
     def nll_value(mu):
         nll = 0.0
+        nll_statsonly = 0.0
         theta = tf.constant(0.0, tf.float64)
         epsilon = tf.constant(1e-9, tf.float64)
         nuisance_param = {}
