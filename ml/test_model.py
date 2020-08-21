@@ -176,6 +176,7 @@ def main(args):
     bincontent_, tot_procssumw2_, nll0_, nll1_ = session.run([bincontent, tot_procssumw2, nll_value(mu0), nll_value(mu1)], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
 
+    logger.info("\n\nNLL1: {}".format(nll1_))
     dnll_array = []
     dnll_array_stat = []
     nll0_tot, nll0_tot_stat, _ , _ = nll0_
