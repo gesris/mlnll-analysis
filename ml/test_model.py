@@ -2,7 +2,7 @@ import os
 import argparse
 import pickle
 
-from tqdm import tqdm
+#from tqdm import tqdm
 import numpy as np
 np.random.seed(1234)
 from scipy import interpolate
@@ -83,79 +83,86 @@ def main(args):
     
 
     ## Calculate NLL
-    mu0 = tf.constant(1.0, tf.float64)
+    mu0 = tf.constant([1.0], tf.float64)
     
     def nll_value(mu):
-        nll = 0.0
-        nll_statsonly = 0.0
-        epsilon = tf.constant(1e-9, tf.float64)
-        nuisances = []
-        bincontent = {}
-        tot_procssumw2 = {}
+        nll_tot = []
+        nll_tot_stat = []
 
-        for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
-            counts = {}
-            logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
-            up = tf.constant(up, tf.float64)
-            down = tf.constant(down, tf.float64)
+        for entry in mu:
+            nll = 0.0
+            nll_statsonly = 0.0
+            epsilon = tf.constant(1e-9, tf.float64)
+            nuisances = []
+            bincontent = {}
+            tot_procssumw2 = {}
 
-            # Processes
-            mask = count_masking(f, up, down)
-            procs = {}
-            procs_sumw2 = {}
-            for j, name in enumerate(classes):
-                proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-                procs[name] = tf.reduce_sum(proc_w) * scale_ph
-                procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) * scale_ph
+            for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
+                counts = {}
+                logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
+                up = tf.constant(up, tf.float64)
+                down = tf.constant(down, tf.float64)
 
-
-            # QCD estimation
-            procs['qcd'] = procs['data_ss']
-            for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
-                procs['qcd'] -= procs[p + '_ss']
-            procs['qcd'] = tf.maximum(procs['qcd'], 0)
-            procs_sumw2['qcd'] = procs['qcd']
+                # Processes
+                mask = count_masking(f, up, down)
+                procs = {}
+                procs_sumw2 = {}
+                for j, name in enumerate(classes):
+                    proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
+                    procs[name] = tf.reduce_sum(proc_w) * scale_ph
+                    procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) * scale_ph
 
 
-            # Nominal signal and background
-            sig = 0
-            for p in ['ggh', 'qqh']:
-                sig += procs[p]
-                counts[p] = procs[p]
-
-            bkg = 0
-            for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-                bkg += procs[p]
-                counts[p] = procs[p]
+                # QCD estimation
+                procs['qcd'] = procs['data_ss']
+                for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
+                    procs['qcd'] -= procs[p + '_ss']
+                procs['qcd'] = tf.maximum(procs['qcd'], 0)
+                procs_sumw2['qcd'] = procs['qcd']
 
 
-            # Add total content to nested dictionary
-            bincontent[i] = counts
-            tot_procssumw2[i] = procs_sumw2
+                # Nominal signal and background
+                sig = 0
+                for p in ['ggh', 'qqh']:
+                    sig += procs[p]
+                    counts[p] = procs[p]
+
+                bkg = 0
+                for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+                    bkg += procs[p]
+                    counts[p] = procs[p]
 
 
-            # Bin by bin uncertainties
-            sys = tf.constant(0.0, tf.float64)
-            for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-                n = tf.constant(0.0, tf.float64)
-                nuisances.append(n)
-                sys += n * tf.sqrt(procs_sumw2[p])
+                # Add total content to nested dictionary
+                bincontent[i] = counts
+                tot_procssumw2[i] = procs_sumw2
 
-            # Expectations
-            obs = sig + bkg
-            exp = mu * sig + bkg + sys 
-            exp_statsonly = mu * sig + bkg
+
+                # Bin by bin uncertainties
+                sys = tf.constant(0.0, tf.float64)
+                for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+                    n = tf.constant(0.0, tf.float64)
+                    nuisances.append(n)
+                    sys += n * tf.sqrt(procs_sumw2[p])
+
+                # Expectations
+                obs = sig + bkg
+                exp = entry * sig + bkg + sys 
+                exp_statsonly = entry * sig + bkg
+                
+                # Likelihood
+                nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+                nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
             
-            # Likelihood
-            nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-            nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
-        
-        # Nuisance constraints
-        for n in nuisances:
-            nll -= tfp.distributions.Normal(
-                    loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                    ).log_prob(n)
-        return nll, nll_statsonly, bincontent, tot_procssumw2
+            # Nuisance constraints
+            for n in nuisances:
+                nll -= tfp.distributions.Normal(
+                        loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+                        ).log_prob(n)
+            
+            nll_tot.append(nll)
+            nll_tot_stat.append(nll_statsonly)
+        return nll_tot, nll_tot_stat, bincontent, tot_procssumw2
 
 
     ## Calculating bbb-unc. and bincontent for histogram
@@ -163,8 +170,20 @@ def main(args):
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
-    bincontent_, tot_procssumw2_, nll0_ = session.run([bincontent, tot_procssumw2, nll_value(mu0)], \
+
+    x = np.linspace(0.0, 2.0, 30)
+    mu1 = tf.constant(x, tf.float64)
+    bincontent_, tot_procssumw2_, nll0_, nll1_ = session.run([bincontent, tot_procssumw2, nll_value(mu0), nll_value(mu1)], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
+
+    dnll_array = []
+    dnll_array_stat = []
+    nll0_tot, nll0_tot_stat, _ , _ = nll0_
+    nll1_tot, nll1_tot_stat, _ , _ = nll1_
+    for nll1 in nll1_tot:
+        dnll_array.append(-2 * (nll0_tot[0] - nll1))
+    for nll1_stat in nll0_tot_stat:
+        dnll_array_stat.append(-2 * (nll0_tot_stat[0] - nll1_stat))
 
 
     ## Printing bbb uncertainty for every class 
@@ -204,18 +223,19 @@ def main(args):
     #saver = tf.train.Saver()
     #saver.restore(session, path)
     
-    x = np.linspace(0.0, 2.0, 30)
-    dnll_array = []
-    dnll_array_stat = []
-    print("\n## Calculating DNLL ##")
-    for i, element in tqdm(enumerate(x)):
-        mu1 = tf.constant(element, tf.float64)
-        nll1_ = session.run(nll_value(mu1), \
-            feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
-        nll0, nll0_stat, _, _ = nll0_
-        nll1, nll1_stat, _, _ = nll1_
-        dnll_array.append(-2 * (nll0 - nll1))
-        dnll_array_stat.append(-2 * (nll0_stat - nll1_stat))
+    #x = np.linspace(0.0, 2.0, 30)
+    #dnll_array = []
+    #dnll_array_stat = []
+    #print("\n## Calculating DNLL ##")
+    #for i, element in tqdm(enumerate(x)):
+    #    mu1 = tf.constant(element, tf.float64)
+    #    nll1_ = session.run(nll_value(mu1), \
+    #        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
+    #    nll0, nll0_stat, _, _ = nll0_
+    #    nll1, nll1_stat, _, _ = nll1_
+    #    dnll_array.append(-2 * (nll0 - nll1))
+    #    dnll_array_stat.append(-2 * (nll0_stat - nll1_stat))
+
 
 
     ## Plot scan
