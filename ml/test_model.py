@@ -182,7 +182,7 @@ def main(args):
     nll1_tot, nll1_tot_stat, _ , _ = nll1_
     for nll1 in nll1_tot:
         dnll_array.append(-2 * (nll0_tot[0] - nll1))
-    for nll1_stat in nll0_tot_stat:
+    for nll1_stat in nll1_tot_stat:
         dnll_array_stat.append(-2 * (nll0_tot_stat[0] - nll1_stat))
 
 
