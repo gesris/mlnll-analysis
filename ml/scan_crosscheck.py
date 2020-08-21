@@ -162,7 +162,7 @@ def main(args):
 
 
     ## Calculating bbb-unc. and bincontent for histogram
-    _, bincontent, tot_procssumw2 = nll_value(mu0)
+    _, _, bincontent, tot_procssumw2 = nll_value(mu0)
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
