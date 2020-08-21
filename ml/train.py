@@ -234,7 +234,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss_fullnll = get_constraint(nll, [mu] + [nuisance_param[n] for n in nuisance_param])
+    loss_fullnll = get_constraint(nll, [mu] + [nuisance_params[n] for n in nuisance_params])
     #loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
 
