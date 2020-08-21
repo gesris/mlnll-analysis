@@ -80,7 +80,7 @@ def main(args):
     for left, right in zip(bins[1:], bins[:-1]):
         bins_center.append(left + (right - left) / 2)
     
-    
+
     ## Calculate NLL
     mu0 = tf.constant(1.0, tf.float64)
     
@@ -215,8 +215,8 @@ def main(args):
         mu1 = tf.constant(i, tf.float64)
         nll0_, nll1_ = session.run([nll_value(mu0), nll_value(mu1)], \
             feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
-        nll0, _, _, _ = nll0_
-        nll1, _, _, _ = nll1_
+        nll0, _, _ = nll0_
+        nll1, _, _ = nll1_
         dnll_array.append(-2 * (nll0 - nll1))
 
 
