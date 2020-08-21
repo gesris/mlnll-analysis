@@ -87,9 +87,8 @@ def main(args):
     def nll_value(mu):
         nll = 0.0
         nll_statsonly = 0.0
-        theta = tf.constant(0.0, tf.float64)
         epsilon = tf.constant(1e-9, tf.float64)
-        nuisance_param = {}
+        nuisances = []
         bincontent = {}
         tot_procssumw2 = {}
 
@@ -105,8 +104,8 @@ def main(args):
             procs_sumw2 = {}
             for j, name in enumerate(classes):
                 proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-                procs[name] = tf.reduce_sum(proc_w)
-                procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w / scale_ph) * scale_ph)
+                procs[name] = tf.reduce_sum(proc_w) * scale_ph
+                procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) * scale_ph
 
 
             # QCD estimation
@@ -114,6 +113,7 @@ def main(args):
             for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
                 procs['qcd'] -= procs[p + '_ss']
             procs['qcd'] = tf.maximum(procs['qcd'], 0)
+            procs_sumw2['qcd'] = procs['qcd']
 
 
             # Nominal signal and background
@@ -134,13 +134,11 @@ def main(args):
 
 
             # Bin by bin uncertainties
-            shift = 0.0
-            #for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            for p in ['w']:
-                shift += procs_sumw2[p]
-            shift = tf.sqrt(shift)
-            nuisance_param["bbb"] = theta
-            sys = theta * shift
+            sys = tf.constant(0.0, tf.float64)
+            for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+                n = tf.constant(0.0, tf.float64)
+                nuisances.append(n)
+                sys += n * tf.sqrt(procs_sumw2[p])
 
             # Expectations
             obs = sig + bkg
@@ -150,14 +148,12 @@ def main(args):
             # Likelihood
             nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        
         # Nuisance constraints
-        #for n in nuisance_param:
-        #    nll -= tfp.distributions.Normal(
-        #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-        #            ).log_prob(nuisance_param[n])
-        nll -= tfp.distributions.Normal(
+        for n in nuisances:
+            nll -= tfp.distributions.Normal(
                     loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                    ).log_prob(theta)
+                    ).log_prob(n)
         return nll, nll_statsonly, bincontent, tot_procssumw2
 
 
