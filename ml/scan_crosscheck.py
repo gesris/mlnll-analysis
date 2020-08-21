@@ -144,9 +144,11 @@ def main(args):
             # Expectations
             obs = sig + bkg
             exp = mu * sig + bkg + sys 
+            exp_statsonly = mu * sig + bkg
             
             # Likelihood
             nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+            nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
         # Nuisance constraints
         #for n in nuisance_param:
         #    nll -= tfp.distributions.Normal(
@@ -155,7 +157,7 @@ def main(args):
         nll -= tfp.distributions.Normal(
                     loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
                     ).log_prob(theta)
-        return nll, bincontent, tot_procssumw2
+        return nll, nll_statsonly, bincontent, tot_procssumw2
 
 
     ## Calculating bbb-unc. and bincontent for histogram
@@ -201,6 +203,7 @@ def main(args):
         plt.ylabel("Counts")
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
+        logger.info("saving histogram in {}/model_fold{}".format(args.workdir, args.fold))
     plot(bincontent_, bins, bins_center)
 
     
@@ -211,13 +214,15 @@ def main(args):
     
     x = np.linspace(0.0, 2.0, 30)
     dnll_array = []
+    dnll_array_stat = []
     for i in x:
         mu1 = tf.constant(i, tf.float64)
         nll0_, nll1_ = session.run([nll_value(mu0), nll_value(mu1)], \
             feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
-        nll0, _, _ = nll0_
-        nll1, _, _ = nll1_
+        nll0, nll0_stat, _, _ = nll0_
+        nll1, nll1_stat, _, _ = nll1_
         dnll_array.append(-2 * (nll0 - nll1))
+        dnll_array_stat.append(-2 * (nll0_stat - nll1_stat))
 
 
     ## Plot scan
@@ -253,6 +258,7 @@ def main(args):
         plt.plot([0], [0], color='C0', label="$\mu$ = 1.00 (-{:.3f} +{:.3f})".format(constraints[1], constraints[0]))
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check{}.png'.format(args.fold, args.fold)), bbox_inches="tight")
+        logger.info("saving scan in {}/model_fold{}".format(args.workdir, args.fold))
     plot_scan(x, dnll_array)
 
 
