@@ -208,7 +208,7 @@ def main(args):
     dnll_array_stat = []
     for i in x:
         mu1 = tf.constant(i, tf.float64)
-        nll1_ = session.run([nll_value(mu1)], \
+        nll1_ = session.run(nll_value(mu1), \
             feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
         nll0, nll0_stat, _, _ = nll0_
         nll1, nll1_stat, _, _ = nll1_
