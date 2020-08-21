@@ -135,7 +135,7 @@ def main(args):
 
             # Bin by bin uncertainties
             sys = tf.constant(0.0, tf.float64)
-            for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+            for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
                 n = tf.constant(0.0, tf.float64)
                 nuisances.append(n)
                 sys += n * tf.sqrt(procs_sumw2[p])
@@ -168,7 +168,7 @@ def main(args):
 
     ## Printing bbb uncertainty for every class 
     summe = 0   
-    for i, element in enumerate(['w']):
+    for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
         content = []
         for id, classes in tot_procssumw2_.items():
             content.append(np.sqrt(classes[element]))
