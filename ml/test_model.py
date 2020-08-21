@@ -199,9 +199,9 @@ def main(args):
 
     
     ## Calculate DNLL
-    session = tf.Session(config=config)
-    saver = tf.train.Saver()
-    saver.restore(session, path)
+    #session = tf.Session(config=config)
+    #saver = tf.train.Saver()
+    #saver.restore(session, path)
     
     x = np.linspace(0.0, 2.0, 30)
     dnll_array = []
