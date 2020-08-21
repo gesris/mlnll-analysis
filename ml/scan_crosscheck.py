@@ -254,8 +254,8 @@ def main(args):
         plt.xlim((x_limit[0], x_limit[1]))
         plt.ylabel("-2 $\cdot \/ \Delta$NLL")
         plt.ylim((y_limit[0], y_limit[1]))
-        plt.plot(x_new, f_dnll_array(x_new), color='C0', lw=linewidth_wide)
-        plt.plot(x_new, f_dnll_array_stat(x_new), color='C1', lw=linewidth_wide)
+        plt.plot(x_new, f_dnll_array(x_new), color='C3', lw=linewidth_wide)
+        plt.plot(x_new, f_dnll_array_stat(x_new), color='C0', lw=linewidth_wide)
 
         plt.plot([x_limit[0], constraints_xval[0]], [1, 1], 'k', lw=linewidth_narrow)
         plt.plot([constraints_xval[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
@@ -263,13 +263,13 @@ def main(args):
         plt.plot([constraints_xval_stat[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
 
         vscale = 1 / y_limit[1]
-        plt.axvline(x=constraints_xval[0], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
-        plt.axvline(x=constraints_xval[1], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
-        plt.axvline(x=constraints_xval_stat[0], ymax=1. * vscale, color='C1', lw=linewidth_narrow)
-        plt.axvline(x=constraints_xval_stat[1], ymax=1. * vscale, color='C1', lw=linewidth_narrow)
+        plt.axvline(x=constraints_xval[0], ymax=1. * vscale, color='C3', lw=linewidth_narrow)
+        plt.axvline(x=constraints_xval[1], ymax=1. * vscale, color='C3', lw=linewidth_narrow)
+        plt.axvline(x=constraints_xval_stat[0], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
+        plt.axvline(x=constraints_xval_stat[1], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
 
-        plt.plot([0], [0], color='C0', label="$\mu$ = 1.00 (-{:.3f} +{:.3f})".format(constraints[1], constraints[0]))
-        plt.plot([0], [0], color='C1', label="$\mu$ = 1.00 (-{:.3f} +{:.3f})".format(constraints_stat[1], constraints_stat[0]))
+        plt.plot([0], [0], color='C3', label="$\mu_{}$ = 1.00 (-{:.3f} +{:.3f})".format('\mathrm{stat. + sys.}', constraints[1], constraints[0]))
+        plt.plot([0], [0], color='C0', label="$\mu_{}$         = 1.00 (-{:.3f} +{:.3f})".format('\mathrm{stat.}', constraints_stat[1], constraints_stat[0]))
 
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check{}.png'.format(args.fold, args.fold)), bbox_inches="tight")
