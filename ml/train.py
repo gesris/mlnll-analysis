@@ -162,15 +162,16 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
+    scale_ph = tf.placeholder(tf.float64)
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     theta = tf.constant(0.0, tf.float64)
+    one = tf.constant(1.0, tf.float64)
     nuisance_param = {}
     epsilon = tf.constant(1e-9, tf.float64)
-    tot_procs = {}
-    tot_procssumw2 = {}
+    tot_shift = []
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
         up = tf.constant(up, tf.float64)
@@ -183,7 +184,7 @@ def main(args):
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w))
+            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w / scale_ph) * scale_ph)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -202,18 +203,19 @@ def main(args):
 
         # Bin by bin uncertainties
         shift = 0.0
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+        #for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['w']:
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         nuisance_param["bbb"] = theta
         sys = theta * shift
 
+        tot_shift.append(shift)
+
         # Expectations
         obs = sig + bkg
         exp = mu * sig + bkg + sys 
-
-        tot_procs[i] = procs
-        tot_procssumw2[i] = procs_sumw2
+        #exp = mu * sig + tf.maximum(one, bkg * ((bkg + shift) / bkg)**theta) * tf.minimum(one, bkg * ((bkg - shift) / bkg)**theta)
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -234,9 +236,9 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    #loss_fullnll = get_constraint(nll, [mu] + [nuisance_param[n] for n in nuisance_param])
+    loss_fullnll = get_constraint(nll, [mu] + [nuisance_param[n] for n in nuisance_param])
     loss_fullnll = get_constraint(nll, [mu, theta])
-    loss_statsonly = get_constraint(nll, [mu])
+
 
     # Add minimization ops
     def get_minimize_op(loss):
@@ -252,7 +254,7 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 10
+    patience = 20
     patience_count = patience
     min_loss = 1e9
     tolerance = 0.001
@@ -274,19 +276,34 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, tot_procssumw2_, tot_procs_, proc_w_ = session.run([loss, minimize, tot_procssumw2, tot_procs, proc_w],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
+        loss_train, _, shift_ = session.run([loss, minimize, tot_shift],
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train})
         
-        #for i in range(8):
-        #    logger.info("\nPROCS:\n{}".format(tot_procs_[i]))
-        #    logger.info("\nPROCSSUMW2:\n{}\n\n\n".format(tot_procssumw2_[i]))
-        logger.info("PROCW: {}".format(proc_w_))
+        ## Breakup condition
+        if is_warmup:
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val})
+        else:
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val})
+            if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
+                min_loss = loss_val
+                patience_count = patience
+            else:
+                patience_count -= 1
 
+            if patience_count == 0:
+                logger.info('Stop training')
+                break
+
+        ## Display / Plot
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
+            path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
+            logger.info('Save model to {}'.format(path))
+
+            logger.info("TOTAL SHIFT: {}".format(shift_))
 
             if is_warmup:
                 logger.info('Warmup: {} / {}'.format(step, warmup_steps))
@@ -294,17 +311,6 @@ def main(args):
                 steps_list.append(step)
                 loss_train_list.append(loss_train)
                 loss_val_list.append(loss_val)
-                if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
-                    min_loss = loss_val
-                    patience_count = patience
-                    path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
-                    logger.info('Save model to {}'.format(path))
-                else:
-                    patience_count -= 1
-
-                if patience_count == 0:
-                    logger.info('Stop training')
-                    break
         step += 1
 
     ## Plot minimization of loss
