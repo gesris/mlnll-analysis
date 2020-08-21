@@ -83,13 +83,15 @@ def main(args):
     
 
     ## Calculate NLL
-    mu0 = tf.constant([1.0], tf.float64)
+    #mu0 = tf.constant([1.0], tf.float64)
+    mu0 = [1.0]
     
     def nll_value(mu):
         nll_tot = []
         nll_tot_stat = []
 
         for entry in mu:
+            entry_tensor = tf.constant(entry, tf.float64)
             nll = 0.0
             nll_statsonly = 0.0
             epsilon = tf.constant(1e-9, tf.float64)
@@ -147,8 +149,8 @@ def main(args):
 
                 # Expectations
                 obs = sig + bkg
-                exp = entry * sig + bkg + sys 
-                exp_statsonly = entry * sig + bkg
+                exp = entry_tensor * sig + bkg + sys 
+                exp_statsonly = entry_tensor * sig + bkg
                 
                 # Likelihood
                 nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -172,7 +174,8 @@ def main(args):
     saver.restore(session, path)
 
     x = np.linspace(0.0, 2.0, 30)
-    mu1 = tf.constant(x, tf.float64)
+    #mu1 = tf.constant(x, tf.float64)
+    mu1 = x
     bincontent_, tot_procssumw2_, nll0_, nll1_ = session.run([bincontent, tot_procssumw2, nll_value(mu0), nll_value(mu1)], \
                         feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
 
