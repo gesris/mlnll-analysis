@@ -151,13 +151,13 @@ def main(args):
             nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
             nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
         # Nuisance constraints
-        #for n in nuisance_param:
-        #    nll -= tfp.distributions.Normal(
-        #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-        #            ).log_prob(nuisance_param[n])
-        nll -= tfp.distributions.Normal(
+        for n in nuisance_param:
+            nll -= tfp.distributions.Normal(
                     loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                    ).log_prob(theta)
+                    ).log_prob(nuisance_param[n])
+        #nll -= tfp.distributions.Normal(
+        #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+        #            ).log_prob(theta)
         return nll, nll_statsonly, bincontent, tot_procssumw2
 
 
@@ -191,12 +191,6 @@ def main(args):
             content = []
             for id, classes in bincontent.items():
                 content.append(classes[element])
-            #if element in ['ggh', 'qqh']:
-            #    plt.hist(bins_center, weights= content, bins= bins, histtype="step", lw=2, color="C0")
-            #    plt.plot([0], [0], lw=2, color="C0", label=element)
-            #else:
-            #    plt.hist(bins_center, weights= content, bins= bins, ls="--", histtype="step", lw=2)
-            #    plt.plot([0], [0], lw=2, ls="--", label=element)
             plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
             plt.plot([0], [0], lw=2, color=color[i], label=element)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
