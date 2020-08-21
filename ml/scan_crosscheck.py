@@ -226,16 +226,21 @@ def main(args):
 
 
     ## Plot scan
-    def plot_scan(x, dnll_array):
+    def plot_scan(x, dnll_array, dnll_array_stat):
         ## Interpolate DNLL data
         f_dnll_array = interpolate.UnivariateSpline(x, dnll_array, s=0)
+        f_dnll_array_stat = interpolate.UnivariateSpline(x, dnll_array_stat, s=0)
         x_new = np.arange(0.0, 2.0, 0.02)
 
         y_target = 1
         y_reduced = np.array(dnll_array) - y_target
+        y_reduced_stat = np.array(dnll_array_stat) - y_target
         freduced = interpolate.UnivariateSpline(x, y_reduced, s=0)
+        freduced_stat = interpolate.UnivariateSpline(x, y_reduced_stat, s=0)
         constraints_xval = freduced.roots()
+        constraints_xval_stat = freduced_stat.roots()
         constraints = [1 - constraints_xval[0], constraints_xval[1] - 1]
+        constraints_stat = [1 - constraints_xval_stat[0], constraints_xval_stat[1] - 1]
 
         y_limit = [0.0, 4.5]
         x_limit = [0.5, 1.5]
@@ -249,17 +254,26 @@ def main(args):
         plt.ylabel("-2 $\cdot \/ \Delta$NLL")
         plt.ylim((y_limit[0], y_limit[1]))
         plt.plot(x_new, f_dnll_array(x_new), color='C0', lw=linewidth_wide)
-        #plt.plot(x, y, color='C1', lw=linewidth_wide)
+        plt.plot(x_new, f_dnll_array_stat(x_new), color='C1', lw=linewidth_wide)
+
         plt.plot([x_limit[0], constraints_xval[0]], [1, 1], 'k', lw=linewidth_narrow)
         plt.plot([constraints_xval[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
+        plt.plot([x_limit[0], constraints_xval_stat[0]], [1, 1], 'k', lw=linewidth_narrow)
+        plt.plot([constraints_xval_stat[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
+
         vscale = 1 / y_limit[1]
         plt.axvline(x=constraints_xval[0], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
         plt.axvline(x=constraints_xval[1], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
+        plt.axvline(x=constraints_xval_stat[0], ymax=1. * vscale, color='C1', lw=linewidth_narrow)
+        plt.axvline(x=constraints_xval_stat[1], ymax=1. * vscale, color='C1', lw=linewidth_narrow)
+
         plt.plot([0], [0], color='C0', label="$\mu$ = 1.00 (-{:.3f} +{:.3f})".format(constraints[1], constraints[0]))
+        plt.plot([0], [0], color='C1', label="$\mu$ = 1.00 (-{:.3f} +{:.3f})".format(constraints_stat[1], constraints_stat[0]))
+
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check{}.png'.format(args.fold, args.fold)), bbox_inches="tight")
         logger.info("saving scan in {}/model_fold{}".format(args.workdir, args.fold))
-    plot_scan(x, dnll_array)
+    plot_scan(x, dnll_array, dnll_array_stat)
 
 
 if __name__ == '__main__':
