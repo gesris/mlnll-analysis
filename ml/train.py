@@ -168,7 +168,6 @@ def main(args):
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     nuisances = []
-    nuisance_params = {}
     epsilon = tf.constant(1e-9, tf.float64)
     for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
         logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
@@ -205,7 +204,6 @@ def main(args):
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             n = tf.constant(0.0, tf.float64)
             nuisances.append(n)
-            nuisance_params[p] = n
             sys += n * tf.sqrt(procs_sumw2[p])
 
         # Expectations
@@ -216,14 +214,11 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
     # Nuisance constraints
-    #for n in nuisances:
-    #    nll -= tfp.distributions.Normal(
-    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #            ).log_prob(n)
-    for n in nuisance_params:
+    for n in nuisances:
         nll -= tfp.distributions.Normal(
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                ).log_prob(nuisance_params[n])
+                ).log_prob(n)
+
 
 
     # Compute constraint of mu
@@ -234,8 +229,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
 
-    loss_fullnll = get_constraint(nll, [mu] + [nuisance_params[n] for n in nuisance_params])
-    #loss_fullnll = get_constraint(nll, [mu] + nuisances)
+    loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
 
     # Add minimization ops
