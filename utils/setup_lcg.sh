@@ -4,7 +4,25 @@
 
 if uname -a | grep ekpdeepthought -q
 then
-    export CUDA_VISIBLE_DEVICES='2'
+    X=$(nvidia-smi | grep -n ' 0%' | head -1 | cut -f 1 -d ':')
+    if [ $X = 9 ]
+    then
+        GPU=0
+    elif [ $X = 12 ]
+    then
+        GPU=1
+    elif [ $X = 15 ]
+    then
+        GPU=2
+    elif [ $X = 18 ]
+    then
+        GPU=3
+    else
+        echo "Currently No Available GPU"
+        fi
+    fi
+    echo $GPU
+    export CUDA_VISIBLE_DEVICES=$GPU
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
     source /home/wunsch/workspace/root/build_ubuntu/bin/thisroot.sh
     export PATH=/usr/local/cuda-8.0/bin:$PATH
