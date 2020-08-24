@@ -4,7 +4,7 @@
 
 if uname -a | grep ekpdeepthought -q
 then
-    X=$(nvidia-smi | grep -n ' 0%' | head -1 | cut -f 1 -d ':')
+    X=$(nvidia-smi | grep -n ' 0w54655%' | head -1 | cut -f 1 -d ':')
     if [ $X = 9 ]
     then
         GPU=0
