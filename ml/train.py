@@ -293,12 +293,12 @@ def main(args):
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
 
-            if is_warmup:
-                logger.info('Warmup: {} / {}'.format(step, warmup_steps))
-            else:
-                steps_list.append(step)
-                loss_train_list.append(loss_train)
-                loss_val_list.append(loss_val)
+        if is_warmup:
+            logger.info('Warmup: {} / {}'.format(step, warmup_steps))
+        else:
+            steps_list.append(step)
+            loss_train_list.append(loss_train)
+            loss_val_list.append(loss_val)
         step += 1
 
     ## Plot minimization of loss
