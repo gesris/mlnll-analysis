@@ -6,7 +6,7 @@ import numpy as np
 np.random.seed(1234)
 import matplotlib
 import matplotlib.pyplot as plt
-mpl.rc("font", size=16, family="serif")
+matplotlib.rc("font", size=16, family="serif")
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
