@@ -4,7 +4,7 @@
 
 if uname -a | grep ekpdeepthought -q
 then
-    X=$(nvidia-smi | grep -n ' 0w54655%' | head -1 | cut -f 1 -d ':')
+    X=$(nvidia-smi | grep -n ' 0%' | head -1 | cut -f 1 -d ':')
     if [ $X = 9 ]
     then
         GPU=0
@@ -18,9 +18,8 @@ then
     then
         GPU=3
     else
-        echo "Currently No Available GPU"
+        echo "### -- Currently No Available GPU -- ###"
     fi
-    echo $GPU
     export CUDA_VISIBLE_DEVICES=$GPU
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
     source /home/wunsch/workspace/root/build_ubuntu/bin/thisroot.sh
