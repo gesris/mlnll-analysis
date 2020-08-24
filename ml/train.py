@@ -226,9 +226,10 @@ def main(args):
         covariance_poi = inverse[0][0]
         constraint = tf.sqrt(covariance_poi)
         return constraint
-
+    logger.info("calculating SD")
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
+    logger.info("starting traiing")
 
     # Add minimization ops
     def get_minimize_op(loss):
