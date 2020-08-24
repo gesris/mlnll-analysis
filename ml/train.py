@@ -219,8 +219,6 @@ def main(args):
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
                 ).log_prob(n)
 
-
-    logger.info("second derivative with nuisances: {}".format(nuisances))
     # Compute constraint of mu
     def get_constraint(nll, params):
         hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
@@ -232,7 +230,6 @@ def main(args):
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
 
-    logger.info("starting minimization")
     # Add minimization ops
     def get_minimize_op(loss):
         optimizer = tf.train.AdamOptimizer()
