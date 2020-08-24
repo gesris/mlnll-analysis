@@ -213,7 +213,6 @@ def main(args):
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
-    logger.info("finished NLL loop")
     # Nuisance constraints
     for n in nuisances:
         nll -= tfp.distributions.Normal(
@@ -221,7 +220,7 @@ def main(args):
                 ).log_prob(n)
 
 
-    logger.info("second derivative")
+    logger.info("second derivative with nuisances: {}".format(nuisances))
     # Compute constraint of mu
     def get_constraint(nll, params):
         hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
