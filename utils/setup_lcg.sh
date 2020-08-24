@@ -19,7 +19,6 @@ then
         GPU=3
     else
         echo "Currently No Available GPU"
-        fi
     fi
     echo $GPU
     export CUDA_VISIBLE_DEVICES=$GPU
