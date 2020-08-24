@@ -213,6 +213,7 @@ def main(args):
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
+    logger.info("finished NLL loop")
     # Nuisance constraints
     for n in nuisances:
         nll -= tfp.distributions.Normal(
@@ -220,7 +221,7 @@ def main(args):
                 ).log_prob(n)
 
 
-
+    logger.info("second derivative")
     # Compute constraint of mu
     def get_constraint(nll, params):
         hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
@@ -232,6 +233,7 @@ def main(args):
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
 
+    logger.info("starting minimization")
     # Add minimization ops
     def get_minimize_op(loss):
         optimizer = tf.train.AdamOptimizer()
