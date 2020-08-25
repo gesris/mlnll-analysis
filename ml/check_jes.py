@@ -13,7 +13,7 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         tot_jes_hist.Add(h)
 
-for i in range(1, 9):
+for i in range(0, 10):
     entries.append(tot_jes_hist.GetBinContent(i))
 
 print(entries)
