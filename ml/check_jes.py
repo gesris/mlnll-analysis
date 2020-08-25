@@ -12,6 +12,7 @@ for key in d.GetListOfKeys():
     if 'Up' in name:
         h = d.Get(name)
         tot_jes_upshift.Add(h)
+        print(name)
 
 tot_jes_downshift = ROOT.TH1F("tot_jes_downshift", "", 8, 0, 1)
 jes_downshift = []
