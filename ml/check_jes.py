@@ -60,7 +60,7 @@ print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
 diff_hist = ROOT.TH1F("DIFF", "", 8, 0, 1)
 ztt_hist = d.Get('ZTT')
-ztt_shift_hist = d.Get('ZTT_CMS_scale_j_HF_2018Down')
+ztt_shift_hist = d.Get('ZTT_CMS_scale_j_FlavorQCDDown')
 diff_hist.Add(ztt_hist, ztt_shift_hist, -1, 1)
 
 ztt=[]
