@@ -201,11 +201,12 @@ def main(args):
 
         # Bin by bin uncertainties
         sys = tf.constant(0.0, tf.float64)
+        """
         #for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
         for p in ['w']:
             n = tf.constant(0.0, tf.float64)
             nuisances.append(n)
-            sys += n * tf.sqrt(procs_sumw2[p])
+            sys += n * tf.sqrt(procs_sumw2[p])"""
 
         # Expectations
         obs = sig + bkg
