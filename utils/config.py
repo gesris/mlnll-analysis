@@ -12,7 +12,7 @@ ntuples_base = path.join(basepath, 'ntuples')
 
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
-ml_score_base = ['/work/gristo/third_mlnll-analysis/output/8_bins_W-bbb/MLScores']
+ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_nosys/MLScores']
 
 # File list
 files = {
@@ -306,5 +306,5 @@ ml_classes = ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']
 # Analysis categories
 
 analysis_categories = {'nll_cat': Selection(name = 'nll_cat')}
-analysis_binning = np.linspace(0, 1, 7)
+analysis_binning = np.linspace(0, 1, 9)
 analysis_variable = 'ml_score'
