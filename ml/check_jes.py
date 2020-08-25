@@ -56,14 +56,22 @@ print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
 print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
+
+
+diff_hist = ROOT.TH1F("DIFF", "", 8, 0, 1)
 ztt_hist = d.Get('ZTT')
 ztt_shift_hist = d.Get('ZTT_CMS_scale_j_HF_2018Down')
+diff_hist.Add(ztt_hist, ztt_shift_hist, -1, 1)
+
 ztt=[]
 ztt_shift=[]
+diff=[]
 for i in range(1, 9):
     ztt.append(ztt_hist.GetBinContent(i))
     ztt_shift.append(ztt_shift_hist.GetBinContent(i))
+    diff.append(diff_hist.GetBinContent(i))
 print("ZTT: {}".format(ztt))
 print("ZTT Shift: {}".format(ztt_shift))
+print("DIFF: {}".format(diff))
 
 
