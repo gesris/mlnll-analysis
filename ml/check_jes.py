@@ -25,7 +25,11 @@ tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
 sig_bkg = []
 for key in d.GetListOfKeys():
     name = key.GetName()
-    if ['Up', 'Down', 'data_obs'] in name:
+    if 'Up' in name:
+        pass
+    elif 'Down' in name:
+        pass
+    elif 'data_obs' in name:
         pass
     else:
         h = d.Get(name)
