@@ -11,3 +11,5 @@ for key in d.GetListOfKeys():
     if 'Up' in name:
         h = d.Get(name)
         tot_jes_hist.Add(h)
+
+print(tot_jes_hist.GetEntries())
