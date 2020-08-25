@@ -26,8 +26,12 @@ jes_downshift = []
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Down' in name:
-        h = d.Get(name)
-        tot_jes_downshift.Add(h)
+        for class_name in classes:
+            if class_name in name:
+                h_nom = d.Get(class_name)
+                h_shift = d.Get(name)
+                # subtract hists to get shift only
+                tot_jes_downshift.Add(h_nom, h_shift, -1, 1)
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
 sig_bkg = []
