@@ -5,14 +5,19 @@ path = '/work/gristo/second_mlnll-analysis/output/8_bins_nosysimpl_shapes/cmb/co
 f = ROOT.TFile(path)
 d = f.Get('htt_mt_0_2018')
 
+classes = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'ggH125', 'qqH125']
+
 tot_jes_upshift = ROOT.TH1F("tot_jes_upshift", "", 8, 0, 1)
 jes_upshift = []
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Up' in name:
+        #for class_name in classes:
+        #    if class_name in name:
+        #        h_nom = 
         h = d.Get(name)
         tot_jes_upshift.Add(h)
-        print(name)
+    print(name)
 
 tot_jes_downshift = ROOT.TH1F("tot_jes_downshift", "", 8, 0, 1)
 jes_downshift = []
