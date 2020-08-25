@@ -2,23 +2,32 @@
 
 # TODO: Still still links to our local build, to be fixed as soon as ROOT 6.20 is on LCG
 
+# Logfile to check for available GPUs
+touch available_gpu.log
+
 if uname -a | grep ekpdeepthought -q
 then
     X=$(nvidia-smi | grep -n ' 0%' | head -1 | cut -f 1 -d ':')
     if [ $X = 9 ]
     then
         GPU=0
+        echo True > available_gpu.log
     elif [ $X = 12 ]
     then
         GPU=1
+        echo True > available_gpu.log
     elif [ $X = 15 ]
     then
         GPU=2
+        echo True > available_gpu.log
     elif [ $X = 18 ]
     then
         GPU=3
+        echo True > available_gpu.log
     else
         echo "### -- Currently No Available GPU -- ###"
+        echo False > available_gpu.log
+
     fi
     export CUDA_VISIBLE_DEVICES=$GPU
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
