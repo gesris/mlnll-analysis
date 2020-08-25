@@ -60,5 +60,5 @@ print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Down' in name:
-        if 'W' in name:
+        if 'ZTT' in name:
             print(name)
