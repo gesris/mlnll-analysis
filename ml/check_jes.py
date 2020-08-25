@@ -56,9 +56,14 @@ print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
 print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
+ztt_hist = d.Get('ZTT')
+ztt_shift_hist = d.Get('ZTT_CMS_scale_j_HF_2018Down')
+ztt=[]
+ztt_shift=[]
+for i in range(1, 9):
+    ztt.append(ztt_hist.GetBinContent(i))
+    ztt_shift.append(ztt_shift_hist.GetBinContent(i))
+print("ZTT: {}".format(ztt))
+print("ZTT Shift: {}".format(ztt_shift))
 
-for key in d.GetListOfKeys():
-    name = key.GetName()
-    if 'Down' in name:
-        if 'ZTT' in name:
-            print(name)
+
