@@ -20,6 +20,7 @@ for key in d.GetListOfKeys():
                 h_shift = d.Get(name)
                 # subtract hists to get shift only
                 tot_jes_upshift.Add(h_nom, h_shift, -1, 1)
+                print(class_name, name)
 
 tot_jes_downshift = ROOT.TH1F("tot_jes_downshift", "", 8, 0, 1)
 jes_downshift = []
