@@ -21,8 +21,19 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         tot_jes_downshift.Add(h)
 
+tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
+sig_bkg = []
+for key in d.GetListOfKeys():
+    name = key.GetName()
+    if ['Up', 'Down', 'data_obs'] in name:
+        pass
+    else:
+        h = d.Get(name)
+        tot_sig_bkg.Add(h)
+
 for i in range(1, 9):
     jes_upshift.append(tot_jes_upshift.GetBinContent(i))
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
+    sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-print("UPSHIFT: {} \nDOWNSHIFT: {}".format(jes_upshift, jes_downshift))
+print("UPSHIFT: {} \nDOWNSHIFT: {}\nSIG+BKG: {}".format(jes_upshift, jes_downshift, sig_bkg))
