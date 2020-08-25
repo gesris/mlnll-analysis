@@ -14,6 +14,6 @@ for key in d.GetListOfKeys():
         tot_jes_hist.Add(h)
 
 for i in range(1, 9):
-    entries.append(tot_jes_hist.GetEntries(i))
+    entries.append(tot_jes_hist.GetBinContent(i))
 
 print(entries)
