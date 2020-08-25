@@ -40,4 +40,6 @@ for i in range(1, 9):
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-print("UPSHIFT: {} \nDOWNSHIFT: {}\nSIG+BKG: {}".format(jes_upshift, jes_downshift, sig_bkg))
+print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
+print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
+print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
