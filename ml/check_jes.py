@@ -12,4 +12,4 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         tot_jes_hist.Add(h)
 
-print(tot_jes_hist.GetEntries())
+print(tot_jes_hist)
