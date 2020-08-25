@@ -6,10 +6,14 @@ f = ROOT.TFile(path)
 d = f.Get('htt_mt_0_2018')
 
 tot_jes_hist = ROOT.TH1F("tot_jes_hist", "", 8, 0, 1)
+entries = []
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Up' in name:
         h = d.Get(name)
         tot_jes_hist.Add(h)
 
-print(tot_jes_hist)
+for i in range(1, 9):
+    entries.append(tot_jes_hist.GetEntries(i))
+
+print(entries)
