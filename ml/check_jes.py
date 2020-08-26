@@ -1,5 +1,6 @@
 import ROOT
 import numpy as np
+from utils import config as cfg
 
 path = '/work/gristo/second_mlnll-analysis/output/8_bins_nosysimpl_shapes/cmb/common/htt_input_2018.root'
 f = ROOT.TFile(path)
@@ -17,7 +18,7 @@ for key in d.GetListOfKeys():
                 h_nom = d.Get(class_name)
                 h_shift = d.Get(name)
                 # subtract hists to get shift only
-                diff_hist.Add(h_nom, h_shift, -1, 1)
+                diff_hist.Add(h_nom, h_shift, **2*(-1), **2*1)
                 tot_jes_upshift.Add(diff_hist)
 
 
@@ -65,6 +66,19 @@ print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
 print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
-print("\n\nSIG + BKG each: \n{}".format(procs))
+"""
+Signal = ['ggH125', 'qqH125']
+Background = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'QCD']
 
-
+## Calculate NLL
+bins = np.array(cfg.analysis_binning)
+for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
+    sig = 0
+    for p in Signal:
+        sig += procs[p]
+    
+    bkg = 0
+    for p in Background:
+        bkg += procs[p]
+    
+"""
