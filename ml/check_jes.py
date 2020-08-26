@@ -9,7 +9,7 @@ classes = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'gg
 
 diff_hist = ROOT.TH1F("DIFF", "", 8, 0, 1)
 tot_jes_upshift = ROOT.TH1F("tot_jes_upshift", "", 8, 0, 1)
-jes_upshift = np.array([])
+jes_upshift = []
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Up' in name:
