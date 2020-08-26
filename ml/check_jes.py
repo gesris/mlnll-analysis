@@ -58,6 +58,7 @@ tot_downshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in downshifts:
     tot_downshifts += downshifts[h]
 print("DOWNSHIFT: {}".format(np.sqrt(np.abs(np.array(tot_downshifts)))))
+h = ROOT.new ROOT.TH1D("tot_jes_downshift", "", 8, 0, 1)
 
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
