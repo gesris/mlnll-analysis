@@ -30,7 +30,8 @@ for key in d.GetListOfKeys():
                 upshifts[name] = np.square(shift_array) - np.square(nom_array)
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
-    tot_upshifts += upshifts[h]
+    #tot_upshifts += upshifts[h]
+    print(upshifts[h])
 
 print(tot_upshifts)
 
