@@ -16,9 +16,9 @@ for key in d.GetListOfKeys():
         for class_name in classes:
             if class_name in name:
                 h_nom = d.Get(class_name)
-                #h_nom.Multiply(h_nom)
+                h_nom.Multiply(h_nom)
                 h_shift = d.Get(name)
-                #h_shift.Multiply(h_shift)
+                h_shift.Multiply(h_shift)
                 # subtract hists to get shift only
                 diff_hist.Add(h_nom, h_shift, -1, 1)
                 tot_jes_upshift.Add(diff_hist)
@@ -34,7 +34,7 @@ for key in d.GetListOfKeys():
                 h_nom = d.Get(class_name)
                 h_shift = d.Get(name)
                 # subtract hists to get shift only
-                diff_hist.Add(h_nom, h_shift, -1, 1)
+                diff_hist.Add(h_nom, h_shift, 1, -1)
                 tot_jes_downshift.Add(diff_hist)
 
 
@@ -64,7 +64,7 @@ for i in range(1, 9):
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
+print("UPSHIFT: {} \nSUM: {}".format(np.sqrt(jes_upshift),np.sum(jes_upshift)))
 print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
