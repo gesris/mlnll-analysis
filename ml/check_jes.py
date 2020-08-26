@@ -22,12 +22,15 @@ for key in d.GetListOfKeys():
                 diff_hist.Add(h_nom, h_shift, -1, 1)
                 tot_jes_upshift.Add(diff_hist)
 
-                placeholder_array = []
+                shift_array = []
+                nom_array = []
                 for i in range(1, 9):
-                    placeholder_array.append(h_shift.GetBinContent(i))
-                upshifts[name] = placeholder_array
-
-print(upshifts)
+                    shift_array.append(h_shift.GetBinContent(i))
+                    nom_array.append(h_shift.GetBinContent(i))
+                upshifts[name] = shift_array**2 - nom_array**2
+tot_upshifts = []
+for h in upshifts:
+    tot_upshifts += h
 
 
 downshifts = {}
@@ -43,6 +46,11 @@ for key in d.GetListOfKeys():
                 # subtract hists to get shift only
                 diff_hist.Add(h_nom, h_shift, 1, -1)
                 tot_jes_downshift.Add(diff_hist)
+
+                placeholder_array = []
+                for i in range(1, 9):
+                    placeholder_array.append(h_shift.GetBinContent(i))
+                downshifts[name] = placeholder_array
 
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
