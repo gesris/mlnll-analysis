@@ -16,9 +16,9 @@ for key in d.GetListOfKeys():
         for class_name in classes:
             if class_name in name:
                 h_nom = d.Get(class_name)
-                h_nom.Square(h_nom)
+                h_nom.Squared(h_nom)
                 h_shift = d.Get(name)
-                h_shift.Square(h_shift)
+                h_shift.Squared(h_shift)
                 # subtract hists to get shift only
                 diff_hist.Add(h_nom, h_shift, -1, 1)
                 tot_jes_upshift.Add(diff_hist)
