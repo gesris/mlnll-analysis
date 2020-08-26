@@ -32,6 +32,8 @@ tot_upshifts = []
 for h in upshifts:
     tot_upshifts += h
 
+print(tot_upshifts)
+
 
 downshifts = {}
 tot_jes_downshift = ROOT.TH1F("tot_jes_downshift", "", 8, 0, 1)
