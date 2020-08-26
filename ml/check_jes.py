@@ -31,9 +31,8 @@ for key in d.GetListOfKeys():
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
     tot_upshifts += upshifts[h]
-#    print(upshifts[h])
 
-print(np.sqrt(np.abs(np.array(tot_upshifts))))
+print("UPSHIFT:   {}".format(np.sqrt(np.abs(np.array(tot_upshifts)))))
 
 
 downshifts = {}
@@ -50,10 +49,17 @@ for key in d.GetListOfKeys():
                 diff_hist.Add(h_nom, h_shift, 1, -1)
                 tot_jes_downshift.Add(diff_hist)
 
-                placeholder_array = []
+                shift_array = []
+                nom_array = []
                 for i in range(1, 9):
-                    placeholder_array.append(h_shift.GetBinContent(i))
-                downshifts[name] = placeholder_array
+                    shift_array.append(h_shift.GetBinContent(i))
+                    nom_array.append(h_nom.GetBinContent(i))
+                downshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+tot_downshifts = [0, 0, 0, 0, 0, 0, 0, 0]
+for h in downshifts:
+    tot_downshifts += downshifts[h]
+
+print("DOWNSHIFT: {}".format(np.sqrt(np.abs(np.array(tot_downshifts)))))
 
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
