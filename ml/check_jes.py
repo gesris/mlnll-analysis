@@ -27,7 +27,7 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_shift.GetBinContent(i))
-                upshifts[name] = shift_array**2 - nom_array**2
+                upshifts[name] = np.square(shift_array) - np.square(nom_array)
 tot_upshifts = []
 for h in upshifts:
     tot_upshifts += h
