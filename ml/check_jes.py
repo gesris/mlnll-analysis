@@ -27,12 +27,14 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
-                upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                #upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                upshifts[name] = np.array(shift_array) - np.array(nom_array)
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
     tot_upshifts += upshifts[h]
 
-print("UPSHIFT:   {}".format(np.sqrt(np.abs(np.array(tot_upshifts)))))
+#print("UPSHIFT:   {}".format(np.sqrt(np.abs(np.array(tot_upshifts)))))
+print("UPSHIFT:   {}".format(np.abs(np.array(tot_upshifts))))
 
 
 downshifts = {}
@@ -88,7 +90,7 @@ for i in range(1, 9):
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
+#print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
 #print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 #print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
