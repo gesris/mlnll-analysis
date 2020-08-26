@@ -28,13 +28,13 @@ for key in d.GetListOfKeys():
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
                 #upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
-                upshifts[name] = np.array(shift_array) - np.array(nom_array)
+                upshifts[name] = np.array(shift_array)**2 - np.array(nom_array)**2
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
     tot_upshifts += upshifts[h]
 
-#print("UPSHIFT:   {}".format(np.sqrt(np.abs(np.array(tot_upshifts)))))
-print("UPSHIFT:   {}".format(np.abs(np.array(tot_upshifts))))
+print("UPSHIFT:   {}".format(np.sqrt(np.abs(np.array(tot_upshifts)))))
+#print("UPSHIFT:   {}".format(np.abs(np.array(tot_upshifts))))
 
 
 downshifts = {}
