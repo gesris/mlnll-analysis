@@ -60,7 +60,7 @@ for key in d.GetListOfKeys():
 
 
 for i in range(1, 9):
-    jes_upshift.append(tot_jes_upshift.GetBinContent(i))
+    jes_upshift.append(np.sqrt(tot_jes_upshift.GetBinContent(i)))
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
