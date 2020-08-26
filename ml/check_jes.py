@@ -37,6 +37,7 @@ for key in d.GetListOfKeys():
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
 sig_bkg = []
+procs = {}
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Up' in name:
@@ -49,6 +50,11 @@ for key in d.GetListOfKeys():
         h = d.Get(name)
         tot_sig_bkg.Add(h)
 
+        placeholder_array = []
+        for i in range(1, 9):
+            placeholder_array.append(h.GetBinContent(i))
+        procs[name] = placeholder_array
+
 
 for i in range(1, 9):
     jes_upshift.append(tot_jes_upshift.GetBinContent(i))
@@ -58,5 +64,7 @@ for i in range(1, 9):
 print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
 print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
+
+print("\n\nSIG + BKG each: \n{}".format(procs))
 
 
