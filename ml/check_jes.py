@@ -33,7 +33,7 @@ for h in upshifts:
     tot_upshifts += upshifts[h]
 #    print(upshifts[h])
 
-print(np.sqrt(np.array(tot_upshifts)))
+print(np.sqrt(np.abs(np.array(tot_upshifts))))
 
 
 downshifts = {}
