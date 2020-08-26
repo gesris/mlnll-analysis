@@ -27,7 +27,7 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i)**2)
                     nom_array.append(h_shift.GetBinContent(i)**2)
-                upshifts[name] = shift_array - nom_array
+                upshifts[name] = np.array(shift_array) - np.array(nom_array)
                 print(shift_array)
 #tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 #for h in upshifts:
@@ -83,9 +83,9 @@ for i in range(1, 9):
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
-print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
-print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
+#print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
+#print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
+#print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
 """
 Signal = ['ggH125', 'qqH125']
