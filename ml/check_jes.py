@@ -9,7 +9,7 @@ classes = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'gg
 
 diff_hist = ROOT.TH1F("DIFF", "", 8, 0, 1)
 tot_jes_upshift = ROOT.TH1F("tot_jes_upshift", "", 8, 0, 1)
-jes_upshift = []
+jes_upshift = np.array([])
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Up' in name:
@@ -60,11 +60,11 @@ for key in d.GetListOfKeys():
 
 
 for i in range(1, 9):
-    jes_upshift.append(np.sqrt(tot_jes_upshift.GetBinContent(i)))
+    jes_upshift.append(tot_jes_upshift.GetBinContent(i))
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
+print("UPSHIFT: {} \nSUM: {}".format(np.sqrt(jes_upshift),np.sum(jes_upshift)))
 print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
 print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
