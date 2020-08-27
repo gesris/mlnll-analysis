@@ -71,26 +71,9 @@ for class_name in classes:
     class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
 
 for name in class_tot_upshifts:
-    print("{}: {}".format(name, class_tot_upshifts[name]))
-
+    print("{}: {}".format(name, class_tot_upshifts[name][1]))
 
 """
-## Transferring root hists to np arrays
-tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
-for h in upshifts:
-    tot_upshifts += upshifts[h]
-#tot_upshifts = np.sqrt(np.abs(np.array(tot_upshifts)))
-tot_upshifts = np.abs(np.array(tot_upshifts))
-print("UPSHIFT:   {}".format(tot_upshifts))
-
-tot_downshifts = [0, 0, 0, 0, 0, 0, 0, 0]
-for h in downshifts:
-    tot_downshifts += downshifts[h]
-#tot_downshifts = np.sqrt(np.abs(np.array(tot_downshifts)))
-tot_downshifts = np.abs(np.array(tot_downshifts))
-print("DOWNSHIFT: {}".format(tot_downshifts))
-
-
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
     name = key.GetName()
