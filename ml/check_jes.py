@@ -67,19 +67,36 @@ print("DOWNSHIFT: {}".format(tot_downshifts))
 
 
 ## Writing new histograms with total up- and downshift
-"""for key in d.GetListOfKeys():
+for key in d.GetListOfKeys():
     name = key.GetName()
     if name in classes:
         h = d.Get(name)
-        newh = h.Clone()
-        newh.SetTitle(name + "g")
+
+        ## Upshift
+        newhup = h.Clone()
+        newhup.SetTitle(name + "_scale_j_totUp")
+        newhup.SetName(name + "_scale_j_totUp")
+
+        ## Downshift
+        newhdown = h.Clone()
+        newhdown.SetTitle(name + "_scale_j_totDown")
+        newhdown.SetName(name + "_scale_j_totDown")
+
+        ## Fill Bincontent
+        for i in range(1, 9):
+            newhup.SetBinContent(i, tot_upshifts[i])
+            newhdown.SetBinContent(i, tot_downshifts[i])
+
+        ## Write content
+        newhup.Write()
+        newhdown.Write()
+
+
+
+
+
+
 """
-
-
-
-
-
-
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
 sig_bkg = []
 procs = {}
@@ -106,11 +123,11 @@ for i in range(1, 9):
     jes_downshift.append(tot_jes_downshift.GetBinContent(i))
     sig_bkg.append(tot_sig_bkg.GetBinContent(i))
 
-#print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
-#print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
-#print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
+print("UPSHIFT: {} \nSUM: {}".format(jes_upshift,np.sum(jes_upshift)))
+print("DOWNSHIFT: {} \nSUM: {}".format(jes_downshift,np.sum(jes_downshift)))
+print("SIG + BKG: {} \nSUM: {}".format(sig_bkg,np.sum(sig_bkg)))
 
-"""
+
 Signal = ['ggH125', 'qqH125']
 Background = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'QCD']
 
