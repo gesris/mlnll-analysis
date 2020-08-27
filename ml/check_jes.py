@@ -30,8 +30,7 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
-                #upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
-                upshifts[name] = np.array(shift_array) - np.array(nom_array)
+                upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
     elif 'Down' in name:
         for class_name in classes:
             if class_name in name:
@@ -46,9 +45,36 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
-                #downshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
-                downshifts[name] = np.array(shift_array) - np.array(nom_array)
+                downshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
 
+#for element in upshifts:
+#    print("{}: {}".format(element, upshifts[element]))
+
+class_tot_upshifts = {}
+class_tot_downshifts = {}
+
+for class_ in classes:
+    tot_upshift = [0, 0, 0, 0, 0, 0, 0, 0]
+    for shift_name in upshifts:
+        if class_ in shift_name:
+            tot_upshift += upshifts[shift_name]
+    tot_upshift[tot_upshift < 0] = 0
+    tot_upshift = np.sqrt(np.array(tot_upshift))
+    class_tot_upshifts[class_ + '_scale_j_totUp'] = tot_upshift
+    
+    tot_downshift = [0, 0, 0, 0, 0, 0, 0, 0]
+    for shift_name in downshifts:
+        if class_ in shift_name:
+            tot_downshift += downshifts[shift_name]
+    tot_downshift[tot_downshift < 0] = 0
+    tot_downshift = np.sqrt(np.array(tot_downshift))
+    class_tot_downshifts[class_ + '_scale_j_totDown'] = tot_downshift
+
+for name in class_tot_upshifts:
+    print("{}: {}".format(name, class_tot_upshifts[name]))
+
+
+"""
 ## Transferring root hists to np arrays
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
@@ -65,10 +91,6 @@ tot_downshifts = np.abs(np.array(tot_downshifts))
 print("DOWNSHIFT: {}".format(tot_downshifts))
 
 
-for element in upshifts:
-    print("{}: {}".format(element, upshifts[element]))
-
-"""
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
     name = key.GetName()
