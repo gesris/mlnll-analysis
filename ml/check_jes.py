@@ -84,8 +84,8 @@ for key in d.GetListOfKeys():
 
         ## Fill Bincontent
         for i in range(1, 9):
-            newhup.SetBinContent(i, tot_upshifts[i])
-            newhdown.SetBinContent(i, tot_downshifts[i])
+            newhup.SetBinContent(i, tot_upshifts[i - 1])
+            newhdown.SetBinContent(i, tot_downshifts[i - 1])
 
         ## Write content
         newhup.Write()
