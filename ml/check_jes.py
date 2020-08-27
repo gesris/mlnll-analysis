@@ -94,8 +94,8 @@ for key in d.GetListOfKeys():
         for i in range(1, 9):
             newhup.SetBinContent(i, h.GetBinContent(i) + class_tot_upshifts[name + "_scale_j_totUp"][i - 1])
             newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name + "_scale_j_totDown"][i - 1])
-
+            print(class_tot_upshifts[name + "_scale_j_totUp"][i - 1] / h.GetBinContent(i) * 100)
         ## Write content
-        d.cd()
-        newhup.Write()
-        newhdown.Write()
+        #d.cd()
+        #newhup.Write()
+        #newhdown.Write()
