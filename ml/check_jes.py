@@ -73,7 +73,7 @@ for class_name in classes:
 for name in class_tot_upshifts:
     print("{}: {}".format(name, class_tot_upshifts[name][1]))
 
-"""
+
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
     name = key.GetName()
@@ -92,11 +92,10 @@ for key in d.GetListOfKeys():
 
         ## Fill Bincontent
         for i in range(1, 9):
-            newhup.SetBinContent(i, tot_upshifts[i - 1])
-            newhdown.SetBinContent(i, tot_downshifts[i - 1])
+            newhup.SetBinContent(i, class_tot_upshifts[name + "_scale_j_totUp"][i - 1])
+            newhdown.SetBinContent(i, class_tot_downshifts[name + "_scale_j_totDown"][i - 1])
 
         ## Write content
         d.cd()
         newhup.Write()
         newhdown.Write()
-"""
