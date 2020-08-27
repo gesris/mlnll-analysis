@@ -65,6 +65,10 @@ tot_downshifts = np.abs(np.array(tot_downshifts))
 print("DOWNSHIFT: {}".format(tot_downshifts))
 
 
+for element in upshifts:
+    print("{}: {}".format(element, upshifts[element]))
+
+"""
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
     name = key.GetName()
@@ -90,4 +94,4 @@ for key in d.GetListOfKeys():
         d.cd()
         newhup.Write()
         newhdown.Write()
-
+"""
