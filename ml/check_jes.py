@@ -83,6 +83,6 @@ for key in d.GetListOfKeys():
             newhdown.SetBinContent(i, tot_downshifts[i - 1])
 
         ## Write content
-        newhup.Write('htt_mt_0_2018/')
-        newhdown.Write('htt_mt_0_2018/')
+        newhup.Write(d)
+        newhdown.Write(d)
 
