@@ -14,6 +14,7 @@ upshifts = {}
 for key in d.GetListOfKeys():
     name = key.GetName()
     if 'Up' in name:
+        print(name)
         for class_name in classes:
             if class_name in name:
                 h_nom = d.Get(class_name)
@@ -31,7 +32,8 @@ for key in d.GetListOfKeys():
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
     tot_upshifts += upshifts[h]
-print("UPSHIFT:   {}".format(np.sqrt(np.abs(np.array(tot_upshifts)))))
+tot_upshifts = np.sqrt(np.abs(np.array(tot_upshifts)))
+print("UPSHIFT:   {}".format(tot_upshifts))
 
 
 downshifts = {}
@@ -57,8 +59,8 @@ for key in d.GetListOfKeys():
 tot_downshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in downshifts:
     tot_downshifts += downshifts[h]
-print("DOWNSHIFT: {}".format(np.sqrt(np.abs(np.array(tot_downshifts)))))
-h = ROOT.new ROOT.TH1D("tot_jes_downshift", "", 8, 0, 1)
+tot_downshifts = np.sqrt(np.abs(np.array(tot_downshifts)))
+print("DOWNSHIFT: {}".format(tot_downshifts))
 
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
