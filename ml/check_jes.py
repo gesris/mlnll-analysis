@@ -53,25 +53,26 @@ for key in d.GetListOfKeys():
 class_tot_upshifts = {}
 class_tot_downshifts = {}
 
-for class_ in classes:
+for class_name in classes:
     tot_upshift = [0, 0, 0, 0, 0, 0, 0, 0]
     for shift_name in upshifts:
-        if class_ in shift_name:
+        if class_name in shift_name:
+            print(class_name, shift_name)
             tot_upshift += upshifts[shift_name]
     tot_upshift[tot_upshift < 0] = 0
     tot_upshift = np.sqrt(np.array(tot_upshift))
-    class_tot_upshifts[class_ + '_scale_j_totUp'] = tot_upshift
+    class_tot_upshifts[class_name + '_scale_j_totUp'] = tot_upshift
     
     tot_downshift = [0, 0, 0, 0, 0, 0, 0, 0]
     for shift_name in downshifts:
-        if class_ in shift_name:
+        if class_name in shift_name:
             tot_downshift += downshifts[shift_name]
     tot_downshift[tot_downshift < 0] = 0
     tot_downshift = np.sqrt(np.array(tot_downshift))
-    class_tot_downshifts[class_ + '_scale_j_totDown'] = tot_downshift
+    class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
 
-for name in class_tot_upshifts:
-    print("{}: {}".format(name, class_tot_upshifts[name]))
+#for name in class_tot_upshifts:
+#    print("{}: {}".format(name, class_tot_upshifts[name]))
 
 
 """
