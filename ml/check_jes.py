@@ -30,7 +30,8 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
-                upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                #upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                upshifts[name] = np.array(shift_array) - np.array(nom_array)
     elif 'Down' in name:
         for class_name in classes:
             if class_name in name:
@@ -45,19 +46,22 @@ for key in d.GetListOfKeys():
                 for i in range(1, 9):
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
-                downshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                #downshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                downshifts[name] = np.array(shift_array) - np.array(nom_array)
 
 ## Transferring root hists to np arrays
 tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
     tot_upshifts += upshifts[h]
-tot_upshifts = np.sqrt(np.abs(np.array(tot_upshifts)))
+#tot_upshifts = np.sqrt(np.abs(np.array(tot_upshifts)))
+tot_upshifts = np.abs(np.array(tot_upshifts))
 print("UPSHIFT:   {}".format(tot_upshifts))
 
 tot_downshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in downshifts:
     tot_downshifts += downshifts[h]
-tot_downshifts = np.sqrt(np.abs(np.array(tot_downshifts)))
+#tot_downshifts = np.sqrt(np.abs(np.array(tot_downshifts)))
+tot_downshifts = np.abs(np.array(tot_downshifts))
 print("DOWNSHIFT: {}".format(tot_downshifts))
 
 
