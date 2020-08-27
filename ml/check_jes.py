@@ -7,6 +7,8 @@ f = ROOT.TFile(path)
 d = f.Get('htt_mt_0_2018')
 classes = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'ggH125', 'qqH125']
 
+
+## Calculating total upshift
 diff_hist = ROOT.TH1F("DIFF", "", 8, 0, 1)
 tot_jes_upshift = ROOT.TH1F("tot_jes_upshift", "", 8, 0, 1)
 jes_upshift = []
@@ -36,6 +38,7 @@ tot_upshifts = np.sqrt(np.abs(np.array(tot_upshifts)))
 print("UPSHIFT:   {}".format(tot_upshifts))
 
 
+## Calculating total downshift
 downshifts = {}
 tot_jes_downshift = ROOT.TH1F("tot_jes_downshift", "", 8, 0, 1)
 jes_downshift = []
@@ -61,6 +64,20 @@ for h in downshifts:
     tot_downshifts += downshifts[h]
 tot_downshifts = np.sqrt(np.abs(np.array(tot_downshifts)))
 print("DOWNSHIFT: {}".format(tot_downshifts))
+
+
+## Writing new histograms with total up- and downshift
+"""for key in d.GetListOfKeys():
+    name = key.GetName()
+    if name in classes:
+        h = d.Get(name)
+        newh = h.Clone()
+        newh.SetTitle(name + "g")
+"""
+
+
+
+
 
 
 tot_sig_bkg = ROOT.TH1F("tot_sig_bkg", "", 8, 0, 1)
