@@ -54,14 +54,14 @@ tot_upshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in upshifts:
     tot_upshifts += upshifts[h]
 #tot_upshifts = np.sqrt(np.abs(np.array(tot_upshifts)))
-tot_upshifts = np.array(tot_upshifts)
+tot_upshifts = np.abs(np.array(tot_upshifts))
 print("UPSHIFT:   {}".format(tot_upshifts))
 
 tot_downshifts = [0, 0, 0, 0, 0, 0, 0, 0]
 for h in downshifts:
     tot_downshifts += downshifts[h]
 #tot_downshifts = np.sqrt(np.abs(np.array(tot_downshifts)))
-tot_downshifts = np.array(tot_downshifts)
+tot_downshifts = np.abs(np.array(tot_downshifts))
 print("DOWNSHIFT: {}".format(tot_downshifts))
 
 
