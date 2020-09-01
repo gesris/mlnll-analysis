@@ -2,6 +2,11 @@ import ROOT
 import numpy as np
 from utils import config as cfg
 
+import matplotlib as mpl
+mpl.use('Agg')
+import matplotlib.pyplot as plt
+mpl.rc("font", size=16, family="serif")
+
 path = '/work/gristo/second_mlnll-analysis/output/8_bins_nosysimpl_shapes/cmb/common/htt_input_2018.root'
 f = ROOT.TFile(path, 'update')
 d = f.Get('htt_mt_0_2018')
@@ -99,9 +104,24 @@ plot_w = nominal["ZTT"]
 plot_w_shift = nominal["ZTT"] + class_tot_upshifts["ZTT"]
 plot_w_weightshift = np.array(nominal["ZTT"]) * 1.07822
 
-print(plot_w)
-print(plot_w_shift)
-print(plot_w_weightshift)
+bins = np.array(cfg.analysis_binning)
+bins_center = []
+for left, right in zip(bins[1:], bins[:-1]):
+    bins_center.append(left + (right - left) / 2)
+
+plt.figure(figsize=(7, 6))
+plt.hist(bins_center, weights=plot_w, bins=bins, histtype="step", lw=2, color='C0')
+plt.hist(bins_center, weights=plot_w_shift, bins=bins, histtype="step", lw=2, ls=":", color='C1')
+plt.hist(bins_center, weights=plot_w_shift, bins=bins, histtype="step", lw=2, ls="--", color='C1')
+plt.plot([0], [0], lw=2, color='C0', label="nominal")
+plt.plot([0], [0], lw=2, color='C1',ls=":", label="shift")
+plt.plot([0], [0], lw=2, color='C1',ls="--", label="weight shift")
+plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+plt.xlabel("$f$")
+plt.ylabel("Counts")
+#plt.yscale('log')
+plt.savefig("/home/gristo/workspace/plots/JES_hist.png", bbox_inches = "tight")
+
 
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
