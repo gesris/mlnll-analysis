@@ -95,9 +95,9 @@ tot_class_events = {"W": 127537, \
 
 
 ## EXAMPLE HISTOGRAM of W
-plot_w = nominal["W"]
-plot_w_shift = nominal["W"] + class_tot_upshifts["W"]
-plot_w_weightshift = np.array(nominal["W"]) * 1.00654
+plot_w = nominal["ZTT"]
+plot_w_shift = nominal["ZTT"] + class_tot_upshifts["W"]
+plot_w_weightshift = np.array(nominal["ZTT"]) * 1.07822
 
 print(plot_w)
 print(plot_w_shift)
