@@ -58,7 +58,8 @@ for class_name in classes:
             tot_upshift += upshifts[shift_name]
     tot_upshift[tot_upshift < 0] = 0
     tot_upshift = np.sqrt(np.array(tot_upshift))
-    class_tot_upshifts[class_name + '_scale_j_totUp'] = tot_upshift
+    #class_tot_upshifts[class_name + '_scale_j_totUp'] = tot_upshift
+    class_tot_upshifts[class_name] = tot_upshift
     
     tot_downshift = [0, 0, 0, 0, 0, 0, 0, 0]
     for shift_name in downshifts:
@@ -66,7 +67,8 @@ for class_name in classes:
             tot_downshift += downshifts[shift_name]
     tot_downshift[tot_downshift < 0] = 0
     tot_downshift = np.sqrt(np.array(tot_downshift))
-    class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
+    #class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
+    class_tot_downshifts[class_name] = tot_downshift
 
 
 tot_class_events = {"W": 127537, \
