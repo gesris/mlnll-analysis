@@ -12,6 +12,7 @@ classes = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'gg
 diff_hist = ROOT.TH1F("DIFF", "", 8, 0, 1)
 tot_jes_upshift = ROOT.TH1F("tot_jes_upshift", "", 8, 0, 1)
 tot_jes_downshift = ROOT.TH1F("tot_jes_downshift", "", 8, 0, 1)
+nominal = {}
 upshifts = {}
 downshifts = {}
 for key in d.GetListOfKeys():
@@ -31,6 +32,7 @@ for key in d.GetListOfKeys():
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
                 upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
+                nominal[name] = nom_array
     elif 'Down' in name:
         for class_name in classes:
             if class_name in name:
@@ -85,12 +87,21 @@ tot_class_events = {"W": 127537, \
 "ggH125": 2118.61, \
 "qqH125": 269.456}
 
-for name in class_tot_upshifts:
-    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
-print("---\n")
-for name in class_tot_downshifts:
-    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_downshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
+#for name in class_tot_upshifts:
+#    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
+#print("---\n")
+#for name in class_tot_downshifts:
+#    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_downshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
 
+
+## EXAMPLE HISTOGRAM of W
+plot_w = nominal["W"]
+plot_w_shift = nominal["W"] + class_tot_upshifts["W"]
+plot_w_weightshift = nominal["W"] * 1.00654
+
+print(plot_w)
+print(plot_w_shift)
+print(plot_w_weightshift)
 
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
