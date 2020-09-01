@@ -32,7 +32,7 @@ for key in d.GetListOfKeys():
                     shift_array.append(h_shift.GetBinContent(i))
                     nom_array.append(h_nom.GetBinContent(i))
                 upshifts[name] = np.square(np.array(shift_array) - np.array(nom_array))
-                nominal[name] = nom_array
+                nominal[class_name] = nom_array
     elif 'Down' in name:
         for class_name in classes:
             if class_name in name:
