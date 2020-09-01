@@ -86,10 +86,10 @@ tot_class_events = {"W": 127537, \
 "qqH125": 269.456}
 
 for name in class_tot_upshifts:
-    print("{} SQRSMSQ-SHIFT: {}, TOT-EVENTS: {}, WEIGHT: {}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
+    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
 print("---\n")
 for name in class_tot_downshifts:
-    print("{} SQRSMSQ-SHIFT: {}, TOT-EVENTS: {}, WEIGHT: {}".format(name, np.sqrt(np.sum(np.square(class_tot_downshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
+    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_downshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
 
 
 ## Writing new histograms with total up- and downshift
