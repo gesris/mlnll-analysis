@@ -69,6 +69,26 @@ for class_name in classes:
     class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
 
 
+tot_class_events = {"W": 127537, \
+"ZTT": 237267, \
+"QCD": 34166.3, \
+"ZL": 9376.46, \
+"ZJ": 5844.12, \
+"TTT": 4032.03, \
+"TTL": 60032.6, \
+"TTJ": 11925.7, \
+"VVJ": 3261.57, \
+"VVT": 1322.81, \
+"VVL": 12812.7, \
+"ggH125": 2118.61, \
+"qqH125": 269.456}
+
+for name in class_tot_upshifts:
+    print(name, class_tot_upshifts[name], tot_class_events[name])
+print("---\n")
+for name in class_tot_downshifts:
+    print(name, class_tot_downshifts[name], tot_class_events[name])
+
 
 ## Writing new histograms with total up- and downshift
 for key in d.GetListOfKeys():
