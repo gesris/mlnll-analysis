@@ -92,35 +92,47 @@ tot_class_events = {"W": 127537, \
 "ggH125": 2118.61, \
 "qqH125": 269.456}
 
-#for name in class_tot_upshifts:
+class_weights_up = {}
+class_weights_down = {}
+
+for name in class_tot_upshifts:
+    class_weights_up[name] = (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]
 #    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
 #print("---\n")
-#for name in class_tot_downshifts:
+for name in class_tot_downshifts:
 #    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_downshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
+    class_weights_down[name] = (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]
 
 
 ## EXAMPLE HISTOGRAM of W
-plot_w = nominal["ZTT"]
-plot_w_shift = nominal["ZTT"] + class_tot_upshifts["ZTT"]
-plot_w_weightshift = np.array(nominal["ZTT"]) * 1.07822
-
 bins = np.array(cfg.analysis_binning)
 bins_center = []
 for left, right in zip(bins[1:], bins[:-1]):
     bins_center.append(left + (right - left) / 2)
 
-plt.figure(figsize=(7, 6))
-plt.hist(bins_center, weights=plot_w, bins=bins, histtype="step", lw=2, color='C0')
-plt.hist(bins_center, weights=plot_w_shift, bins=bins, histtype="step", lw=2, ls=":", color='C1')
-plt.hist(bins_center, weights=plot_w_shift, bins=bins, histtype="step", lw=2, ls="--", color='C1')
-plt.plot([0], [0], lw=2, color='C0', label="nominal")
-plt.plot([0], [0], lw=2, color='C1',ls=":", label="shift")
-plt.plot([0], [0], lw=2, color='C1',ls="--", label="weight shift")
-plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-plt.xlabel("$f$")
-plt.ylabel("Counts")
-plt.yscale('log')
-plt.savefig("/home/gristo/workspace/plots/JES_hist.png", bbox_inches = "tight")
+for name in classes:
+    for shift in ["Up", "Down"]:
+        weigths = nominal[name]
+        if shift == "Up":
+            weights_shifted = nominal[name] + class_tot_upshifts[name]
+            weights_weightshifted = np.array(nominal[name]) * class_weights_up[name]
+        else:
+            weights_shifted = nominal[name] + class_tot_downshifts[name]
+            weights_weightshifted = np.array(nominal[name]) * (1 - (class_weights_down[name] - 1))
+        
+
+        plt.figure(figsize=(7, 6))
+        plt.hist(bins_center, weights=weigths, bins=bins, histtype="step", lw=2, color='C0')
+        plt.hist(bins_center, weights=weights_shifted, bins=bins, histtype="step", lw=2, ls=":", color='C1')
+        plt.hist(bins_center, weights=weights_weightshifted, bins=bins, histtype="step", lw=2, ls="--", color='C1')
+        plt.plot([0], [0], lw=2, color='C0', label=name + " nominal")
+        plt.plot([0], [0], lw=2, color='C1',ls=":", label=name + " " + shift + " shift")
+        plt.plot([0], [0], lw=2, color='C1',ls="--", label=name + " " + shift + " weight shift")
+        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+        plt.xlabel("$f$")
+        plt.ylabel("Counts")
+        plt.yscale('log')
+        plt.savefig("/home/gristo/workspace/plots/JES_hist_{}_{}.png".format(name, shift), bbox_inches = "tight")
 
 
 ## Writing new histograms with total up- and downshift
