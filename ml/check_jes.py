@@ -112,14 +112,15 @@ for left, right in zip(bins[1:], bins[:-1]):
 
 for name in classes:
     for shift in ["Up", "Down"]:
-        print()
         weigths = nominal[name]
         if shift == "Up":
             weights_shifted = nominal[name] + class_tot_upshifts[name]
             weights_weightshifted = np.array(nominal[name]) * class_weights_up[name]
+            print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_up[name]))
         else:
             weights_shifted = nominal[name] + class_tot_downshifts[name]
             weights_weightshifted = np.array(nominal[name]) * class_weights_down[name]
+            print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_down[name]))
         
 
         plt.figure(figsize=(7, 6))
