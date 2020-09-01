@@ -119,7 +119,7 @@ plt.plot([0], [0], lw=2, color='C1',ls="--", label="weight shift")
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
 plt.xlabel("$f$")
 plt.ylabel("Counts")
-#plt.yscale('log')
+plt.yscale('log')
 plt.savefig("/home/gristo/workspace/plots/JES_hist.png", bbox_inches = "tight")
 
 
