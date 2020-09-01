@@ -104,7 +104,7 @@ for name in class_tot_downshifts:
     class_weights_down[name] = (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]
 
 
-## EXAMPLE HISTOGRAM of W
+## Plotting all shifts and weightshifts for comparison
 bins = np.array(cfg.analysis_binning)
 bins_center = []
 for left, right in zip(bins[1:], bins[:-1]):
@@ -113,6 +113,7 @@ for left, right in zip(bins[1:], bins[:-1]):
 for name in classes:
     for shift in ["Up", "Down"]:
         weigths = nominal[name]
+        
         if shift == "Up":
             weights_shifted = nominal[name] + class_tot_upshifts[name]
             weights_weightshifted = np.array(nominal[name]) * class_weights_up[name]
@@ -121,7 +122,6 @@ for name in classes:
             weights_shifted = nominal[name] + class_tot_downshifts[name]
             weights_weightshifted = np.array(nominal[name]) * class_weights_down[name]
             print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_down[name]))
-        
 
         plt.figure(figsize=(7, 6))
         plt.hist(bins_center, weights=weigths, bins=bins, histtype="step", lw=2, color='C0')
@@ -155,8 +155,8 @@ for key in d.GetListOfKeys():
 
         ## Fill Bincontent
         for i in range(1, 9):
-            newhup.SetBinContent(i, h.GetBinContent(i) + class_tot_upshifts[name + "_scale_j_totUp"][i - 1])
-            newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name + "_scale_j_totDown"][i - 1])
+            newhup.SetBinContent(i, h.GetBinContent(i) + class_tot_upshifts[name][i - 1])
+            newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name][i - 1])
         
         ## Write content
         #d.cd()
