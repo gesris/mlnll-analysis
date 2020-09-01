@@ -86,7 +86,7 @@ tot_class_events = {"W": 127537, \
 "qqH125": 269.456}
 
 for name in class_tot_upshifts:
-    print("{} SQSM: {}, TOT: {}".format(name, np.sum(np.square(class_tot_upshifts[name])), tot_class_events[name]))
+    print("{} SQSM: {}, TOT: {}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name]))
 print("---\n")
 for name in class_tot_downshifts:
     print("{} SQSM: {}, TOT: {}".format(name, class_tot_downshifts[name], tot_class_events[name]))
