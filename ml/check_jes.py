@@ -65,7 +65,6 @@ for class_name in classes:
             tot_upshift += upshifts[shift_name]
     tot_upshift[tot_upshift < 0] = 0
     tot_upshift = np.sqrt(np.array(tot_upshift))
-    #class_tot_upshifts[class_name + '_scale_j_totUp'] = tot_upshift
     class_tot_upshifts[class_name] = tot_upshift
     
     tot_downshift = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -74,37 +73,18 @@ for class_name in classes:
             tot_downshift += downshifts[shift_name]
     tot_downshift[tot_downshift < 0] = 0
     tot_downshift = np.sqrt(np.array(tot_downshift))
-    #class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
     class_tot_downshifts[class_name] = tot_downshift
 
-for element in nominal:
-    print("{}: {}".format(element, nominal[element]))
 
-
-tot_class_events = {"W": 127537, \
-"ZTT": 237267, \
-"QCD": 34166.3, \
-"ZL": 9376.46, \
-"ZJ": 5844.12, \
-"TTT": 4032.03, \
-"TTL": 60032.6, \
-"TTJ": 11925.7, \
-"VVJ": 3261.57, \
-"VVT": 1322.81, \
-"VVL": 12812.7, \
-"ggH125": 2118.61, \
-"qqH125": 269.456}
-
+## Calculate weights resulting from shifts
 class_weights_up = {}
 class_weights_down = {}
 
 for name in class_tot_upshifts:
-    class_weights_up[name] = (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]
-#    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_upshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_upshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
-#print("---\n")
+    class_weights_up[name] = (np.array(nominal[name]) + np.array(class_tot_upshifts[name])) /  np.array(nominal[name])
+
 for name in class_tot_downshifts:
-#    print("{} SQRSMSQ-SHIFT: {:.2f}, TOT-EVENTS: {}, WEIGHT: {:.5f}".format(name, np.sqrt(np.sum(np.square(class_tot_downshifts[name]))), tot_class_events[name], (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]))
-    class_weights_down[name] = (np.sqrt(np.sum(np.square(class_tot_downshifts[name]))) + tot_class_events[name]) / tot_class_events[name]
+    class_weights_down[name] = (np.array(nominal[name]) + np.array(class_tot_downshifts[name])) /  np.array(nominal[name])
 
 
 ## Plotting all shifts and weightshifts for comparison
@@ -119,11 +99,11 @@ for name in classes:
         
         if shift == "Up":
             weights_shifted = nominal[name] + class_tot_upshifts[name]
-            weights_weightshifted = np.array(nominal[name]) * class_weights_up[name]
+            weights_weightshifted = np.array(nominal[name]) * np.array(class_weights_up[name])
             print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_up[name]))
         else:
             weights_shifted = nominal[name] + class_tot_downshifts[name]
-            weights_weightshifted = np.array(nominal[name]) * class_weights_down[name]
+            weights_weightshifted = np.array(nominal[name]) * np.array(class_weights_down[name])
             print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_down[name]))
 
         plt.figure(figsize=(7, 6))
