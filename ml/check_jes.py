@@ -77,6 +77,9 @@ for class_name in classes:
     #class_tot_downshifts[class_name + '_scale_j_totDown'] = tot_downshift
     class_tot_downshifts[class_name] = tot_downshift
 
+for element in nominal:
+    print("{}: {}".format(element, nominal[element]))
+
 
 tot_class_events = {"W": 127537, \
 "ZTT": 237267, \
