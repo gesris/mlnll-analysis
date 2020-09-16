@@ -1,6 +1,7 @@
 import ROOT
 import numpy as np
 from utils import config as cfg
+import array
 
 import matplotlib as mpl
 mpl.use('Agg')
