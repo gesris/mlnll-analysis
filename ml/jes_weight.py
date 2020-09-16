@@ -1,6 +1,7 @@
 import ROOT
 import numpy as np
 from utils import config as cfg
+import matplotlib.pyplot as plt
 
 # cfg.basepath + cfg.files = root file location
 
@@ -17,8 +18,8 @@ tree = d.Get('ntuple')
 dara = tree.AsMatrix(["jpt_1"])
 print(dara)
 
-import matplotlib.pyplot as plt
 plt.hist(dara)
+plt.show()
 
 """
 for name in cfg.files:
