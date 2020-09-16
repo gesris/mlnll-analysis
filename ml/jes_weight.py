@@ -14,8 +14,8 @@ for name in cfg.files:
             name = key.GetName()
             if 'mt_jecUnc' in name:
                 if 'Up' in name:
-                    d = name.Get("ntuple")
-                    h_up = d.GetHistogram('jpt_1')
+                    name.cd()
+                    print(ntuple.GetBinContent(1))
                 elif 'Down' in name:
                     pass
 
