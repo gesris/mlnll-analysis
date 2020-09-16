@@ -24,7 +24,7 @@ print(nominal["jpt_1"] - upshift["jpt_1"])
 
 f = ROOT.TFile(path)
 d = f.Get('mt_nominal/ntuple')
-print(d.Print())
+print(d.Print(["jpt_1"]))
 
 
 
