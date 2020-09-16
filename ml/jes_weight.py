@@ -11,21 +11,22 @@ mpl.rc("font", size=16, family="serif")
 path = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
 
 
-"""
-df = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path)
-hist = df.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with entries for jpt_1
-print(hist["jpt_1"])
 
-nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
-upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
+df_nominal = ROOT.RDataFrame('mt_nominal/ntuple', path)
+df_up = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path)
 
-print(nominal["jpt_1"] - upshift["jpt_1"])
-"""
+dir_up = df_up.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with entries for jpt_1
+print(dir_up["jpt_1"])
 
-f = ROOT.TFile(path)
-d = f.Get('mt_nominal/ntuple')
-print(d.Print(["jpt_1"]))
+hist_nominal = df_nominal.Histo1D("jpt_1")
+hist_up = df_up.Histo1D("jpt_1")
 
+hist_nominal.Add(hist_up.GetPtr())
+
+
+#nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
+#upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
+#print(nominal["jpt_1"] - upshift["jpt_1"])
 
 
 
