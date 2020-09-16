@@ -21,7 +21,7 @@ print(dir_up["jpt_1"])
 hist_nominal = df_nominal.Histo1D("jpt_1")
 hist_up = df_up.Histo1D("jpt_1")
 
-hist_nominal.Add(hist_up.GetPtr())
+hist_nominal.Merge(hist_up.GetPtr())
 
 
 #nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
