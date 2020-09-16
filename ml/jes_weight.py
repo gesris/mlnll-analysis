@@ -11,4 +11,6 @@ for name in cfg.files:
         #d = f.Get(path)
         for key in f.GetListOfKeys():
             name = key.GetName()
-            print(name)
+            if 'mt_jecUnc' in name:
+                print(name)
+    break
