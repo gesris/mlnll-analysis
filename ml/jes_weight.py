@@ -44,7 +44,8 @@ for left, right in zip(bins[1:], bins[:-1]):
     bins_center.append(left + (right - left) / 2)
 
 plt.figure(figsize=(7, 6))
-plt.hist(bins_center, weights=weigths, bins=bins, histtype="step", lw=2, color='C0')
+plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=2, color='C0')
+plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=2, color='C0')
 plt.savefig('/home/gristo/workspace/plots/test_hist.png')
 
 
