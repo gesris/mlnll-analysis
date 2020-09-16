@@ -7,7 +7,7 @@ from utils import config as cfg
 for name in cfg.files:
     for path in cfg.files[name]:
         f = ROOT.TFile(cfg.basepath + path, 'update')
-        d = f.Get('mt_nominal')
+        d = f.Get(path)
         for key in d.GetListOfKeys():
             name = key.GetName()
             print(name)
