@@ -19,22 +19,20 @@ df_up = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path)
 dir_up = df_up.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with entries for jpt_1
 print(dir_up["jpt_1"])
 
-hist_nominal = df_nominal.Histo1D("jpt_1")
-hist_nominal2 = df_nominal.Histo1D("jpt_1")
-hist_up = df_up.Histo1D("jpt_1")
+#hist_nominal = df_nominal.Histo1D("jpt_1")
+#hist_nominal2 = df_nominal.Histo1D("jpt_1")
+#hist_up = df_up.Histo1D("jpt_1")
 
-hist_nominal.Add(hist_up.GetPtr(), -1)
+#hist_nominal.Add(hist_up.GetPtr(), -1)
 #for i in range(1, 70):
 #    print(hist_nominal2.GetBinContent(i), hist_up.GetBinContent(i), hist_nominal.GetBinContent(i))
 
-diff_hist = ROOT.TH1D("DIFF", "", 70, 0, 800)
-diff_hist.Add(hist_up.GetPtr(), hist_nominal, -1, 1)
-for i in range(1, 71):
-    print(diff_hist.GetBinContent(i))
 
-#nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
-#upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
-#print(nominal["jpt_1"] - upshift["jpt_1"])
+
+nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
+upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
+diff = nominal["jpt_1"] - upshift["jpt_1"]
+print(diff)
 
 
 
