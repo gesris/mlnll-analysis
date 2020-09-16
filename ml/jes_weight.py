@@ -15,7 +15,7 @@ f = ROOT.TFile('/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilt
 d = f.Get('mt_jecUncRelativeBalUp')
 tree = d.Get('ntuple')
 #branch = tree.jpt_1
-print(tree)
+print(tree.jpt_1)
 #for entry in tree:
 #    x = entry.jpt_1
 #    entries.append(x)
