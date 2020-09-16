@@ -23,9 +23,9 @@ upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1
 downshift = ROOT.RDataFrame('mt_jecUncRelativeBalDown/ntuple', path).AsNumpy(["jpt_1"])
 #diff = nominal["jpt_1"] - upshift["jpt_1"]
 
-heights_nom, bins = np.histogram(nominal["jpt_1"], bins=20, range=(-10, 800))
-heights_up, _ = np.histogram(upshift["jpt_1"], bins=20, range=(-10, 800))
-heights_down, _ = np.histogram(downshift["jpt_1"], bins=20, range=(-10, 800))
+heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
+heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
+heights_down, _ = np.histogram(downshift["jpt_1"], bins=10, range=(-10, 800))
 
 bins_center = []
 for left, right in zip(bins[1:], bins[:-1]):
