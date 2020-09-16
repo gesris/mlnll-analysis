@@ -15,7 +15,13 @@ upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1
 print(nominal["jpt_1"] - upshift["jpt_1"])
 
 bins = np.linspace(0, 800, 9)
-print(bins)
+bins_center = []
+for left, right in zip(bins[1:], bins[:-1]):
+    bins_center.append(left + (right - left) / 2)
+
+plt.figure(figsize=(7, 6))
+plt.hist(bins_center, weights=nominal["jpt_1"], bins=bins, histtype="step", lw=2, color='C0')
+plt.savefig('/home/gristo/workspace/plots/test_histogram.png')
 
 
 
