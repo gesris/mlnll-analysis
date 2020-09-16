@@ -34,7 +34,7 @@ upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1
 diff = nominal["jpt_1"] - upshift["jpt_1"]
 print(diff)
 
-heights, bin_bounds = np.histogram(diff, bins=60)
+heights, bin_bounds = np.histogram(nominal, bins=60)
 print(heights)
 print(bin_bounds)
 
