@@ -14,6 +14,9 @@ upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1
 
 print(nominal["jpt_1"] - upshift["jpt_1"])
 
+bins = np.linspace(0, 800, 9)
+print(bins)
+
 
 
 """
