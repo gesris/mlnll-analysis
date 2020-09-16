@@ -41,8 +41,8 @@ for left, right in zip(bins[1:], bins[:-1]):
     bins_center.append(left + (right - left) / 2)
 
 plt.figure(figsize=(7, 6))
-plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=0.5, color='C0')
-plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=0.5, color='C1')
+plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=0.9, color='C0')
+plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=0.9, color='C1')
 plt.plot([0], [0], lw=2, color='C0', label="nominal")
 plt.plot([0], [0], lw=2, color='C1', label="up shift")
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
