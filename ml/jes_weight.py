@@ -20,11 +20,12 @@ dir_up = df_up.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with ent
 print(dir_up["jpt_1"])
 
 hist_nominal = df_nominal.Histo1D("jpt_1")
+hist_nominal2 = df_nominal.Histo1D("jpt_1")
 hist_up = df_up.Histo1D("jpt_1")
 
 hist_nominal.Add(hist_up.GetPtr(), -1)
 for i in range(20):
-    print(hist_nominal.GetBinContent(i))
+    print(hist_nominal2.GetBinContent(i), hist_up.GetBinContent(i), hist_nominal.GetBinContent(i))
 
 
 
