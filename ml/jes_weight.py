@@ -9,8 +9,8 @@ df = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path)
 hist = df.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with entries for jpt_1
 print(hist["jpt_1"])
 
-nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).Filter(["jpt_1"])
-upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).Filter(["jpt_1"])
+nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).Filter("jpt_1")
+upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).Filter("jpt_1")
 
 nominal.Add(nominal, upshift, -1, 1)
 print(nominal.AsNumpy(["jpt_1"]))
