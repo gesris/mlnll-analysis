@@ -14,8 +14,9 @@ for name in cfg.files:
             name = key.GetName()
             if 'mt_jecUnc' in name:
                 if 'Up' in name:
-                    h_up = f.Get(name + '/jpt_1')
-                    upshifts[name] = h_up
+                    #h_up = f.Get(name + '/jpt_1')
+                    #upshifts[name] = h_up
+                    print(name)
                 elif 'Down' in name:
                     pass
 
