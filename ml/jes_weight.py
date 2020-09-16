@@ -34,9 +34,19 @@ upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1
 diff = nominal["jpt_1"] - upshift["jpt_1"]
 print(diff)
 
-heights, bin_bounds = np.histogram(nominal["jpt_1"], bins=20)
-print(heights)
-print(bin_bounds)
+heights_nom, bins = np.histogram(nominal["jpt_1"], bins=20)
+heights_up, _ = np.histogram(upshift["jpt_1"], bins=20)
+#print(heights_nom)
+#print(bins)
+
+bins_center = []
+for left, right in zip(bins[1:], bins[:-1]):
+    bins_center.append(left + (right - left) / 2)
+
+plt.figure(figsize=(7, 6))
+plt.hist(bins_center, weights=weigths, bins=bins, histtype="step", lw=2, color='C0')
+plt.savefig('/home/gristo/workspace/plots/test_hist.png')
+
 
 
 
