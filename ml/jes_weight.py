@@ -8,17 +8,18 @@ upshifts = {}
 """
 df = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root')
 hist = df.Filter("jpt_1")
-print(hist.GetEntry(1))
 """
+
 entries = []
 f = ROOT.TFile('/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root')
 d = f.Get('mt_jecUncRelativeBalUp')
 tree = d.Get('ntuple')
-for entry in tree:
-    x = entry.jpt_1
-    entries.append(x)
-print(entries)
-print(len(entries))
+branch = tree.Get('jpt_1')
+#for entry in tree:
+#    x = entry.jpt_1
+#    entries.append(x)
+#print(entries)
+#print(len(entries))
 
 """
 for name in cfg.files:
