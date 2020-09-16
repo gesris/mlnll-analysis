@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 
 # cfg.basepath + cfg.files = root file location
 
-upshifts = {}
-
 df = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root')
 hist = df.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with entries for jpt_1
 print(hist["jpt_1"])
@@ -27,5 +25,6 @@ for name in cfg.files:
                 elif 'Down' in name:
                     pass
 """
-print(upshifts)
 
+plt.hist(hist["jpt_1"])
+plt.savefig("/home/gristo/workspace/plots/test_histogram.png")
