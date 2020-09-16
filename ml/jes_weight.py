@@ -6,7 +6,7 @@ import array
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
-mpl.rc("font", size=16, family="serif")
+#mpl.rc("font", size=16, family="serif")
 
 # cfg.basepath + cfg.files = root file location
 
@@ -48,6 +48,7 @@ plt.plot([0], [0], lw=2, color='C1', label="up shift")
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
 plt.xlabel("jpt_1")
 plt.ylabel("Counts")
+plt.yscale('log')
 plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
 
