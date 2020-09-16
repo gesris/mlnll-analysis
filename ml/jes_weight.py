@@ -23,7 +23,7 @@ hist_nominal = df_nominal.Histo1D("jpt_1")
 hist_up = df_up.Histo1D("jpt_1")
 
 hist_nominal.Add(hist_up.GetPtr(), -1)
-print(hist_nominal.GetBinContent(100))
+print(hist_nominal.GetBinContent(13))
 
 
 
