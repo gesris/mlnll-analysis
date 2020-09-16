@@ -1,7 +1,11 @@
 import ROOT
 import numpy as np
 from utils import config as cfg
+
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
+mpl.rc("font", size=16, family="serif")
 
 # cfg.basepath + cfg.files = root file location
 path = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
