@@ -9,10 +9,8 @@ import matplotlib.pyplot as plt
 mpl.rc("font", size=16, family="serif")
 
 # cfg.basepath + cfg.files = root file location
+
 path = '/ceph/htautau/deeptau_02-20/2018/ntuples/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2/GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2.root'
-
-
-
 df_nominal = ROOT.RDataFrame('mt_nominal/ntuple', path)
 df_up = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path)
 
@@ -26,7 +24,6 @@ print(dir_up["jpt_1"])
 #hist_nominal.Add(hist_up.GetPtr(), -1)
 #for i in range(1, 70):
 #    print(hist_nominal2.GetBinContent(i), hist_up.GetBinContent(i), hist_nominal.GetBinContent(i))
-
 
 
 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
@@ -44,9 +41,14 @@ for left, right in zip(bins[1:], bins[:-1]):
     bins_center.append(left + (right - left) / 2)
 
 plt.figure(figsize=(7, 6))
-plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=2, color='C0')
-plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=2, color='C1')
-plt.savefig('/home/gristo/workspace/plots/test_hist.png')
+plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=0.5, color='C0')
+plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=0.5, color='C1')
+plt.plot([0], [0], lw=2, color='C0', label="nominal")
+plt.plot([0], [0], lw=2, color='C1', label="up shift")
+plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+plt.xlabel("$f$")
+plt.ylabel("Counts")
+plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
 
 
