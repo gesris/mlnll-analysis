@@ -14,8 +14,9 @@ for name in cfg.files:
             name = key.GetName()
             if 'mt_jecUnc' in name:
                 if 'Up' in name:
-                    name.cd()
-                    print(ntuple.GetBinContent(1))
+                    d = f.Get(name)
+                    tree = d.Get('ntuple')
+                    tree.Print()
                 elif 'Down' in name:
                     pass
 
