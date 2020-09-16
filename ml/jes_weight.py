@@ -23,8 +23,8 @@ hist_nominal = df_nominal.Histo1D("jpt_1")
 hist_up = df_up.Histo1D("jpt_1")
 
 hist_nominal.Add(hist_up.GetPtr(), -1)
+print(hist_nominal.GetBinContent(1))
 
-print(hist_nominal.AsNumpy())
 
 
 #nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
