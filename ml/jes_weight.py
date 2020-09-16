@@ -16,7 +16,7 @@ for name in cfg.files:
                 if 'Up' in name:
                     d = f.Get(name)
                     tree = d.Get('ntuple')
-                    hist = tree.GetEntry('jpt_1')
+                    hist = tree.GetEntry(583)
                     print(hist)
                 elif 'Down' in name:
                     pass
