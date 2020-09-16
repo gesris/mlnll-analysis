@@ -19,7 +19,8 @@ dir_up = df_up.AsNumpy(columns=["jpt_1"])    # hist is now a dictionary with ent
 print(dir_up["jpt_1"])
 
 hist_nominal = df_nominal.Histo1D("jpt_1")
-hist_nominal_rebinned = hist_nominal.Rebin(10, 0, 800)
+xbins = array.array('d', [3,4,5,6,7,8,10,12,15,20])
+hist_nominal_rebinned = hist_nominal.Rebin(10, '', xbins)
 hist_up = df_up.Histo1D("jpt_1")
 
 hist_nominal.Merge(hist_up.GetPtr())
