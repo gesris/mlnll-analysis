@@ -32,9 +32,9 @@ for left, right in zip(bins[1:], bins[:-1]):
     bins_center.append(left + (right - left) / 2)
 
 plt.figure(figsize=(7, 6))
-plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1, color='C0')
-plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1, ls=':', color='C1')
-plt.hist(bins_center, weights=heights_down, bins=bins, histtype="step", lw=1, ls='--', color='C1')
+plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
+plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
+plt.hist(bins_center, weights=heights_down, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
 plt.plot([0], [0], lw=2, color='C0', label="nominal")
 plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
 plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
