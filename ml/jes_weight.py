@@ -16,11 +16,9 @@ d = f.Get('mt_jecUncRelativeBalUp')
 tree = d.Get('ntuple')
 dara = tree.AsMatrix(["jpt_1"])
 print(dara)
-#for entry in tree:
-#    x = entry.jpt_1
-#    entries.append(x)
-#print(entries)
-#print(len(entries))
+
+import matplotlib.pyplot as plt
+plt.hist(dara)
 
 """
 for name in cfg.files:
