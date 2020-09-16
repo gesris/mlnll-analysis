@@ -29,7 +29,8 @@ hist_nominal.Add(hist_up.GetPtr(), -1)
 
 diff_hist = ROOT.TH1D("DIFF", "", 70, 0, 800)
 diff_hist.Add(hist_up.GetPtr(), hist_nominal.GetPtr(), 1, -1)
-
+for i in range(1, 71):
+    print(diff_hist.GetBinContent(i))
 
 #nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
 #upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
