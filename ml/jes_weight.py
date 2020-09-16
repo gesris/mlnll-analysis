@@ -31,8 +31,8 @@ upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1
 diff = nominal["jpt_1"] - upshift["jpt_1"]
 print(diff)
 
-heights_nom, bins = np.histogram(nominal["jpt_1"], bins=20)
-heights_up, _ = np.histogram(upshift["jpt_1"], bins=20)
+heights_nom, bins = np.histogram(nominal["jpt_1"], bins=20, range=(-10, 800))
+heights_up, _ = np.histogram(upshift["jpt_1"], bins=20, range=(-10, 800))
 #print(heights_nom)
 #print(bins)
 
@@ -41,12 +41,12 @@ for left, right in zip(bins[1:], bins[:-1]):
     bins_center.append(left + (right - left) / 2)
 
 plt.figure(figsize=(7, 6))
-plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=0.9, color='C0')
-plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=0.9, color='C1')
+plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1, color='C0')
+plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1, color='C1')
 plt.plot([0], [0], lw=2, color='C0', label="nominal")
 plt.plot([0], [0], lw=2, color='C1', label="up shift")
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-plt.xlabel("$f$")
+plt.xlabel("jpt_1")
 plt.ylabel("Counts")
 plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
