@@ -24,7 +24,7 @@ hist_nominal2 = df_nominal.Histo1D("jpt_1")
 hist_up = df_up.Histo1D("jpt_1")
 
 hist_nominal.Add(hist_up.GetPtr(), -1)
-for i in range(1, 200):
+for i in range(1, 150):
     print(hist_nominal2.GetBinContent(i), hist_up.GetBinContent(i), hist_nominal.GetBinContent(i))
 
 
