@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 for filename in cfg.files:
-    if 'qqh' in filename:
+    if 'vv' in filename:
         print(filename)
         tot_nom = np.zeros(10)
         tot_upshift = np.zeros(10)
