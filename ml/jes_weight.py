@@ -69,6 +69,7 @@ for filename in cfg.files:
             for key in f.GetListOfKeys():
                 name = key.GetName()
 
+                print(name)
                 if 'mt_jecUnc' in name:
                     if 'Up' in name:
                         #df_up = ROOT.RDataFrame(name + '/ntuple', path)
