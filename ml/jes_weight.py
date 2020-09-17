@@ -61,6 +61,8 @@ for filename in cfg.files:
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
+            print(heights_nom)
+
             ## SUM OF SQUARES
             tot_nom += heights_nom
             n += 1
