@@ -12,9 +12,9 @@ import matplotlib.pyplot as plt
 for filename in cfg.files:
     if 'tt' in filename:
         print(filename)
-        tot_nom = np.zeros(10)
-        tot_upshift = np.zeros(10)
-        tot_downshift = np.zeros(10)
+        #tot_nom = np.zeros(10)
+        #tot_upshift = np.zeros(10)
+        #tot_downshift = np.zeros(10)
         n = 0
 
         for file_ in cfg.files[filename]:
@@ -26,7 +26,7 @@ for filename in cfg.files:
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
             ## SUM OF SQUARES
-            tot_nom += heights_nom
+            #tot_nom += heights_nom
             n += 1
             
             f = ROOT.TFile(path)
@@ -47,26 +47,28 @@ for filename in cfg.files:
                         
                         ## SUM Of SQUARE DIFF
                         file_downshift += np.square(heights_nom - heights_down)
-            tot_upshift += np.sqrt(file_upshift)
-            tot_downshift += np.sqrt(file_downshift)
+            file_upshift = np.sqrt(file_upshift)
+            file_downshift = np.sqrt(file_downshift)
+            #tot_upshift += np.sqrt(file_upshift)
+            #tot_downshift += np.sqrt(file_downshift)
         
-        tot_nom = tot_nom / n
-        tot_upshift = tot_upshift / n
-        tot_downshift = tot_downshift / n
+        #tot_nom = tot_nom / n
+        #tot_upshift = tot_upshift / n
+        #tot_downshift = tot_downshift / n
 
-        bins_center = []
-        for left, right in zip(bins[1:], bins[:-1]):
-            bins_center.append(left + (right - left) / 2)
+            bins_center = []
+            for left, right in zip(bins[1:], bins[:-1]):
+                bins_center.append(left + (right - left) / 2)
 
-        plt.figure(figsize=(7, 6))
-        plt.hist(bins_center, weights=tot_nom, bins=bins, histtype="step", lw=1.5, color='C0')
-        plt.hist(bins_center, weights=tot_nom + tot_upshift, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
-        plt.hist(bins_center, weights=tot_nom - tot_downshift, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
-        plt.plot([0], [0], lw=2, color='C0', label="nominal")
-        plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
-        plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
-        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-        plt.xlabel("jpt_1")
-        plt.ylabel("Counts")
-        plt.savefig('/home/gristo/workspace/plots/jpt1_totshift_{}.png'.format(filename), bbox_inches = "tight")
+            plt.figure(figsize=(7, 6))
+            plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
+            plt.hist(bins_center, weights=heights_nom + file_upshift, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
+            plt.hist(bins_center, weights=heights_nom - file_downshift, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
+            plt.plot([0], [0], lw=2, color='C0', label="nominal")
+            plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
+            plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+            plt.xlabel("jpt_1")
+            plt.ylabel("Counts")
+            plt.savefig('/home/gristo/workspace/plots/jpt1_totshift_{}{}.png'.format(filename, n), bbox_inches = "tight")
 
