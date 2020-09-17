@@ -47,23 +47,30 @@ plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
 
 
-for name in cfg.files:
-    if 'ggh' in name:
+for filename in cfg.files:
+    if 'ggh' in filename:
+        print(filename)
+        tot_nom = np.zeros(10)
         tot_upshift = np.zeros(10)
         tot_downshift = np.zeros(10)
 
-        for file in cfg.files[name]:
+        for file in cfg.files[filename]:
             path = cfg.basepath + 'ntuples/' + file + '/' + file + '.root'
             df_nominal = ROOT.RDataFrame('mt_nominal/ntuple', path)
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
+
+            ## SUM OF SQUARES
+            tot_nom += np.square(heights_nom)
             
             f = ROOT.TFile(path)
             for key in f.GetListOfKeys():
                 name = key.GetName()
 
                 if 'mt_jecUnc' in name:
+                    print(name)
                     if 'Up' in name:
+
                         df_up = ROOT.RDataFrame(name + '/ntuple', path)
                         upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
                         heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
@@ -80,6 +87,7 @@ for name in cfg.files:
                         ## SUM Of SQUARE DIFF
                         tot_downshift += np.square(heights_nom - heights_down)
 
+        tot_nom = np.square(tot_nom)
         tot_upshift = np.square(tot_upshift)
         tot_downshift = np.square(tot_downshift)
 
@@ -88,9 +96,9 @@ for name in cfg.files:
             bins_center.append(left + (right - left) / 2)
 
         plt.figure(figsize=(7, 6))
-        plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
-        plt.hist(bins_center, weights=heights_nom + tot_upshift, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
-        plt.hist(bins_center, weights=heights_nom - tot_downshift, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
+        plt.hist(bins_center, weights=tot_nom, bins=bins, histtype="step", lw=1.5, color='C0')
+        plt.hist(bins_center, weights=tot_nom + tot_upshift, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
+        plt.hist(bins_center, weights=tot_nom - tot_downshift, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
         plt.plot([0], [0], lw=2, color='C0', label="nominal")
         plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
         plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
