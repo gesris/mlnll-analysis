@@ -65,11 +65,13 @@ for filename in cfg.files:
             tot_nom = heights_nom
             
             f = ROOT.TFile(path)
+            n = 0
             for key in f.GetListOfKeys():
                 name = key.GetName()
 
                 if 'mt_jecUnc' in name:
                     if 'Up' in name:
+                        n += 1
 
                         df_up = ROOT.RDataFrame(name + '/ntuple', path)
                         upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
@@ -79,7 +81,7 @@ for filename in cfg.files:
                         tot_upshift += np.square(heights_up - heights_nom)
 
                         print(np.square(heights_up - heights_nom))
-                        print(np.sqrt(tot_upshift / 10))
+                        print(np.sqrt(tot_upshift / n))
 
 
                     elif 'Down' in name:
@@ -90,9 +92,9 @@ for filename in cfg.files:
                         ## SUM Of SQUARE DIFF
                         tot_downshift += np.square(heights_nom - heights_down)
 
-        tot_nom = np.square(tot_nom / 10)
-        tot_upshift = np.square(tot_upshift / 10)
-        tot_downshift = np.square(tot_downshift / 10)
+        tot_nom = np.sqrt(tot_nom / n)
+        tot_upshift = np.sqrt(tot_upshift / n)
+        tot_downshift = np.sqrt(tot_downshift / n)
 
         bins_center = []
         for left, right in zip(bins[1:], bins[:-1]):
