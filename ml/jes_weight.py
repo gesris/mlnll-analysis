@@ -10,20 +10,21 @@ import matplotlib.pyplot as plt
 
 
 for filename in cfg.files:
-    if filename in ['vv']:
+    if filename in ['ggh']:
         print(filename)
         n = 0
 
         for file_ in cfg.files[filename]:
             print(file_)
+            bins = np.percentile(array, np.linspace(0, 10, 11))
             file_upshift = np.zeros(10)
             file_downshift = np.zeros(10)
             path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
-            heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
+            heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(-10, 800))
 
             n += 1
-            if n > 4:
+            if n < 2:
                 f = ROOT.TFile(path)
                 for key in f.GetListOfKeys():
                     name = key.GetName()
@@ -32,14 +33,14 @@ for filename in cfg.files:
                         print(name)
                         if 'Up' in name:
                             upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
-                            heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
+                            heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(-10, 800))
                             
                             ## SUM Of SQUARE DIFF
                             file_upshift += np.square(heights_up - heights_nom)
 
                         elif 'Down' in name: 
                             downshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
-                            heights_down, _ = np.histogram(downshift["jpt_1"], bins=10, range=(-10, 800))           
+                            heights_down, _ = np.histogram(downshift["jpt_1"], bins=bins, range=(-10, 800))           
                             
                             ## SUM Of SQUARE DIFF
                             file_downshift += np.square(heights_nom - heights_down)
@@ -62,4 +63,6 @@ for filename in cfg.files:
                 plt.xlabel("jpt_1")
                 plt.ylabel("Counts")
                 plt.savefig('/home/gristo/workspace/plots/jpt1_totshift_{}{}.png'.format(filename, n), bbox_inches = "tight")
+            else:
+                break
 
