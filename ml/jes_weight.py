@@ -56,9 +56,11 @@ for filename in cfg.files:
         n = 0
 
         for file in cfg.files[filename]:
+            print(filename)
             path = cfg.basepath + 'ntuples/' + file + '/' + file + '.root'
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
+            print(heights_nom)
 
             ## SUM OF SQUARES
             tot_nom += heights_nom
@@ -69,7 +71,6 @@ for filename in cfg.files:
                 name = key.GetName()
 
                 if 'mt_jecUnc' in name:
-                    print(name)
                     if 'Up' in name:
                         upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                         heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
