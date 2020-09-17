@@ -61,7 +61,7 @@ for filename in cfg.files:
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
             ## SUM OF SQUARES
-            tot_nom += np.square(heights_nom)
+            tot_nom = heights_nom
             
             f = ROOT.TFile(path)
             for key in f.GetListOfKeys():
