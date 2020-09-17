@@ -57,7 +57,7 @@ for filename in cfg.files:
 
         for file in cfg.files[filename]:
             path = cfg.basepath + 'ntuples/' + file + '/' + file + '.root'
-            df_nominal = ROOT.RDataFrame('mt_nominal/ntuple', path)
+            #df_nominal = ROOT.RDataFrame('mt_nominal/ntuple', path)
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
@@ -71,16 +71,16 @@ for filename in cfg.files:
 
                 if 'mt_jecUnc' in name:
                     if 'Up' in name:
-                        df_up = ROOT.RDataFrame(name + '/ntuple', path)
-                        upshift = ROOT.RDataFrame('mt_jecUncRelativeBalUp/ntuple', path).AsNumpy(["jpt_1"])
+                        #df_up = ROOT.RDataFrame(name + '/ntuple', path)
+                        upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                         heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
                         
                         ## SUM Of SQUARE DIFF
                         tot_upshift += np.square(heights_up - heights_nom)
 
                     elif 'Down' in name:
-                        df_down = ROOT.RDataFrame(name + '/ntuple', path)   
-                        downshift = ROOT.RDataFrame('mt_jecUncRelativeBalDown/ntuple', path).AsNumpy(["jpt_1"])
+                        #df_down = ROOT.RDataFrame(name + '/ntuple', path)   
+                        downshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                         heights_down, _ = np.histogram(downshift["jpt_1"], bins=10, range=(-10, 800))           
                         
                         ## SUM Of SQUARE DIFF
