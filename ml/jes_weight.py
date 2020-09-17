@@ -48,7 +48,7 @@ plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
 
 for filename in cfg.files:
-    if 'tt' in filename:
+    if 'ggh' in filename:
         print(filename)
         tot_nom = np.zeros(10)
         tot_upshift = np.zeros(10)
@@ -56,6 +56,8 @@ for filename in cfg.files:
         n = 0
 
         for file_ in cfg.files[filename]:
+            file_upshift = np.zeros(10)
+            file_downshift = np.zeros(10)
             print(file_)
             path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
@@ -75,18 +77,20 @@ for filename in cfg.files:
                         heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
                         
                         ## SUM Of SQUARE DIFF
-                        tot_upshift += np.square(heights_up - heights_nom)
+                        file_upshift += np.square(heights_up - heights_nom)
 
                     elif 'Down' in name: 
                         downshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                         heights_down, _ = np.histogram(downshift["jpt_1"], bins=10, range=(-10, 800))           
                         
                         ## SUM Of SQUARE DIFF
-                        tot_downshift += np.square(heights_nom - heights_down)
-
+                        file_downshift += np.square(heights_nom - heights_down)
+            tot_upshift += np.sqrt(tot_upshift)
+            tot_downshift += np.sqrt(tot_downshift)
+        
         tot_nom = tot_nom / n
-        tot_upshift = np.sqrt(tot_upshift)
-        tot_downshift = np.sqrt(tot_downshift)
+        tot_upshift = tot_upshift / n
+        tot_downshift = tot_downshift / n
 
         bins_center = []
         for left, right in zip(bins[1:], bins[:-1]):
