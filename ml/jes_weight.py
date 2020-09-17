@@ -85,8 +85,8 @@ for filename in cfg.files:
                         
                         ## SUM Of SQUARE DIFF
                         file_downshift += np.square(heights_nom - heights_down)
-            tot_upshift += np.sqrt(tot_upshift)
-            tot_downshift += np.sqrt(tot_downshift)
+            tot_upshift += np.sqrt(file_upshift)
+            tot_downshift += np.sqrt(file_downshift)
         
         tot_nom = tot_nom / n
         tot_upshift = tot_upshift / n
