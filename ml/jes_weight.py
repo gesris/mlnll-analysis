@@ -78,8 +78,8 @@ for filename in cfg.files:
                         ## SUM Of SQUARE DIFF
                         tot_upshift += np.square(heights_up - heights_nom)
 
-                        print(heights_up - heights_nom)
                         print(np.square(heights_up - heights_nom))
+                        print(np.sqrt(tot_upshift))
 
 
                     elif 'Down' in name:
