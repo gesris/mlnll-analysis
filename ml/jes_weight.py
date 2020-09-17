@@ -48,7 +48,7 @@ plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
 
 for filename in cfg.files:
-    if 'qqh' in filename:
+    if 'ggh' in filename:
         print(filename)
         tot_nom = np.zeros(10)
         tot_upshift = np.zeros(10)
@@ -61,7 +61,7 @@ for filename in cfg.files:
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
             ## SUM OF SQUARES
-            tot_nom += np.square(heights_nom)
+            tot_nom += heights_nom
             n += 1
             
             f = ROOT.TFile(path)
@@ -84,7 +84,7 @@ for filename in cfg.files:
                         ## SUM Of SQUARE DIFF
                         tot_downshift += np.square(heights_nom - heights_down)
 
-        tot_nom = np.sqrt(tot_nom / n)
+        tot_nom = tot_nom / n
         tot_upshift = np.sqrt(tot_upshift)
         tot_downshift = np.sqrt(tot_downshift)
 
