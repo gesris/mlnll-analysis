@@ -48,16 +48,16 @@ plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
 
 
 for filename in cfg.files:
-    if 'dy' in filename:
+    if 'ggh' in filename:
         print(filename)
         tot_nom = np.zeros(10)
         tot_upshift = np.zeros(10)
         tot_downshift = np.zeros(10)
         n = 0
 
-        for file in cfg.files[filename]:
-            print(file)
-            path = cfg.basepath + 'ntuples/' + file + '/' + file + '.root'
+        for file_ in cfg.files[filename]:
+            print(file_)
+            path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
