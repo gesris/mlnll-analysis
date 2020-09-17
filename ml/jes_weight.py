@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 for filename in cfg.files:
-    if ['ggh', 'qqh', 'vv', 'dy'] in filename:
+    if filename in ['ggh', 'qqh', 'vv', 'dy']:
         print(filename)
         n = 0
 
