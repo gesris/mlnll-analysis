@@ -69,7 +69,6 @@ for filename in cfg.files:
                 name = key.GetName()
 
                 if 'mt_jecUnc' in name:
-                    print(name)
                     if 'Up' in name:
 
                         df_up = ROOT.RDataFrame(name + '/ntuple', path)
@@ -78,6 +77,9 @@ for filename in cfg.files:
                         
                         ## SUM Of SQUARE DIFF
                         tot_upshift += np.square(heights_up - heights_nom)
+
+                        print(heights_up - heights_nom)
+                        print(np.square(heights_up - heights_nom))
 
 
                     elif 'Down' in name:
