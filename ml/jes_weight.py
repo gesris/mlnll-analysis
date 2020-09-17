@@ -62,7 +62,7 @@ for filename in cfg.files:
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=10, range=(-10, 800))
 
             ## SUM OF SQUARES
-            tot_nom += np.square(heights_nom)
+            tot_nom += heights_nom
             n += 1
             
             f = ROOT.TFile(path)
@@ -86,7 +86,7 @@ for filename in cfg.files:
                         ## SUM Of SQUARE DIFF
                         tot_downshift += np.square(heights_nom - heights_down)
 
-        tot_nom = np.sqrt(tot_nom / n)
+        tot_nom = tot_nom / n
         tot_upshift = np.sqrt(tot_upshift)
         tot_downshift = np.sqrt(tot_downshift)
 
@@ -104,5 +104,5 @@ for filename in cfg.files:
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("jpt_1")
         plt.ylabel("Counts")
-        plt.savefig('/home/gristo/workspace/plots/test_hist.png', bbox_inches = "tight")
+        plt.savefig('/home/gristo/workspace/plots/test_hist_{}.png'.format(filename), bbox_inches = "tight")
 
