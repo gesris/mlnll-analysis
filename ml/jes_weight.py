@@ -79,7 +79,7 @@ for filename in cfg.files:
                         tot_upshift += np.square(heights_up - heights_nom)
 
                         print(np.square(heights_up - heights_nom))
-                        print(np.sqrt(tot_upshift))
+                        print(np.sqrt(tot_upshift / 10))
 
 
                     elif 'Down' in name:
@@ -90,9 +90,9 @@ for filename in cfg.files:
                         ## SUM Of SQUARE DIFF
                         tot_downshift += np.square(heights_nom - heights_down)
 
-        tot_nom = np.square(tot_nom)
-        tot_upshift = np.square(tot_upshift)
-        tot_downshift = np.square(tot_downshift)
+        tot_nom = np.square(tot_nom / 10)
+        tot_upshift = np.square(tot_upshift / 10)
+        tot_downshift = np.square(tot_downshift / 10)
 
         bins_center = []
         for left, right in zip(bins[1:], bins[:-1]):
