@@ -24,7 +24,7 @@ for filename in cfg.files:
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(-10, 800))
 
             n += 1
-            if n < 2:
+            if n < 7:
                 f = ROOT.TFile(path)
                 for key in f.GetListOfKeys():
                     name = key.GetName()
