@@ -10,11 +10,12 @@ import matplotlib.pyplot as plt
 
 
 for filename in cfg.files:
-    if filename in ['ggh', 'qqh', 'vv', 'dy']:
+    if filename in ['ggh', 'qqh', 'vv']:
         print(filename)
         n = 0
 
         for file_ in cfg.files[filename]:
+            print(file_)
             file_upshift = np.zeros(10)
             file_downshift = np.zeros(10)
             path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
@@ -28,6 +29,7 @@ for filename in cfg.files:
                 name = key.GetName()
 
                 if 'mt_jecUnc' in name:
+                    print(name)
                     if 'Up' in name:
                         upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                         heights_up, _ = np.histogram(upshift["jpt_1"], bins=10, range=(-10, 800))
