@@ -102,5 +102,5 @@ for filename in cfg.files:
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
     plt.xlabel("jpt_1")
     plt.ylabel("Counts")
-    plt.savefig('/home/gristo/workspace/plots/jes_totshift_{}.png'.format(filename), bbox_inches = "tight")
+    plt.savefig('/home/gristo/workspace/plots/jpt1_totshift_{}.png'.format(filename), bbox_inches = "tight")
 
