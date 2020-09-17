@@ -16,9 +16,9 @@ for filename in cfg.files:
 
         for file_ in cfg.files[filename]:
             print(file_)
-            bins = np.percentile(array, np.linspace(0, 10, 11))
-            file_upshift = np.zeros(10)
-            file_downshift = np.zeros(10)
+            bins = 50
+            file_upshift = np.zeros(bins)
+            file_downshift = np.zeros(bins)
             path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
             nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
             heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(-10, 800))
