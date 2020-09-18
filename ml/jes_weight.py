@@ -74,7 +74,7 @@ for filename in cfg.files:
 
                 print(heights_nom)
                 heights_nom[heights_nom - epsilon < 0] = epsilon
-                print(heights_nom)
+                print(heights_nom[heights_nom == 815])
 
                 weights_up = heights_up / heights_nom
                 weights_down = heights_down / heights_nom
