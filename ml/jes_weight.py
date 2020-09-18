@@ -48,6 +48,7 @@ for filename in cfg.files:
         bins = 50
         minrange = -10
         maxrange = 800
+        binning = np.linspace(minrange, maxrange, bins + 1)
         file_upshift = np.zeros(bins)
         file_downshift = np.zeros(bins)
         heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(minrange, maxrange))
@@ -92,6 +93,7 @@ for filename in cfg.files:
         #save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights_up.csv'.format(file_))
         np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asfarray(weights_up), delimiter=',')
         np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asfarray(weights_down), delimiter=',')
+        np.savetxt(home_basepath + file_ + '/binning.csv', np.asfarray(binning), delimiter=',')
 
         
         ## Make Histogram
