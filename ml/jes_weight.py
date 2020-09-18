@@ -9,9 +9,19 @@ import matplotlib.pyplot as plt
 #mpl.rc("font", size=16, family="serif")
 
 import os
+import csv
+from csv import reader
 
-# homedir: /home/gristo/workspace/htautau/deeptau_02-20/2018
+
 home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
+
+def save_to_csv(nparray, path, filename):
+    data = np.asfarray(nparray)
+    np.savetxt(path + filename, data, delimeter=',')
+
+def load_from_csv(path, filename):
+    data = np.loadtxt(path + filename, delimeter=',')
+    return data
 
 
 for filename in cfg.files:
@@ -64,7 +74,7 @@ for filename in cfg.files:
                 file_downshift = np.sqrt(file_downshift)
 
                 ## Calculate weights
-                epsilon = 1e-5
+                epsilon = 1e-6
                 heights_nom = heights_nom.astype(float)
                 heights_nom[heights_nom == 0] = epsilon
 
@@ -73,7 +83,8 @@ for filename in cfg.files:
 
                 weights_up[weights_up == 0] = epsilon
                 weights_down[weights_down == 0] = epsilon
-                print("WEIGHTS DOWN:\n{}".format(weights_down))
+
+                save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights.csv'.format(file_))
 
                 """
                 ## Make Histogram
