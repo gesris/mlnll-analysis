@@ -71,12 +71,15 @@ for filename in cfg.files:
 
                 heights_up[heights_up == 0] = epsilon
                 heights_down[heights_down == 0] = epsilon
-                heights_nom[heights_nom == 0] = epsilon
+
+                print(heights_nom)
+                heights_nom[heights_nom - epsilon < 0] = epsilon
+                print(heights_nom)
 
                 weights_up = heights_up / heights_nom
                 weights_down = heights_down / heights_nom
                 print("NOM: {}; UP: {}; DOWN: {}".format(heights_nom[1], heights_up[1], heights_down[1]))
-                print("WEIGHTS DOWN:\n{}".format(weights_up))
+                print("WEIGHTS DOWN:\n{}".format(weights_down))
 
                 """
                 ## Make Histogram
