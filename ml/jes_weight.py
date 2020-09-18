@@ -17,10 +17,10 @@ home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
 
 def save_to_csv(nparray, path, filename):
     data = np.asfarray(nparray)
-    np.savetxt(path + filename, data, delimeter=',')
+    np.savetxt(path + filename, data, delimiter=',')
 
 def load_from_csv(path, filename):
-    data = np.loadtxt(path + filename, delimeter=',')
+    data = np.loadtxt(path + filename, delimiter=',')
     return data
 
 
