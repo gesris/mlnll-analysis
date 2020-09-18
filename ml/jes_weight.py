@@ -76,8 +76,8 @@ for filename in cfg.files:
         heights_nom = heights_nom.astype(float)
         heights_nom[heights_nom == 0] = epsilon
 
-        weights_up = heights_up / heights_nom
-        weights_down = heights_down / heights_nom
+        weights_up = (heights_nom + file_upshift) / heights_nom
+        weights_down = (heights_nom - file_downshift) / heights_nom
 
         weights_up[weights_up == 0] = epsilon
         weights_down[weights_down == 0] = epsilon
