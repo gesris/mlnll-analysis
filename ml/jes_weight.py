@@ -61,6 +61,9 @@ for filename in cfg.files:
                 file_downshift = np.sqrt(file_downshift)
 
                 ## Calculate weights
+                epsilon = 1e-6
+                weights_up[weights_up == 0] = epsilon
+                weights_down[weights_down == 0] = epsilon
                 weights_up = (heights_nom + heights_up) / heights_nom
                 weights_down = (heights_nom - heights_down) / heights_nom
                 print(weights_down)
