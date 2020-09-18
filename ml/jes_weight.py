@@ -28,7 +28,7 @@ for filename in cfg.files:
     print(filename)
     if filename in ['ggh']:
         for file_ in cfg.files[filename]:
-            if file_ in ['SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD']:
+            if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
                     print("Directory {} exists".format(home_basepath + file_))
