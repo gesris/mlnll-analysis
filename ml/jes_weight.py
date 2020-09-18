@@ -76,7 +76,7 @@ for filename in cfg.files:
                 weights_up = heights_up / heights_nom
                 weights_down = heights_down / heights_nom
                 print("NOM: {}; UP: {}; DOWN: {}".format(heights_nom[1], heights_up[1], heights_down[1]))
-                print("WEIGHTS DOWN:\n{}".format(weights_down))
+                print("WEIGHTS DOWN:\n{}".format(weights_up))
 
                 """
                 ## Make Histogram
