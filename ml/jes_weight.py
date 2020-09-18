@@ -66,19 +66,13 @@ for filename in cfg.files:
                 ## Calculate weights
                 epsilon = 1e-5
                 heights_nom = heights_nom.astype(float)
-                heights_up = heights_up.astype(float)
-                heights_down = heights_down.astype(float)
-
-                #heights_up[heights_up == 0] = epsilon
-                #heights_down[heights_down == 0] = epsilon
-
-                print(heights_nom)
                 heights_nom[heights_nom == 0] = epsilon
-                print(heights_nom)
 
                 weights_up = heights_up / heights_nom
                 weights_down = heights_down / heights_nom
-                print("NOM: {}; UP: {}; DOWN: {}".format(heights_nom[1], heights_up[1], heights_down[1]))
+
+                weights_up[weights_up == 0] = epsilon
+                weights_down[weights_down == 0] = epsilon
                 print("WEIGHTS DOWN:\n{}".format(weights_down))
 
                 """
