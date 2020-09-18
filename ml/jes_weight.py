@@ -68,7 +68,7 @@ for filename in cfg.files:
                 #heights_nom = np.array(heights_nom)
                 #heights_up = np.array(heights_up)
                 #heights_down = np.array(heights_down)
-                print(heights_nom)
+                print(heights_nom[heights_nom == 0])
                 heights_up[heights_up == 0] = epsilon
                 heights_down[heights_down == 0] = epsilon
                 heights_nom[heights_nom == 0] = epsilon
