@@ -16,7 +16,7 @@ home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
 
 for filename in cfg.files:
     print(filename)
-    if filename in ['ggh', 'qqh']:
+    if filename in ['vv']:
         for file_ in cfg.files[filename]:
             ## Make directory for Hist and .csv with weights
             try:
