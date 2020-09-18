@@ -23,9 +23,9 @@ for filename in cfg.files:
                 try:
                     os.mkdir(home_basepath + file_)
                 except OSError:
-                    print("Creating directory %s failed" % home_basepath + file_)
+                    print("Creating directory %s failed" % [home_basepath + file_])
                 else:
-                    print("Successfully created directory %s " % home_basepath + file_)
+                    print("Successfully created directory %s " % [home_basepath + file_])
 
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
@@ -43,7 +43,6 @@ for filename in cfg.files:
                     name = key.GetName()
 
                     if 'mt_jecUnc' in name:
-                        print(name)
                         if 'Up' in name:
                             upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                             heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(-10, 800))
@@ -60,6 +59,11 @@ for filename in cfg.files:
 
                 file_upshift = np.sqrt(file_upshift)
                 file_downshift = np.sqrt(file_downshift)
+
+                ## Calculate weights
+                weights_up = (heights_nom + heights_up) / heights_nom
+                weights_down = (heights_nom - heights_down) / heights_nom
+                print(weights_down)
 
                 ## Make Histogram
                 bins_center = []
