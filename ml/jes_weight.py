@@ -65,6 +65,9 @@ for filename in cfg.files:
 
                 ## Calculate weights
                 epsilon = 1e-5
+                heights_nom = np.array(heights_nom)
+                heights_up = np.array(heights_up)
+                heights_down = np.array(heights_down)
                 heights_up[heights_up == 0] = epsilon
                 heights_down[heights_down == 0] = epsilon
                 heights_nom[heights_nom == 0] = epsilon
