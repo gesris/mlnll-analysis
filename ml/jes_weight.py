@@ -46,9 +46,11 @@ for filename in cfg.files:
 
         ## Prepatre for Hist
         bins = 50
+        minrange = -10
+        maxrange = 800
         file_upshift = np.zeros(bins)
         file_downshift = np.zeros(bins)
-        heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(-10, 800))
+        heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(minrange, maxrange))
 
         ## Calculate shifts
         f = ROOT.TFile(path)
@@ -58,14 +60,14 @@ for filename in cfg.files:
             if 'mt_jecUnc' in name:
                 if 'Up' in name:
                     upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
-                    heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(-10, 800))
+                    heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(minrange, maxrange))
                     
                     ## SUM Of SQUARE DIFF
                     file_upshift += np.square(heights_up - heights_nom)
 
                 elif 'Down' in name: 
                     downshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
-                    heights_down, _ = np.histogram(downshift["jpt_1"], bins=bins, range=(-10, 800))           
+                    heights_down, _ = np.histogram(downshift["jpt_1"], bins=bins, range=(minrange, maxrange))           
                     
                     ## SUM Of SQUARE DIFF
                     file_downshift += np.square(heights_nom - heights_down)
@@ -91,7 +93,7 @@ for filename in cfg.files:
         np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asfarray(weights_up), delimiter=',')
         np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asfarray(weights_down), delimiter=',')
 
-        """
+        
         ## Make Histogram
         bins_center = []
         for left, right in zip(bins[1:], bins[:-1]):
@@ -108,4 +110,4 @@ for filename in cfg.files:
         plt.xlabel("jpt_1")
         plt.ylabel("Counts")
         plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
-        """
+        
