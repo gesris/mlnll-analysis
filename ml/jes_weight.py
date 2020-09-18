@@ -20,12 +20,15 @@ for filename in cfg.files:
         for file_ in cfg.files[filename]:
             if file_ in ['WplusHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
-                try:
-                    os.mkdir(home_basepath + file_)
-                except OSError:
-                    print("Creating directory %s failed" % [home_basepath + file_])
+                if os.path.exists(home_basepath + file_):
+                    print("Directory {} exists".format(home_basepath + file_))
                 else:
-                    print("Successfully created directory %s " % [home_basepath + file_])
+                    try:
+                        os.mkdir(home_basepath + file_)
+                    except OSError:
+                        print("Creating directory {} failed".format(home_basepath + file_))
+                    else:
+                        print("Successfully created directory %s " % [home_basepath + file_])
 
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
@@ -62,12 +65,15 @@ for filename in cfg.files:
 
                 ## Calculate weights
                 epsilon = 1e-6
-                weights_up[weights_up == 0] = epsilon
-                weights_down[weights_down == 0] = epsilon
+                heights_up[heights_up == 0] = epsilon
+                heights_down[heights_down == 0] = epsilon
+                heights_nom[heights_nom == 0] = epsilon
+
                 weights_up = (heights_nom + heights_up) / heights_nom
                 weights_down = (heights_nom - heights_down) / heights_nom
                 print(weights_down)
 
+                """
                 ## Make Histogram
                 bins_center = []
                 for left, right in zip(bins[1:], bins[:-1]):
@@ -84,4 +90,4 @@ for filename in cfg.files:
                 plt.xlabel("jpt_1")
                 plt.ylabel("Counts")
                 plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
-
+                """
