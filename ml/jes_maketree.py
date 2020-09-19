@@ -25,18 +25,18 @@ for filename in cfg.files:
                 binning = load_from_csv(home_basepath + file_ , '/binning.csv')
                 weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
                 weights_down = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_down.csv'.format(file_))
-                #a = np.array(weights_up, dtype=[('jpt_1_weights_up', np.float32)])
-                #b = np.array(weights_down, dtype=[('jpt_1_weights_down', np.float32)])
-                print(weights_up)
 
-
-
-                """
-                ## Make tree with two branches upweights and downweights
+                
+                ## Make new root file with new tree with two branches upweights and downweights
                 root_file = ROOT.TFile(home_basepath + file_ + '/jpt_1_weights.root', 'RECREATE')
                 tree = ROOT.TTree('tree', 'jpt_1_weights')
+
+                ## create 1 dimensional float arrays as fill variables, in this way the float
+                ## array serves as a pointer which can be passed to the branch
                 x = np.zeros(1, dtype=float)
                 y = np.zeros(1, dtype=float)
+
+                ## create the branches and assign the fill-variables to them as floats (F)
                 tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
                 tree.Branch('jpt_1_weights_down', y, 'jpt_1_weights_down/F')
 
@@ -45,6 +45,7 @@ for filename in cfg.files:
                     x[0] = weights_up[i]
                     y[0] = weights_down[i]
                     tree.Fill()
+
                 root_file.Write()
                 root_file.Close()
-                """
+                
