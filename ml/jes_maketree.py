@@ -17,8 +17,6 @@ def load_from_csv(path, filename):
     data = np.loadtxt(path + filename, delimiter=',')
     return data
 
-def numpy2tree():
-    pass
 
 for filename in cfg.files:
     if filename in ['ggh']:
@@ -35,8 +33,8 @@ for filename in cfg.files:
                 tree = ROOT.TTree('tree', 'jpt_1_weights')
                 x = np.array(weights_up, dtype='float32')
                 y = np.array(weights_down, dtype='float32')
-                tree.Branch('jpt_1_weights_up', x, 'test')
-                tree.Branch('jpt_1_weights_down', y, 'test')
+                tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
+                tree.Branch('jpt_1_weights_down', y, 'jpt_1_weights_down/F')
                 tree.Fill()
                 root_file.Write()
 
