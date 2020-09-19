@@ -1,5 +1,4 @@
 import ROOT
-from root_numpy import array2tree
 import numpy as np
 from utils import config as cfg
 import array
@@ -18,13 +17,26 @@ def load_from_csv(path, filename):
     data = np.loadtxt(path + filename, delimiter=',')
     return data
 
-for filename in cfg.files:
-    #if filename in ['ggh']:
-    for file_ in cfg.files[filename]:
-        binning = load_from_csv(home_basepath + file_ , '/binning.csv')
-        weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
-        weights_down = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_down.csv'.format(file_))
-        a = np.array(weights_up, dtype=[('jpt_1_weights_up', np.float32)])
-        b = np.array(weights_down, dtype=[('jpt_1_weights_down', np.float32)])
+def numpy2tree():
+    pass
 
-        ## Make tree with two branches upweights and downweights
+for filename in cfg.files:
+    if filename in ['ggh']:
+        for file_ in cfg.files[filename]:
+            if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
+                binning = load_from_csv(home_basepath + file_ , '/binning.csv')
+                weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
+                weights_down = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_down.csv'.format(file_))
+                a = np.array(weights_up, dtype=[('jpt_1_weights_up', np.float32)])
+                b = np.array(weights_down, dtype=[('jpt_1_weights_down', np.float32)])
+
+                ## Make tree with two branches upweights and downweights
+                root_file = ROOT.TFile(home_basepath + file_ + '/jpt_1_weights.root', 'RECREATE')
+                tree = ROOT.TTree('tree', 'jpt_1_weights')
+                x = np.array(weights_up, dtype='float32')
+                y = np.array(weights_down, dtype='float32')
+                tree.Branch('jpt_1_weights_up', x, 'test')
+                tree.Branch('jpt_1_weights_down', y, 'test')
+                tree.Fill()
+                root_file.Write()
+
