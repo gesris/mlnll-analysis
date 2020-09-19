@@ -1,4 +1,5 @@
 import ROOT
+from root_numpy import array2tree
 import numpy as np
 from utils import config as cfg
 import array
@@ -18,8 +19,12 @@ def load_from_csv(path, filename):
     return data
 
 for filename in cfg.files:
-    print(filename)
     #if filename in ['ggh']:
     for file_ in cfg.files[filename]:
         binning = load_from_csv(home_basepath + file_ , '/binning.csv')
-        print(binning)
+        weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
+        weights_down = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_down.csv'.format(file_))
+        a = np.array(weights_up, dtype=[('jpt_1_weights_up', np.float32)])
+        b = np.array(weights_down, dtype=[('jpt_1_weights_down', np.float32)])
+
+        ## Make tree with two branches upweights and downweights
