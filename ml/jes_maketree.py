@@ -50,16 +50,17 @@ for filename in cfg.files:
                         ## fill tree with weight = 1
                         x[0] = 1.
                         y[0] = 1.
-                        tree.Fill()
+                        #tree.Fill()
                     else:
                         left_binedge = binning[binning <= event.jpt_1]
                         index = np.where(binning==left_binedge)[0]
-                        x[0] = weights_up[index]
-                        y[0] = weights_down[index]
-                        tree.Fill()
+                        print(index)
+                        #x[0] = weights_up[index]
+                        #y[0] = weights_down[index]
+                        #tree.Fill()
                 
-                root_file.Write()
-                root_file.Close()
+                #root_file.Write()
+                #root_file.Close()
 
                 
                 """
