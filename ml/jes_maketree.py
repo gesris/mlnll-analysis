@@ -33,8 +33,10 @@ for filename in cfg.files:
 
                 ## create 1 dimensional float arrays as fill variables, in this way the float
                 ## array serves as a pointer which can be passed to the branch
-                x = np.zeros(1, dtype=float)
-                y = np.zeros(1, dtype=float)
+                x = array('f', [0])
+                y = array('f', [0])
+                #x = np.zeros(1, dtype=float)
+                #y = np.zeros(1, dtype=float)
 
                 ## create the branches and assign the fill-variables to them as floats (F)
                 tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
