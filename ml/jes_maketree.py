@@ -43,7 +43,7 @@ for filename in cfg.files:
                 
                 ## Fill tree
                 for i in range(len(weights_down)):
-                    x[0] = 1 + weights_up
+                    x[0] = 1 + weights_up[i]
                     y[0] = weights_down[i]
                     tree.Fill()
 
