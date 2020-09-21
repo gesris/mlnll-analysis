@@ -29,7 +29,7 @@ for filename in cfg.files:
                 
                 ## Make new root file with new tree with two branches upweights and downweights
                 root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-                tree = ROOT.TTree('ntuple', 'ntuple')
+                tree = ROOT.TTree('ntuple', 'tree')
 
                 ## create 1 dimensional float arrays as fill variables, in this way the float
                 ## array serves as a pointer which can be passed to the branch
@@ -54,10 +54,9 @@ for filename in cfg.files:
                     else:
                         left_binedge = binning[binning <= event.jpt_1][-1]
                         index = np.where(binning==left_binedge)
-                        #x[0] = weights_up[index]
-                        #y[0] = weights_down[index]
-                        #tree.Fill()
-                        print(weights_down[index][0])
+                        x[0] = weights_up[index][0]
+                        y[0] = weights_down[index][0]
+                        tree.Fill()
                 
                 root_file.Write()
                 root_file.Close()
