@@ -1,7 +1,7 @@
 import ROOT
 import numpy as np
 from utils import config as cfg
-import array
+from array import array
 
 import os
 import csv
