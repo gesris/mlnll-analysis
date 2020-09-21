@@ -7,6 +7,8 @@ import os
 import csv
 from csv import reader
 
+import multiprocessing.dummy as mp
+
 home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
 
 def save_to_csv(nparray, path, filename):
@@ -20,6 +22,9 @@ def load_from_csv(path, filename):
 
 for filename in cfg.files:
     #if filename in 'ggh':
+    # pass
+
+def job(filename):
     for file_ in cfg.files[filename]:
         #if file_ in 'GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2':
         binning = load_from_csv(home_basepath + file_ , '/binning.csv')
@@ -63,3 +68,13 @@ for filename in cfg.files:
         
         root_file.Write()
         root_file.Close()
+
+if __name__=="__main__":
+    filenames = []
+    for filename in cfg.files:
+        if filename in ['ggh', 'qqh', 'vv', 'tt']:
+            filenames.append(filename)
+    p = mp.Pool(4)
+    p.map(job, filenames)
+    p.close()
+    p.join()
