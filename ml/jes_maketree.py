@@ -37,15 +37,14 @@ for filename in cfg.files:
                 y = np.zeros(1, dtype=float)
 
                 ## create the branches and assign the fill-variables to them as floats (F)
-                tree.Branch('jpt_1_weights_up', weights_up, 'jpt_1_weights_up/F')
-                tree.Branch('jpt_1_weights_down', weights_down, 'jpt_1_weights_down/F')
+                tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
+                tree.Branch('jpt_1_weights_down', y, 'jpt_1_weights_down/F')
                 
                 
                 ## Fill tree
                 for i in range(len(weights_down)):
-                    weights_up = weights_up[i]
-                    #x[0] = weights_up[i]
-                    #y[0] = weights_down[i]
+                    x[0] = weights_up[i]
+                    y[0] = weights_down[i]
                     tree.Fill()
                 #tree.Fill()
 
