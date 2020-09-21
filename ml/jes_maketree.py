@@ -29,6 +29,7 @@ for filename in cfg.files:
                 
                 ## Make new root file with new tree with two branches upweights and downweights
                 root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+                directory = ROOT.TDirectoryFile('mt_nominal')
                 tree = ROOT.TTree('mt_nominal/ntuple', 'mt_nominal/ntuple')
 
                 ## create 1 dimensional float arrays as fill variables, in this way the float
