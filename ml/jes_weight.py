@@ -48,7 +48,8 @@ for filename in cfg.files:
                 tree = nominal.Get("mt_nominal/ntuple")
                 
                 for event in tree:
-                    print(event.jpt_1)
+                    if event.jpt_1 > 800:
+                        print(event.jpt_1)
 
                 """
                 ## Prepatre for Hist
