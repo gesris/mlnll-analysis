@@ -44,8 +44,8 @@ for filename in cfg.files:
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
                 #nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
-                nominal = ROOT.RDataFrame('mt_nominal', path).AsNumpy(["jpt_1"])
-                tree = nominal.Get("ntuple")
+                nominal = ROOT.TFile(path)
+                tree = nominal.Get("mt_nominal/ntuple")
                 
                 for event in tree:
                     print(event.jpt_1)
