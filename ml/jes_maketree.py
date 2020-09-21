@@ -54,9 +54,10 @@ for filename in cfg.files:
                     else:
                         left_binedge = binning[binning <= event.jpt_1][-1]
                         index = np.where(binning==left_binedge)
-                        x[0] = weights_up[index]
-                        y[0] = weights_down[index]
-                        tree.Fill()
+                        #x[0] = weights_up[index]
+                        #y[0] = weights_down[index]
+                        #tree.Fill()
+                        print(weights_down[index])
                 
                 root_file.Write()
                 root_file.Close()
