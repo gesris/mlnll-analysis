@@ -43,7 +43,7 @@ for filename in cfg.files:
                 
                 ## Fill tree
                 for i in range(len(weights_down)):
-                    x[0] = gRandom.Gaus(20,2)
+                    x[0] = ROOT.gRandom.Gaus(20,2)
                     y[0] = weights_down[i]
                     tree.Fill()
 
