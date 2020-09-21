@@ -52,8 +52,8 @@ for filename in cfg.files:
                         y[0] = 1.
                         #tree.Fill()
                     else:
-                        print(binning[binning <= event.jpt_1])
-                        #left_binedge = binning[binning <= event.jpt_1]
+                        print(binning[binning <= event.jpt_1][-1])
+                        #left_binedge = binning[binning <= event.jpt_1][-1]
                         #index = np.where(binning==left_binedge)
                         #print(index)
                         #x[0] = weights_up[index]
