@@ -42,11 +42,12 @@ for filename in cfg.files:
                 
                 
                 ## Fill tree
-                #for i in range(len(weights_down)):
-                #    x[0] = weights_up[i]
-                #    y[0] = weights_down[i]
-                #    tree.Fill()
-                tree.Fill()
+                for i in range(len(weights_down)):
+                    weights_up = weights_up[i]
+                    #x[0] = weights_up[i]
+                    #y[0] = weights_down[i]
+                    tree.Fill()
+                #tree.Fill()
 
                 root_file.Write()
                 root_file.Close()
