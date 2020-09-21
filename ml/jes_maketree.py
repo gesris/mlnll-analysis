@@ -39,8 +39,8 @@ for filename in cfg.files:
                 ## create the branches and assign the fill-variables to them as floats (F)
                 tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
                 tree.Branch('jpt_1_weights_down', y, 'jpt_1_weights_down/F')
-                print(len(weights_down))
-                """
+                
+                
                 ## Fill tree
                 for i in range(len(weights_down)):
                     x[0] = weights_up[i]
@@ -50,4 +50,3 @@ for filename in cfg.files:
                 root_file.Write()
                 root_file.Close()
                 
-"""
