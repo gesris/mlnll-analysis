@@ -46,6 +46,7 @@ for filename in cfg.files:
                 #    x[0] = weights_up[i]
                 #    y[0] = weights_down[i]
                 #    tree.Fill()
+                tree.Fill()
 
                 root_file.Write()
                 root_file.Close()
