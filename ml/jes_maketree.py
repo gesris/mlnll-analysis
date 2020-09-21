@@ -20,7 +20,7 @@ def load_from_csv(path, filename):
     return data
 
 
-for filename in cfg.files:
+#for filename in cfg.files:
     #if filename in 'ggh':
     # pass
 
