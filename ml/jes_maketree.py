@@ -29,7 +29,7 @@ for filename in cfg.files:
                 
                 ## Make new root file with new tree with two branches upweights and downweights
                 root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-                tree = ROOT.TTree('ntuple', 'tree')
+                tree = ROOT.TTree('ntuple', 'ntuple')
 
                 ## create 1 dimensional float arrays as fill variables, in this way the float
                 ## array serves as a pointer which can be passed to the branch
@@ -43,9 +43,9 @@ for filename in cfg.files:
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
                 nominal = ROOT.TFile(path)
-                tree = nominal.Get("mt_nominal/ntuple")
+                tree_2 = nominal.Get("mt_nominal/ntuple")
                 
-                for event in tree:
+                for event in tree_2:
                     if event.jpt_1 > binning[-1]:
                         ## fill tree with weight = 1
                         x[0] = 1.
