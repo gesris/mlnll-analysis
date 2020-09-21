@@ -40,6 +40,8 @@ for filename in cfg.files:
                 tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
                 tree.Branch('jpt_1_weights_down', y, 'jpt_1_weights_down/F')
 
+                print(weights_down)
+                """
                 ## Fill tree
                 for i in range(len(weights_down)):
                     x[0] = weights_up[i]
@@ -49,3 +51,4 @@ for filename in cfg.files:
                 root_file.Write()
                 root_file.Close()
                 
+"""
