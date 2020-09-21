@@ -28,8 +28,8 @@ for filename in cfg.files:
 
                 
                 ## Make new root file with new tree with two branches upweights and downweights
-                root_file = ROOT.TFile(home_basepath + file_ + '/jpt_1_weights.root', 'RECREATE')
-                tree = ROOT.TTree('jpt_1', 'jpt_1')
+                root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+                tree = ROOT.TTree('ntuple', 'ntuple')
 
                 ## create 1 dimensional float arrays as fill variables, in this way the float
                 ## array serves as a pointer which can be passed to the branch
@@ -39,8 +39,30 @@ for filename in cfg.files:
                 ## create the branches and assign the fill-variables to them as floats (F)
                 tree.Branch('jpt_1_weights_up', x, 'jpt_1_weights_up/F')
                 tree.Branch('jpt_1_weights_down', y, 'jpt_1_weights_down/F')
+
+                ## Loading root files
+                path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
+                nominal = ROOT.TFile(path)
+                tree = nominal.Get("mt_nominal/ntuple")
                 
+                for event in tree:
+                    if event.jpt_1 > binning[-1]:
+                        ## fill tree with weight = 1
+                        x[0] = 1.
+                        y[0] = 1.
+                        tree.Fill()
+                    else:
+                        left_binedge = binning[binning <= event.jpt_1]
+                        index = np.where(binning==left_binedge)
+                        x[0] = weights_up[index]
+                        y[0] = weights_down[index]
+                        tree.Fill()
                 
+                root_file.Write()
+                root_file.Close()
+
+                
+                """
                 ## Fill tree
                 for i in range(len(weights_down)):
                     x[0] = weights_up[i]
@@ -49,4 +71,4 @@ for filename in cfg.files:
 
                 root_file.Write()
                 root_file.Close()
-                
+                """
