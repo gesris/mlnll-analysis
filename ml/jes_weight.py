@@ -47,9 +47,11 @@ for filename in cfg.files:
                 nominal = ROOT.TFile(path)
                 tree = nominal.Get("mt_nominal/ntuple")
                 
+                n = 0
                 for event in tree:
                     if event.jpt_1 > 800:
-                        print(event.jpt_1)
+                        n += 1
+                print(n)
 
                 """
                 ## Prepatre for Hist
