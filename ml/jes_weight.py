@@ -30,7 +30,6 @@ for filename in cfg.files:
         for file_ in cfg.files[filename]:
             if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
-                """
                 if os.path.exists(home_basepath + file_):
                     print("Directory {} exists".format(home_basepath + file_))
                 else:
@@ -40,20 +39,12 @@ for filename in cfg.files:
                         print("Creating directory {} failed".format(home_basepath + file_))
                     else:
                         print("Successfully created directory %s " % [home_basepath + file_])
-                """
+                
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
-                #nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
-                nominal = ROOT.TFile(path)
+                nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
                 tree = nominal.Get("mt_nominal/ntuple")
                 
-                n = 0
-                for event in tree:
-                    if event.jpt_1 > 800:
-                        n += 1
-                print(n)
-
-                """
                 ## Prepatre for Hist
                 bins = 50
                 minrange = -10
@@ -122,4 +113,5 @@ for filename in cfg.files:
                 plt.xlabel("jpt_1")
                 plt.ylabel("Counts")
                 plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
-                """
+                
+                
