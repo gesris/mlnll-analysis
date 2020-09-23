@@ -184,6 +184,7 @@ def main(args):
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
+    n = tf.constant(0.0, tf.float64)
     nuisances = []
     zero = tf.constant(0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
@@ -223,7 +224,7 @@ def main(args):
 
         # JES Uncertainty
         sys = tf.constant(0.0, tf.float64)
-        n = tf.constant(0.0, tf.float64)
+        #n = tf.constant(0.0, tf.float64)
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             #n = tf.constant(0.0, tf.float64)
             #nuisances.append(n)
