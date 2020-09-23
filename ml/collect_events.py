@@ -137,7 +137,7 @@ def data():
 
 def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
-    """
+    
     # Collect nominal events
     for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
@@ -161,7 +161,7 @@ def main(args):
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name + '_ss', group + '_ss', fold, weightstr, cutstr_ss)
-    """
+    
     ## Collect JES systematic shift
     for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
