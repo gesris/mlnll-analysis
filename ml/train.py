@@ -293,9 +293,9 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, procs_up_ = session.run([loss, minimize, procs_up],
+        loss_train, _, procs_, procs_up_ = session.run([loss, minimize, procs, procs_up],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
-        logger.info("\n\n{}".format(procs_up_))
+        logger.info("\n\nUP: {}\nNOM: {}".format(procs_['ggh'], procs_up_['ggh']))
         ## Breakup condition
         if is_warmup:
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
