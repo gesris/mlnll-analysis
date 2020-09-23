@@ -166,7 +166,7 @@ def main(args):
     for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
-        d = make_dataset(files, cfg.ntuples_jpt_1_base, cfg.friends_jpt_1_base, 'mt_nominal')
+        d = make_dataset(files, cfg.ntuples_jpt_1_base, cfg.friends_base, 'mt_nominal')
         logger.info('Create dataset for %s with label %s, group %s and %u events', process, name, group, d.GetEntries())
         logger.debug('Weight string: %s', weightstr)
         logger.debug('Cut string: %s', cutstr)
