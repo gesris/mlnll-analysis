@@ -13,7 +13,7 @@ import csv
 from csv import reader
 
 
-home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
+home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 def save_to_csv(nparray, path, filename):
     data = np.asarray(nparray)
