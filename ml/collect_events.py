@@ -81,6 +81,20 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
       .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
 
 
+def write_dataset_jpt_1(d, workdir, name, group, fold, weightstr, cutstr):
+    df = ROOT.RDataFrame(d)
+    variables = ROOT.std.vector(ROOT.std.string)()
+    #for v in cfg.ml_variables:
+    #    variables.push_back(v)
+    #variables.push_back(cfg.ml_weight)
+    variables.push_back("jpt_1_weights_up")
+    variables.push_back("jpt_1_weights_down")
+    df.Filter('event % 2 == {}'.format(fold))\
+      .Filter(cutstr)\
+      .Define(cfg.ml_weight, weightstr)\
+      .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
+
+
 def ggh():
     return cfg.files['ggh'], [cfg.channel, cfg.mc, cfg.htt, cfg.ggh], 'ggh', 'ggh'
 
@@ -157,7 +171,7 @@ def main(args):
         logger.debug('Weight string: %s', weightstr)
         logger.debug('Cut string: %s', cutstr)
         for fold in [0, 1]:
-            write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
+            write_dataset_jpt_1(d, args.workdir, name, group, fold, weightstr, cutstr)
 
 
     # Collect systematic shifts
