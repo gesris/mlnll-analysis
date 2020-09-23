@@ -167,9 +167,6 @@ def main(args):
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
         d = make_dataset(files, cfg.ntuples_jpt_1_base, cfg.friends_base, 'mt_nominal')
-        logger.info('Create dataset for %s with label %s, group %s and %u events', process, name, group, d.GetEntries())
-        logger.debug('Weight string: %s', weightstr)
-        logger.debug('Cut string: %s', cutstr)
         for fold in [0, 1]:
             write_dataset_jpt_1(d, args.workdir, name, group, fold, weightstr, cutstr)
 
