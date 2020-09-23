@@ -8,7 +8,7 @@ mkdir -p $WORKDIR
 ml/dataset.sh $WORKDIR
 
 # Train model
-ml/train.sh $WORKDIR
+#ml/train.sh $WORKDIR
 
 # Validate model
 #ml/test_model.sh $WORKDIR
