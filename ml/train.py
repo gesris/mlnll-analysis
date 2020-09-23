@@ -227,7 +227,7 @@ def main(args):
             n = tf.constant(0.0, tf.float64)
             #nuisances.append(n)
             Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
-            Delta_down = tf.maximum(n, zero) * (procs[p] - procs_down[p])
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
             sys += Delta_up + Delta_down
 
         # Expectations
