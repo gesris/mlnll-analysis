@@ -9,14 +9,10 @@ from ntuple_processor.variations import ReplaceCut, AddWeight, ChangeDataset
 # Base path to main ntuples
 basepath = '/ceph/htautau/deeptau_02-20/2018/'
 ntuples_base = path.join(basepath, 'ntuples')
-
-# Basepath to JES total systeamtic shift
-jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
-ntuples_jpt_1_base = path.join(jpt_1_basepath, 'ntuples')
+jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 # Friend trees
-friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
-friends_jpt_1_base = [path.join(jpt_1_basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
+friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [jpt_1_basepath]
 ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_nosysimpl/MLScores']
 
 # File list

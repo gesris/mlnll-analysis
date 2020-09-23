@@ -75,24 +75,13 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
     for v in cfg.ml_variables:
         variables.push_back(v)
     variables.push_back(cfg.ml_weight)
-    df.Filter('event % 2 == {}'.format(fold))\
-      .Filter(cutstr)\
-      .Define(cfg.ml_weight, weightstr)\
-      .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
-
-
-def write_dataset_jpt_1(d, workdir, name, group, fold, weightstr, cutstr):
-    df = ROOT.RDataFrame(d)
-    variables = ROOT.std.vector(ROOT.std.string)()
-    #for v in cfg.ml_variables:
-    #    variables.push_back(v)
-    #variables.push_back(cfg.ml_weight)
     variables.push_back("jpt_1_weights_up")
     variables.push_back("jpt_1_weights_down")
     df.Filter('event % 2 == {}'.format(fold))\
       .Filter(cutstr)\
       .Define(cfg.ml_weight, weightstr)\
       .Snapshot(group, os.path.join(workdir, '{}_fold{}.root'.format(name, fold)), variables)
+
 
 
 def ggh():
@@ -137,7 +126,7 @@ def data():
 
 def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
-    """
+    
     # Collect nominal events
     for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
@@ -161,14 +150,6 @@ def main(args):
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name + '_ss', group + '_ss', fold, weightstr, cutstr_ss)
-    """
-    ## Collect JES systematic shift
-    for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
-        files, selections, name, group = process()
-        cutstr, weightstr = collect_cuts_weights(selections)
-        d = make_dataset(files, cfg.ntuples_jpt_1_base, cfg.friends_base, 'mt_nominal')
-        for fold in [0, 1]:
-            write_dataset_jpt_1(d, args.workdir, name, group, fold, weightstr, cutstr)
 
 
     # Collect systematic shifts
