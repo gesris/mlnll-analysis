@@ -11,18 +11,22 @@ then
     if [ $X = 9 ]
     then
         GPU=0
+        echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
     elif [ $X = 12 ]
     then
         GPU=1
+        echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
     elif [ $X = 15 ]
     then
         GPU=2
+        echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
     elif [ $X = 18 ]
     then
         GPU=3
+        echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
     else
         echo "### -- Currently No Available GPU -- ###"

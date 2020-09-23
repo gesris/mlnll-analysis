@@ -178,8 +178,8 @@ def main(args):
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
     scale_ph = tf.placeholder(tf.float64, shape=())
-    jpt_1_upshift_ph = tf.placeholder(tf.float64, shape=(None,))
-    jpt_1_downshift_ph = tf.placeholder(tf.float64, shape=(None,))
+    jpt_1_upshift_ph = tf.placeholder(tf.float64)
+    jpt_1_downshift_ph = tf.placeholder(tf.float64)
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
