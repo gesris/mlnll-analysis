@@ -222,8 +222,7 @@ def main(args):
             bkg += procs[p]
 
         # JES Uncertainty
-        #sys = tf.constant(0.0, tf.float64)
-        sys = 0
+        sys = tf.constant(0.0, tf.float64)
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             n = tf.constant(0.0, tf.float64)
             #nuisances.append(n)
