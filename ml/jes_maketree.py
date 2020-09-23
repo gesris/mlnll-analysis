@@ -69,12 +69,12 @@ def job(filename):
         root_file.Write()
         root_file.Close()
 
+## With multiprozessing with 1 core per category
 if __name__=="__main__":
     filenames = []
     for filename in cfg.files:
-        if filename in ['ggh', 'qqh', 'vv', 'tt']:
-            filenames.append(filename)
-    p = mp.Pool(4)
+        filenames.append(filename)
+    p = mp.Pool(len(filenames))
     p.map(job, filenames)
     p.close()
     p.join()
