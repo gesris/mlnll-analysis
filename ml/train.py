@@ -224,10 +224,7 @@ def main(args):
 
         # JES Uncertainty
         sys = tf.constant(0.0, tf.float64)
-        #n = tf.constant(0.0, tf.float64)
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            #n = tf.constant(0.0, tf.float64)
-            #nuisances.append(n)
             Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
             Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
             sys += Delta_up + Delta_down
