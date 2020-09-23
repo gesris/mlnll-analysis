@@ -11,7 +11,7 @@ basepath = '/ceph/htautau/deeptau_02-20/2018/'
 ntuples_base = path.join(basepath, 'ntuples')
 
 # Basepath to JES total systeamtic shift
-jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018'
+jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/'
 ntuples_jpt_1_base = path.join(jpt_1_basepath, 'ntuples')
 
 # Friend trees
