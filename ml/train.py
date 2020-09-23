@@ -74,9 +74,9 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape, dtype=np.float64) * i)
 
         # JES Weights
-        jpt_1_upshift = np.array(d["jpt_1_weights_up"], dtype=np.float64)
+        jpt_1_upshift = np.array(d['jpt_1_weights_up'], dtype=np.float64)
         jpt_1_upshifts.append(jpt_1_upshift)
-        jpt_1_downshift = np.array(d["jpt_1_weights_down"], dtype=np.float64)
+        jpt_1_downshift = np.array(d['jpt_1_weights_down'], dtype=np.float64)
         jpt_1_downshifts.append(jpt_1_downshift)
 
     # Stack inputs
