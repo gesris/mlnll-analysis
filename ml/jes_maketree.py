@@ -59,11 +59,12 @@ for folder in foldernames:
         for file_ in cfg.files[filename]:
             f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
             f.cd()
-            d = f.Get("mt_nominal")
-            t = d.Get("ntuple")
+            #d = f.Get("mt_nominal")
+            t = f.Get("mt_nominal/ntuple")
             d_new = ROOT.TDirectoryFile(folder, folder)
             d_new.cd()
-            tree_clone = t.Clone()
+            #tree_clone = t.Clone()
+            tree_clone = f.Get("mt_nominal/ntuple").Clone()
             #d_new.Write()
             #f.Close()
         
