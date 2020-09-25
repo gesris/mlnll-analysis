@@ -59,12 +59,15 @@ for folder in foldernames:
         if filename in ['ggh']:
             for file_ in cfg.files[filename]:
                 if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
+                    ## Loadng TDirectory needet to clone
                     f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
                     t = f.Get("mt_nominal/ntuple")
-                    t.Print()
-                    #d_new = ROOT.TDirectoryFile(folder, folder)
-                    #d_new.cd()
-                    #tree_clone = t.Clone()
+                    
+                    ## Making new TDirectory
+                    d_new = ROOT.TDirectoryFile(folder, folder)
+                    d_new.cd()
+                    tree_clone = t.Clone()
+                    tree_clone.Print()
                     #tree_clone = f.Get("mt_nominal/ntuple").Clone
                     #d_new.Write()
                     #f.Close()
