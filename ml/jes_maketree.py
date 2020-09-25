@@ -66,9 +66,9 @@ for folder in foldernames:
                     ## Making new TDirectory
                     d_new = ROOT.TDirectoryFile(folder, folder)
                     d_new.cd()
-                    #tree_clone = t.Clone()
+                    tree_clone = t.CloneTree()
                     #tree_clone.Print()
-                    tree_clone = f.Get("mt_nominal/ntuple").Clone
+                    #tree_clone = f.Get("mt_nominal/ntuple").Clone
                     #d_new.Write()
                     #f.Close()
         
