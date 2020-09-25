@@ -60,8 +60,8 @@ for filename in cfg.files:
         #tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
         #tdirectory.cd()
         #tree = ROOT.TTree('ntuple', 'ntuple')
-        tree = root_file.Get("mt_nominal/ntuple")
-        clone_tree = tree.Clone()
+        tree = root_file.Get("mt_nominal/ntuple").Clone()
+        #clone_tree = tree.Clone()
         for folder in foldernames:
             tdirectory = ROOT.TDirectoryFile(folder, folder)
             clone_tree.Write(folder + "/ntuple")
