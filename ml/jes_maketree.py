@@ -53,7 +53,7 @@ foldernames = [
         'mt_tauEsOneProngOnePiZeroUp',
         'mt_tauEsOneProngOnePiZeroDown',
         ]
-"""
+
 for folder in foldernames:
     for filename in cfg.files:
         if filename in ['ggh']:
@@ -67,11 +67,11 @@ for folder in foldernames:
                     d_new = ROOT.TDirectoryFile(folder, folder)
                     d_new.cd()
                     t.Print()
-                    #tree_clone = t.Clone()
+                    tree_clone = t.Clone()
                     #tree_clone.Print()
                     #tree_clone = f.Get("mt_nominal/ntuple").Clone
-                    #d_new.Write()
-                    #f.Close()
+                    d_new.Write()
+                    f.Close()
         
         
 
@@ -137,3 +137,4 @@ if __name__=="__main__":
     p.close()
     p.join()
 
+"""
