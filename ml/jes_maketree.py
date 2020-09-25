@@ -61,7 +61,7 @@ for folder in foldernames:
             tree = root_file.Get("mt_nominal/ntuple")
             tdirectory = ROOT.TDirectoryFile(folder, folder)
             tdirectory.cd()
-            tree_clone = tree.CloneTree()
+            tree_clone = tree.Clone()
             tdirectory.Write()
             root_file.Close()
         
