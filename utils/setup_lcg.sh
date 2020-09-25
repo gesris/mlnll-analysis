@@ -34,6 +34,7 @@ then
 #    fi
 
     #export CUDA_VISIBLE_DEVICES=$GPU
+    
     export CUDA_VISIBLE_DEVICES=2
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
     source /home/wunsch/workspace/root/build_ubuntu/bin/thisroot.sh
