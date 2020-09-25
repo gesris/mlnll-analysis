@@ -54,17 +54,16 @@ foldernames = [
         'mt_tauEsOneProngOnePiZeroDown',
         ]
 
-for filename in cfg.files:
-    for file_ in cfg.files[filename]:
-        root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-        #tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
-        #tdirectory.cd()
-        #tree = ROOT.TTree('ntuple', 'ntuple')
-        tree = root_file.Get("mt_nominal/ntuple")
-        #clone_tree = tree.Clone()
-        for folder in foldernames:
+for folder in foldernames:
+    for filename in cfg.files:
+        for file_ in cfg.files[filename]:
+            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            tree = root_file.Get("mt_nominal/ntuple")
             tdirectory = ROOT.TDirectoryFile(folder, folder)
-            tree.Write(folder + "/ntuple")
+            tdirectory.cd()
+            tree_clone = tree.CloneTree()
+            tdirectory.Write()
+            root_file.Close()
         
         
 
