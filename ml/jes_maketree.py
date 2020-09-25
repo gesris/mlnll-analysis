@@ -19,7 +19,56 @@ def load_from_csv(path, filename):
     data = np.loadtxt(path + filename, delimiter=',')
     return data
 
+foldernames = [
+        'mt_jerUncUp',
+        'mt_jerUncDown',
+        'mt_jecUncAbsoluteYearUp',
+        'mt_jecUncAbsoluteYearDown',
+        'mt_jecUncAbsoluteUp',
+        'mt_jecUncAbsoluteDown',
+        'mt_jecUncBBEC1YearUp',
+        'mt_jecUncBBEC1YearDown',
+        'mt_jecUncBBEC1Up',
+        'mt_jecUncBBEC1Down',
+        'mt_jecUncEC2YearUp',
+        'mt_jecUncEC2YearDown',
+        'mt_jecUncEC2Up',
+        'mt_jecUncEC2Down',
+        'mt_jecUncHFYearUp',
+        'mt_jecUncHFYearDown',
+        'mt_jecUncHFUp',
+        'mt_jecUncHFDown',
+        'mt_jecUncFlavorQCDUp',
+        'mt_jecUncFlavorQCDDown',
+        'mt_jecUncRelativeSampleYearUp',
+        'mt_jecUncRelativeSampleYearDown',
+        'mt_jecUncRelativeBalUp',
+        'mt_jecUncRelativeBalDown',
+        'mt_tauEsThreeProngUp',
+        'mt_tauEsThreeProngDown',
+        'mt_tauEsThreeProngOnePiZeroUp',
+        'mt_tauEsThreeProngOnePiZeroDown',
+        'mt_tauEsOneProngUp',
+        'mt_tauEsOneProngDown',
+        'mt_tauEsOneProngOnePiZeroUp',
+        'mt_tauEsOneProngOnePiZeroDown',
+        ]
 
+for filename in cfg.files:
+    for file_ in cfg.files[filename]:
+        root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+        #tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
+        #tdirectory.cd()
+        #tree = ROOT.TTree('ntuple', 'ntuple')
+        tree = root_file.Get("mt_nominal").Clone("ntuple")
+        for folder in foldernames:
+            tdirectory = ROOT.TDirectoryFile(folder, folder)
+            tree.Write(folder + "/ntuple")
+        
+        
+
+
+"""
 #for filename in cfg.files:
     #if filename in 'ggh':
     # pass
@@ -78,3 +127,5 @@ if __name__=="__main__":
     p.map(job, filenames)
     p.close()
     p.join()
+"""
+
