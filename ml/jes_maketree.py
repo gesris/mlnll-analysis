@@ -60,8 +60,9 @@ for folder in foldernames:
             for file_ in cfg.files[filename]:
                 if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                     f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-                    print(f.ls)
-                    #d = f.Get("mt_nominal")
+                    d = f.Get("mt_nominal")
+                    for key in d.GetListOfKeys():
+                        print(key)
                     t = f.Get("mt_nominal/ntuple")
                     t.Print()
                     d_new = ROOT.TDirectoryFile(folder, folder)
