@@ -53,25 +53,24 @@ foldernames = [
         'mt_tauEsOneProngOnePiZeroUp',
         'mt_tauEsOneProngOnePiZeroDown',
         ]
-
+"""
 for folder in foldernames:
     for filename in cfg.files:
-        if filename in ['ggh']:
-            for file_ in cfg.files[filename]:
-                if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
-                    ## Loadng TDirectory needet to clone
-                    f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
-                    t = f.Get("mt_nominal/ntuple")
-                    t.Print()
-                    ## Making new TDirectory
-                    d_new = ROOT.TDirectoryFile(folder, folder)
-                    d_new.cd()
-                    t.Print()
-                    tree_clone = t.Clone()
-                    #tree_clone.Print()
-                    #tree_clone = f.Get("mt_nominal/ntuple").Clone
-                    d_new.Write()
-                    f.Close()
+        #if filename in ['ggh']:
+        for file_ in cfg.files[filename]:
+            #if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
+            ## Loadng TDirectory needet to clone
+            f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
+            t = f.Get("mt_nominal/ntuple")
+
+            ## Making new TDirectory
+            d_new = ROOT.TDirectoryFile(folder, folder)
+            d_new.cd()
+
+            ## Cloning and Saving changes
+            tree_clone = t.Clone()
+            d_new.Write()
+            f.Close()
         
         
 
@@ -137,4 +136,3 @@ if __name__=="__main__":
     p.close()
     p.join()
 
-"""
