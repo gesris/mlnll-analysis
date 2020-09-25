@@ -252,7 +252,7 @@ def main(args):
     logger.info("calculating SD")
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
-    logger.info("starting traiing")
+    logger.info("starting training")
 
     # Add minimization ops
     def get_minimize_op(loss):
