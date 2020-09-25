@@ -53,7 +53,7 @@ foldernames = [
         'mt_tauEsOneProngOnePiZeroUp',
         'mt_tauEsOneProngOnePiZeroDown',
         ]
-
+"""
 for folder in foldernames:
     for filename in cfg.files:
         #if filename in ['ggh']:
@@ -82,7 +82,7 @@ for folder in foldernames:
 
 def job(filename):
     for file_ in cfg.files[filename]:
-        if file_ in 'GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2':
+        if file_ in 'SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD':
             binning = load_from_csv(home_basepath + file_ , '/binning.csv')
             weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
             weights_down = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_down.csv'.format(file_))
@@ -135,4 +135,4 @@ if __name__=="__main__":
     p.map(job, filenames)
     p.close()
     p.join()
-"""
+
