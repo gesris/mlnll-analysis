@@ -62,11 +62,12 @@ for folder in foldernames:
                     ## Loadng TDirectory needet to clone
                     f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
                     t = f.Get("mt_nominal/ntuple")
-                    
+                    t.Print()
                     ## Making new TDirectory
                     d_new = ROOT.TDirectoryFile(folder, folder)
                     d_new.cd()
-                    tree_clone = t.Clone()
+                    t.Print()
+                    #tree_clone = t.Clone()
                     #tree_clone.Print()
                     #tree_clone = f.Get("mt_nominal/ntuple").Clone
                     #d_new.Write()
