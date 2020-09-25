@@ -56,7 +56,7 @@ foldernames = [
 
 for folder in foldernames:
     for filename in cfg.files:
-        if filename in ['tt', 'vv', 'wjets', 'dy']:
+        if filename in ['singlemuon']:
             for file_ in cfg.files[filename]:
                 #if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 ## Loadng TDirectory needet to clone
