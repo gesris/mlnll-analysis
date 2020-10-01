@@ -142,6 +142,11 @@ def main(args):
     scale_val = 4.0 * 2.0
     w_train = w_train * scale_train
     w_val = w_val * scale_val
+    jpt_1_upshift_train = jpt_1_upshift_train * scale_train
+    jpt_1_upshift_val = jpt_1_upshift_val * scale_val
+    jpt_1_downshift_train = jpt_1_downshift_train * scale_train
+    jpt_1_downshift_val = jpt_1_downshift_val * scale_val
+    
     for i, name in enumerate(classes):
         s_train = np.sum(w_train[y_train == i])
         s_val = np.sum(w_val[y_val == i])
@@ -176,7 +181,6 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    scale_ph = tf.placeholder(tf.float64, shape=())
     jpt_1_upshift_ph = tf.placeholder(tf.float64)
     jpt_1_downshift_ph = tf.placeholder(tf.float64)
 
@@ -202,9 +206,9 @@ def main(args):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_upshift_ph
             proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_downshift_ph
-            procs[name] = tf.reduce_sum(proc_w) * scale_ph
-            procs_up[name] = tf.reduce_sum(proc_w_up) * scale_ph
-            procs_down[name] = tf.reduce_sum(proc_w_down) * scale_ph
+            procs[name] = tf.reduce_sum(proc_w)
+            procs_up[name] = tf.reduce_sum(proc_w_up)
+            procs_down[name] = tf.reduce_sum(proc_w_down)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -292,13 +296,13 @@ def main(args):
             is_warmup = False
 
         loss_train, _, procs_, procs_up_, sys_ = session.run([loss, minimize, procs, procs_up, sys],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, scale_ph: scale_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
         logger.info("\n\nUP: {}\nNOM: {}\nDIFF: {}\nSYS: {}".format(procs_['ggh'], procs_up_['ggh'], procs_up_['ggh'] - procs_['ggh'], sys_))
         ## Breakup condition
         if is_warmup:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
         else:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
@@ -313,7 +317,7 @@ def main(args):
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, scale_ph: scale_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
