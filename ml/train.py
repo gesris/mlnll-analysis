@@ -294,7 +294,7 @@ def main(args):
 
         loss_train, _, Delta_up_, Delta_down_ = session.run([loss, minimize, Delta_up, Delta_down],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
-        logger.info("DELTAUP: {}\nDELTADOWN: {}".format(Delta_up_, Delta_down_))
+        #logger.info("DELTAUP: {}\nDELTADOWN: {}".format(Delta_up_, Delta_down_))
         ## Breakup condition
         if is_warmup:
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
