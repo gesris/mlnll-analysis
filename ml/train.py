@@ -206,8 +206,7 @@ def main(args):
             shift += procs_sumw2[p]
         shift = tf.sqrt(shift)
         nuisance_param["bbb"] = theta
-        #sys = theta * shift
-        sys = 0
+        sys = theta * shift
 
         # Expectations
         obs = sig + bkg
