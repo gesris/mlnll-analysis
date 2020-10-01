@@ -234,7 +234,7 @@ def main(args):
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + sys 
+        exp = mu * sig + bkg #+ sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -253,10 +253,8 @@ def main(args):
         covariance_poi = inverse[0][0]
         constraint = tf.sqrt(covariance_poi)
         return constraint
-    logger.info("calculating SD")
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll, [mu])
-    logger.info("starting training")
 
     # Add minimization ops
     def get_minimize_op(loss):
@@ -294,7 +292,7 @@ def main(args):
             minimize = minimize_fullnll
             is_warmup = False
 
-        loss_train, _, procs_, procs_up_, sys_ = session.run([loss, minimize, procs, procs_up, sys],
+        loss_train, _, sys_ = session.run([loss, minimize, sys],
                 feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
         logger.info("SYS: {}".format(sys_))
         ## Breakup condition
