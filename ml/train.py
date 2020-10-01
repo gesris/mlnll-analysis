@@ -230,7 +230,8 @@ def main(args):
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + sys 
+        #exp = mu * sig + bkg + sys 
+        exp = mu * sig + bkg
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
@@ -308,7 +309,7 @@ def main(args):
                 logger.info('Stop training')
                 break
 
-        ## Display / Plot
+        ## Loss Display / Plot
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
@@ -324,6 +325,7 @@ def main(args):
             loss_train_list.append(loss_train)
             loss_val_list.append(loss_val)
         step += 1
+
 
     ## Plot minimization of loss
     plt.figure()

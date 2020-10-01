@@ -88,36 +88,38 @@ for name in class_tot_downshifts:
 
 
 ## Plotting all shifts and weightshifts for comparison
-bins = np.array(cfg.analysis_binning)
-bins_center = []
-for left, right in zip(bins[1:], bins[:-1]):
-    bins_center.append(left + (right - left) / 2)
+def plotting():
+    bins = np.array(cfg.analysis_binning)
+    bins_center = []
+    for left, right in zip(bins[1:], bins[:-1]):
+        bins_center.append(left + (right - left) / 2)
 
-for name in classes:
-    for shift in ["Up", "Down"]:
-        weigths = nominal[name]
-        
-        if shift == "Up":
-            weights_shifted = nominal[name] + class_tot_upshifts[name]
-            weights_weightshifted = np.array(nominal[name]) * np.array(class_weights_up[name])
-            print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_up[name]))
-        else:
-            weights_shifted = nominal[name] + class_tot_downshifts[name]
-            weights_weightshifted = np.array(nominal[name]) * np.array(class_weights_down[name])
-            print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_down[name]))
+    for name in classes:
+        for shift in ["Up", "Down"]:
+            weigths = nominal[name]
+            
+            if shift == "Up":
+                weights_shifted = nominal[name] + class_tot_upshifts[name]
+                weights_weightshifted = np.array(nominal[name]) * np.array(class_weights_up[name])
+                print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_up[name]))
+            else:
+                weights_shifted = nominal[name] + class_tot_downshifts[name]
+                weights_weightshifted = np.array(nominal[name]) * np.array(class_weights_down[name])
+                print("Making histogram for class {} with shift {} and weight {}".format(name, shift, class_weights_down[name]))
 
-        plt.figure(figsize=(7, 6))
-        plt.hist(bins_center, weights=weigths, bins=bins, histtype="step", lw=2, color='C0')
-        plt.hist(bins_center, weights=weights_shifted, bins=bins, histtype="step", lw=2, ls=":", color='C1')
-        plt.hist(bins_center, weights=weights_weightshifted, bins=bins, histtype="step", lw=2, ls="--", color='C1')
-        plt.plot([0], [0], lw=2, color='C0', label=name + " nominal")
-        plt.plot([0], [0], lw=2, color='C1',ls=":", label=name + " " + shift + " shift")
-        plt.plot([0], [0], lw=2, color='C1',ls="--", label=name + " " + shift + " weight shift")
-        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-        plt.xlabel("$f$")
-        plt.ylabel("Counts")
-        plt.yscale('log')
-        plt.savefig("/home/gristo/workspace/plots/JES_hist_{}_{}.png".format(name, shift), bbox_inches = "tight")
+            plt.figure(figsize=(7, 6))
+            plt.hist(bins_center, weights=weigths, bins=bins, histtype="step", lw=2, color='C0')
+            plt.hist(bins_center, weights=weights_shifted, bins=bins, histtype="step", lw=2, ls=":", color='C1')
+            plt.hist(bins_center, weights=weights_weightshifted, bins=bins, histtype="step", lw=2, ls="--", color='C1')
+            plt.plot([0], [0], lw=2, color='C0', label=name + " nominal")
+            plt.plot([0], [0], lw=2, color='C1',ls=":", label=name + " " + shift + " shift")
+            plt.plot([0], [0], lw=2, color='C1',ls="--", label=name + " " + shift + " weight shift")
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+            plt.xlabel("$f$")
+            plt.ylabel("Counts")
+            plt.yscale('log')
+            plt.savefig("/home/gristo/workspace/plots/JES_hist_{}_{}.png".format(name, shift), bbox_inches = "tight")
+#plotting()
 
 
 ## Writing new histograms with total up- and downshift
