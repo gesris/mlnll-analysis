@@ -12,13 +12,13 @@ step=0
 
 while $run; do
     sleep 120s
-    if [ $(ls -l $ANALYSISDIR/$WORKDIR/MLScores_jobs/err | grep err | wc -l) =  1126 ]; then
+    if [ $(ls -l $ANALYSISDIR/$WORKDIR/MLScores_jobs/err | grep err | wc -l) -gt  1125 ]; then
         printf "\n\n## --------------  All jobs done  --------------- ##\n\n"
         run=false
         break
     fi
 
-    if [ $(condor_q | grep HOLD | wc -l) = 1 ]; then
+    if [ $(condor_q | grep HOLD | wc -l) -eq 1 ]; then
         printf "\n\n## ---------  Releasing jobs from HOLD  --------- ##\n\n"
         sh $ANALYSISDIR/condor_release.sh
     fi

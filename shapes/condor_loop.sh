@@ -16,7 +16,7 @@ while $run; do
         break
     fi
 
-    if [ $(condor_q | grep HOLD | wc -l) = 1 ]; then
+    if [ $(condor_q | grep HOLD | wc -l) -eq 1 ]; then
         printf "\n\n## ---------  Releasing jobs from HOLD  --------- ##\n\n"
         sh $ANALYSISDIR/condor_release.sh
     fi
