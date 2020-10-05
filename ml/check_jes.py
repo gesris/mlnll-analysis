@@ -7,7 +7,7 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 mpl.rc("font", size=16, family="serif")
 
-path = '/work/gristo/second_mlnll-analysis/output/8_bins_nosysimpl_shapes/cmb/common/htt_input_2018.root'
+path = '/work/gristo/second_mlnll-analysis/output/8_bins_jes3_shapes/cmb/common/htt_input_2018.root'
 f = ROOT.TFile(path, 'update')
 d = f.Get('htt_mt_0_2018')
 classes = ['W', 'ZTT', 'ZL', 'ZJ', 'TTT', 'TTL', 'TTJ', 'VVJ', 'VVT', 'VVL', 'ggH125', 'qqH125']
@@ -144,6 +144,6 @@ for key in d.GetListOfKeys():
             newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name][i - 1])
         
         ## Write content
-        #d.cd()
-        #newhup.Write()
-        #newhdown.Write()
+        d.cd()
+        newhup.Write()
+        newhdown.Write()
