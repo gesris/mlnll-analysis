@@ -151,10 +151,10 @@ def main(args):
         color = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
         for i, element in enumerate(['ggh', 'qqh']):#, 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
             content = []
-            for id, classes in bincontent_nom.items():
-                content.append(classes[element])
-            plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
-            plt.plot([0], [0], lw=2, color=color[i], label=element)
+            #for id, classes in bincontent_nom.items():
+            #    content.append(classes[element])
+            #plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
+            #plt.plot([0], [0], lw=2, color=color[i], label=element)
             content_up = []
             for id, classes_up in bincontent_up.items():
                 content_up.append(classes_up[element])
