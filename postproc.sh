@@ -3,7 +3,7 @@
 WORKDIR=$1
 
 # Postprocess shapes for process estimations
-shapes/postproc.sh $WORKDIR
+#shapes/postproc.sh $WORKDIR
 
 # Control plots
 plot/control.sh $WORKDIR
@@ -11,24 +11,24 @@ plot/control.sh $WORKDIR
 # Create datacards and workspacd
 fit/convert2ch.sh $WORKDIR
 fit/datacards.sh $WORKDIR
-fit/workspace.sh $WORKDIR
+#fit/workspace.sh $WORKDIR
 
 # Prefit plots
-fit/workspace2shapes.sh $WORKDIR
-plot/analysis.sh $WORKDIR
+#fit/workspace2shapes.sh $WORKDIR
+#plot/analysis.sh $WORKDIR
 
 # Signal strenght
-fit/signal_strength.sh $WORKDIR
+#fit/signal_strength.sh $WORKDIR
 
 # NLL scan
-fit/scan.sh $WORKDIR
-plot/scan.sh $WORKDIR
+#fit/scan.sh $WORKDIR
+#plot/scan.sh $WORKDIR
 
 # Significance
-fit/significance.sh $WORKDIR
+#fit/significance.sh $WORKDIR
 
 # Pulls
-fit/pulls.sh $WORKDIR
+#fit/pulls.sh $WORKDIR
 
 # Impacts
-fit/impacts.sh $WORKDIR
+#fit/impacts.sh $WORKDIR
