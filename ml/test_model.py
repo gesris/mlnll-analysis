@@ -57,10 +57,12 @@ def count_masking(x, up, down):
 def main(args):
     ## Load dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w, jpt_1_upshift, jpt_1_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     fold_factor = 2.
     w = w * fold_factor    
+    jpt_1_upshift = jpt_1_upshift * fold_factor
+    jpt_1_downshift = jpt_1_downshift * fold_factor
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
 
@@ -74,6 +76,8 @@ def main(args):
     
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
+    jpt_1_upshift_ph = tf.placeholder(tf.float64)
+    jpt_1_downshift_ph = tf.placeholder(tf.float64)
     scale_ph = tf.placeholder(tf.float64)
 
     bins = np.array(cfg.analysis_binning)
@@ -82,190 +86,90 @@ def main(args):
         bins_center.append(left + (right - left) / 2)
     
 
-    ## Calculate NLL    
-    def nll_value(mu):
-        nll_tot = []
-        nll_tot_stat = []
-
-        for entry in mu:
-            entry_tensor = tf.constant(entry, tf.float64)
-            nll = 0.0
-            nll_statsonly = 0.0
-            epsilon = tf.constant(1e-9, tf.float64)
-            nuisances = []
-            bincontent = {}
-            tot_procssumw2 = {}
-
-            for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
-                counts = {}
-                logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
-                up = tf.constant(up, tf.float64)
-                down = tf.constant(down, tf.float64)
-
-                # Processes
-                mask = count_masking(f, up, down)
-                procs = {}
-                procs_sumw2 = {}
-                for j, name in enumerate(classes):
-                    proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-                    procs[name] = tf.reduce_sum(proc_w) * scale_ph
-                    procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) * scale_ph
+    ## Get bincontent   
+    bincontent_nom = {}
+    bincontent_up = {}
+    bincontent_down = {}
 
 
-                # QCD estimation
-                procs['qcd'] = procs['data_ss']
-                for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
-                    procs['qcd'] -= procs[p + '_ss']
-                procs['qcd'] = tf.maximum(procs['qcd'], 0)
-                procs_sumw2['qcd'] = procs['qcd']
+    for i, (up, down) in enumerate(zip(bins[1:], bins[:-1])):
+        counts_nom = {}
+        counts_up = {}
+        counts_down = {}
+        logger.debug('Add NLL for bin {} with boundaries [{}, {}]'.format(i, down, up))
+        up = tf.constant(up, tf.float64)
+        down = tf.constant(down, tf.float64)
 
+        # Processes
+        mask = count_masking(f, up, down)
+        procs = {}
+        procs_up = {}
+        procs_down = {}
 
-                # Nominal signal and background
-                sig = 0
-                for p in ['ggh', 'qqh']:
-                    sig += procs[p]
-                    counts[p] = procs[p]
+        for j, name in enumerate(classes):
+            proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
+            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_upshift_ph
+            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_downshift_ph
+            procs[name] = tf.reduce_sum(proc_w)
+            procs_up[name] = tf.reduce_sum(proc_w_up)
+            procs_down[name] = tf.reduce_sum(proc_w_down)
 
-                bkg = 0
-                for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-                    bkg += procs[p]
-                    counts[p] = procs[p]
+        # QCD estimation
+        procs['qcd'] = procs['data_ss']
+        for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
+            procs['qcd'] -= procs[p + '_ss']
+        procs['qcd'] = tf.maximum(procs['qcd'], 0)
 
+        # Nominal signal and background
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+            counts_nom[p] = procs[p]
+        
+        # Shifted signal and background
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+            counts_up[p] = procs_up[p]
+            counts_down[p] = procs_down[p]
 
-                # Add total content to nested dictionary
-                bincontent[i] = counts
-                tot_procssumw2[i] = procs_sumw2
-
-
-                # Bin by bin uncertainties
-                sys = tf.constant(0.0, tf.float64)
-                for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-                    n = tf.constant(0.0, tf.float64)
-                    nuisances.append(n)
-                    sys += n * tf.sqrt(procs_sumw2[p])
-
-                # Expectations
-                obs = sig + bkg
-                exp = entry_tensor * sig + bkg + sys 
-                exp_statsonly = entry_tensor * sig + bkg
-                
-                # Likelihood
-                nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
-                nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp_statsonly, epsilon)).log_prob(tf.maximum(obs, epsilon))
-            
-            # Nuisance constraints
-            for n in nuisances:
-                nll -= tfp.distributions.Normal(
-                        loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-                        ).log_prob(n)
-            
-            nll_tot.append(nll)
-            nll_tot_stat.append(nll_statsonly)
-        return nll_tot, nll_tot_stat, bincontent, tot_procssumw2
-
+        # Add total content to nested dictionary
+        bincontent_nom[i] = counts_nom
+        bincontent_up[i] = counts_up
+        bincontent_down[i] = counts_down
 
     ## Calculating bbb-unc. and bincontent for histogram
     session = tf.Session(config=config)
     saver = tf.train.Saver()
     saver.restore(session, path)
 
-    mu0 = [1.0]
-    mu1 = np.linspace(0.0, 2.0, 30)
-    _, _, bincontent, tot_procssumw2 = nll_value(mu0)
-    bincontent_, tot_procssumw2_, nll0_, nll1_ = session.run([bincontent, tot_procssumw2, nll_value(mu0), nll_value(mu1)], \
-                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
-
-    dnll_array = []
-    dnll_array_stat = []
-    nll0_tot, nll0_tot_stat, _ , _ = nll0_
-    nll1_tot, nll1_tot_stat, _ , _ = nll1_
-    for nll1 in nll1_tot:
-        dnll_array.append(-2 * (nll0_tot[0] - nll1))
-    for nll1_stat in nll1_tot_stat:
-        dnll_array_stat.append(-2 * (nll0_tot_stat[0] - nll1_stat))
-
-
-    ## Printing bbb uncertainty for every class 
-    summe = 0   
-    for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
-        content = []
-        for id, classes in tot_procssumw2_.items():
-            content.append(np.sqrt(classes[element]))
-        content = np.array(content)
-        np.set_printoptions(precision=3)
-        summe += np.sum(content)
-        print("{}: {}".format(element, content))
-    print("TOTAL SUM OF ALL UNC: {}".format(summe))
+    bincontent_nom_, bincontent_up_, bincontent_down_ = session.run([bincontent_nom, bincontent_up, bincontent_down], \
+                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor, jpt_1_downshift_ph: jpt_1_downshift, jpt_1_upshift_ph: jpt_1_upshift})
 
 
     ## Plotting histogram
-    def plot(bincontent, bins, bins_center):
+    def plot(bincontent_nom, bincontent_up, bincontent_down, bins, bins_center):
         plt.figure(figsize=(7, 6))
         color = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
         for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
             content = []
-            for id, classes in bincontent.items():
+            for id, classes in bincontent_nom.items():
                 content.append(classes[element])
             plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
             plt.plot([0], [0], lw=2, color=color[i], label=element)
+            content_up = []
+            for id, classes in bincontent_up.items():
+                content_up.append(classes[element])
+            plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
+            plt.plot([0], [0], lw=2, ls=':', color=color[i], label=element)
+            content_down = []
+            for id, classes in bincontent_down.items():
+                content_down.append(classes[element])
+            plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
+            plt.plot([0], [0], lw=2, ls='--', color=color[i], label=element)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
         plt.ylabel("Counts")
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
         logger.info("saving histogram in {}/model_fold{}".format(args.workdir, args.fold))
-    plot(bincontent_, bins, bins_center)
-
-
-    ## Plot scan
-    def plot_scan(x, dnll_array, dnll_array_stat):
-        ## Interpolate DNLL data
-        f_dnll_array = interpolate.UnivariateSpline(x, dnll_array, s=0)
-        f_dnll_array_stat = interpolate.UnivariateSpline(x, dnll_array_stat, s=0)
-        x_new = np.arange(0.0, 2.0, 0.02)
-
-        y_target = 1
-        y_reduced = np.array(dnll_array) - y_target
-        y_reduced_stat = np.array(dnll_array_stat) - y_target
-        freduced = interpolate.UnivariateSpline(x, y_reduced, s=0)
-        freduced_stat = interpolate.UnivariateSpline(x, y_reduced_stat, s=0)
-        constraints_xval = freduced.roots()
-        constraints_xval_stat = freduced_stat.roots()
-        constraints = [1 - constraints_xval[0], constraints_xval[1] - 1]
-        constraints_stat = [1 - constraints_xval_stat[0], constraints_xval_stat[1] - 1]
-
-        y_limit = [0.0, 4.5]
-        x_limit = [0.5, 1.5]
-        linewidth_narrow = 1.
-        linewidth_wide = 2.
-
-        ## Plot interpolation
-        plt.figure(figsize=(7,6))
-        plt.xlabel("$\mu$")
-        plt.xlim((x_limit[0], x_limit[1]))
-        plt.ylabel("-2 $\cdot \/ \Delta$NLL")
-        plt.ylim((y_limit[0], y_limit[1]))
-        plt.plot(x_new, f_dnll_array(x_new), color='C3', lw=linewidth_wide)
-        plt.plot(x_new, f_dnll_array_stat(x_new), color='C0', lw=linewidth_wide)
-
-        plt.plot([x_limit[0], constraints_xval[0]], [1, 1], 'k', lw=linewidth_narrow)
-        plt.plot([constraints_xval[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
-        plt.plot([x_limit[0], constraints_xval_stat[0]], [1, 1], 'k', lw=linewidth_narrow)
-        plt.plot([constraints_xval_stat[1], x_limit[1]], [1, 1], 'k', lw=linewidth_narrow)
-
-        vscale = 1 / y_limit[1]
-        plt.axvline(x=constraints_xval[0], ymax=1. * vscale, color='C3', lw=linewidth_narrow)
-        plt.axvline(x=constraints_xval[1], ymax=1. * vscale, color='C3', lw=linewidth_narrow)
-        plt.axvline(x=constraints_xval_stat[0], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
-        plt.axvline(x=constraints_xval_stat[1], ymax=1. * vscale, color='C0', lw=linewidth_narrow)
-
-        plt.plot([0], [0], color='C3', label="$\mu_{}$ = 1.00 (-{:.3f} +{:.3f})".format('\mathrm{stat. + sys.}', constraints[1], constraints[0]))
-        plt.plot([0], [0], color='C0', label="$\mu_{}$         = 1.00 (-{:.3f} +{:.3f})".format('\mathrm{stat.}', constraints_stat[1], constraints_stat[0]))
-
-        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand", borderaxespad=0., prop={'size': 14})
-        plt.savefig(os.path.join(args.workdir, 'model_fold{}/scan_cross_check{}.png'.format(args.fold, args.fold)), bbox_inches="tight")
-        logger.info("saving scan in {}/model_fold{}".format(args.workdir, args.fold))
-    plot_scan(x, dnll_array, dnll_array_stat)
+    plot(bincontent_nom_, bincontent_up_, bincontent_down_, bins, bins_center)
 
 
 if __name__ == '__main__':
