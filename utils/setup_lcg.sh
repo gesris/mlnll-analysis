@@ -7,18 +7,8 @@ touch available_gpu.log
 
 if uname -a | grep ekpdeepthought -q
 then
-    X=$(nvidia-smi | grep -n ' 0%' | head -1 | cut -f 1 -d ':')
-    if [ $X = 18 ]
-    then
-        GPU=3
-        echo "### ------ Running On GPU $GPU ------ ###"
-        echo True > available_gpu.log
-    elif [ $X = 15 ]
-    then
-        GPU=2
-        echo "### ------ Running On GPU $GPU ------ ###"
-        echo True > available_gpu.log
-    elif [ $X = 9 ]
+    X=$(nvidia-smi | grep -n '15W' | head -1 | cut -f 1 -d ':')
+    if [ $X = 9 ]
     then
         GPU=0
         echo "### ------ Running On GPU $GPU ------ ###"
@@ -26,6 +16,16 @@ then
     elif [ $X = 12 ]
     then
         GPU=1
+        echo "### ------ Running On GPU $GPU ------ ###"
+        echo True > available_gpu.log
+    elif [ $X = 15 ]
+    then
+        GPU=2
+        echo "### ------ Running On GPU $GPU ------ ###"
+        echo True > available_gpu.log
+    elif [ $X = 18 ]
+    then
+        GPU=3
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
     else
