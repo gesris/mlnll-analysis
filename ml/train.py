@@ -142,10 +142,6 @@ def main(args):
     scale_val = 4.0 * 2.0
     w_train = w_train * scale_train
     w_val = w_val * scale_val
-    jpt_1_upshift_train = jpt_1_upshift_train * scale_train
-    jpt_1_upshift_val = jpt_1_upshift_val * scale_val
-    jpt_1_downshift_train = jpt_1_downshift_train * scale_train
-    jpt_1_downshift_val = jpt_1_downshift_val * scale_val
     
     for i, name in enumerate(classes):
         s_train = np.sum(w_train[y_train == i])

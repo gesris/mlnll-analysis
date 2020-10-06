@@ -60,9 +60,7 @@ def main(args):
     x, y, w, jpt_1_upshift, jpt_1_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     fold_factor = 2.
-    w = w * fold_factor    
-    #jpt_1_upshift = jpt_1_upshift * fold_factor
-    #jpt_1_downshift = jpt_1_downshift * fold_factor
+    w = w * fold_factor
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
 
@@ -149,7 +147,7 @@ def main(args):
     def plot(bincontent_nom, bincontent_up, bincontent_down, bins, bins_center):
         plt.figure(figsize=(7, 6))
         color = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
-        for i, element in enumerate(['ggh']):#, 'qqh', 'ztt', 'zl']):#, 'w', 'tt', 'vv']):
+        for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl']):#, 'w', 'tt', 'vv']):
             content = []
             for id, classes in bincontent_nom.items():
                 content.append(classes[element])
