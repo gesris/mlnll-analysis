@@ -151,19 +151,19 @@ def main(args):
         color = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
         for i, element in enumerate(['ggh', 'qqh']):#, 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']):
             content = []
-            #for id, classes in bincontent_nom.items():
-            #    content.append(classes[element])
-            #plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
-            #plt.plot([0], [0], lw=2, color=color[i], label=element)
+            for id, classes in bincontent_nom.items():
+                content.append(classes[element])
+            plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
+            plt.plot([0], [0], lw=2, color=color[i], label=element)
             content_up = []
             for id, classes_up in bincontent_up.items():
                 content_up.append(classes_up[element])
-            plt.hist(bins_center, weights=content_up, bins=bins, histtype="step", lw=2, color=color[i])
+            plt.hist(bins_center, weights=content_up, bins=bins, histtype="step", lw=2, ls=':', color=color[i])
             plt.plot([0], [0], lw=2, ls=':', color=color[i], label=element)
             content_down = []
             for id, classes_down in bincontent_down.items():
                 content_down.append(classes_down[element])
-            plt.hist(bins_center, weights=content_down, bins=bins, histtype="step", lw=2, color=color[i])
+            plt.hist(bins_center, weights=content_down, bins=bins, histtype="step", lw=2, ls='--', color=color[i])
             plt.plot([0], [0], lw=2, ls='--', color=color[i], label=element)
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
