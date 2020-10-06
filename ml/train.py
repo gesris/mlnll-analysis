@@ -223,14 +223,15 @@ def main(args):
 
         # JES Uncertainty
         sys = tf.constant(0.0, tf.float64)
+        magn_scale = tf.constant(1, tf.float64)
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
-            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * magn_scale
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * magn_scale
             sys += Delta_up + Delta_down
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg #+ sys 
+        exp = mu * sig + bkg + sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
