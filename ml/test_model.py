@@ -61,8 +61,8 @@ def main(args):
                             use_class_weights=False, make_categorical=False)
     fold_factor = 2.
     w = w * fold_factor    
-    jpt_1_upshift = jpt_1_upshift * fold_factor
-    jpt_1_downshift = jpt_1_downshift * fold_factor
+    #jpt_1_upshift = jpt_1_upshift * fold_factor
+    #jpt_1_downshift = jpt_1_downshift * fold_factor
     preproc = pickle.load(open(os.path.join(args.workdir, 'preproc_fold{}.pickle'.format(args.fold)), 'rb'))
     x_preproc = preproc.transform(x)
 
