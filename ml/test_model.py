@@ -149,7 +149,7 @@ def main(args):
     def plot(bincontent_nom, bincontent_up, bincontent_down, bins, bins_center):
         plt.figure(figsize=(7, 6))
         color = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
-        for i, element in enumerate(['ggh', 'qqh', 'ztt', 'zl']):#, 'w', 'tt', 'vv']):
+        for i, element in enumerate(['ggh']):#, 'qqh', 'ztt', 'zl']):#, 'w', 'tt', 'vv']):
             content = []
             for id, classes in bincontent_nom.items():
                 content.append(classes[element])
@@ -168,7 +168,7 @@ def main(args):
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=3, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
         plt.ylabel("Counts")
-        plt.yscale('log')
+        #plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
         logger.info("Saving histogram in {}/model_fold{}".format(args.workdir, args.fold))
     plot(bincontent_nom_, bincontent_up_, bincontent_down_, bins, bins_center)
