@@ -170,7 +170,7 @@ def main(args):
         plt.ylabel("Counts")
         plt.yscale('log')
         plt.savefig(os.path.join(args.workdir, 'model_fold{}/histogram{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
-        logger.info("saving histogram in {}/model_fold{}".format(args.workdir, args.fold))
+        logger.info("Saving histogram in {}/model_fold{}".format(args.workdir, args.fold))
     plot(bincontent_nom_, bincontent_up_, bincontent_down_, bins, bins_center)
 
 
