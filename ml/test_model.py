@@ -119,6 +119,8 @@ def main(args):
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
+        procs_up['qcd'] = tf.maximum(procs['qcd'] * jpt_1_upshift_ph, 0)
+        procs_down['qcd'] = tf.maximum(procs['qcd'] * jpt_1_downshift_ph, 0)
 
         # Nominal signal and background
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
