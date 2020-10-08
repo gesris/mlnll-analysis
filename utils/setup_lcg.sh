@@ -9,7 +9,7 @@ if uname -a | grep ekpdeepthought -q
 then
     X=$(nvidia-smi | grep -n '15W' | head -1 | cut -f 1 -d ':')
     Y=$(nvidia-smi | grep -n '16W' | head -1 | cut -f 1 -d ':')
-    if [ $X = 9 -o $Y = 9 ]
+    if [ $X = 9 ] || [ $Y = 9 ]
     then
         GPU=0
         echo "### ------ Running On GPU $GPU ------ ###"
