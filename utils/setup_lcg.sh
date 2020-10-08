@@ -14,17 +14,17 @@ then
         GPU=0
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
-    elif [ $X = 12 || $Y = 12 ]
+    elif [ $X = 12 -o $Y = 12 ]
     then
         GPU=1
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
-    elif [ $X = 15 || $Y = 15 ]
+    elif [ $X = 15 -o $Y = 15 ]
     then
         GPU=2
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
-    elif [ $X = 18 || $Y = 18 ]
+    elif [ $X = 18 -o $Y = 18 ]
     then
         GPU=3
         echo "### ------ Running On GPU $GPU ------ ###"
