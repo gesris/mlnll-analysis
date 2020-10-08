@@ -9,22 +9,22 @@ if uname -a | grep ekpdeepthought -q
 then
     X=$(nvidia-smi | grep -n '15W' | head -1 | cut -f 1 -d ':')
     Y=$(nvidia-smi | grep -n '16W' | head -1 | cut -f 1 -d ':')
-    if [ $X = 9 ] || [ $Y = 9 ]
+    if [ $X -eq 9 ] || [ $Y -eq 9 ]
     then
         GPU=0
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
-    elif [ $X = 12 ] || [ $Y = 12 ]
+    elif [ $X -eq 12 ] || [ $Y -eq 12 ]
     then
         GPU=1
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
-    elif [ $X = 15 ] || [ $Y = 15 ]
+    elif [ $X -eq 15 ] || [ $Y -eq 15 ]
     then
         GPU=2
         echo "### ------ Running On GPU $GPU ------ ###"
         echo True > available_gpu.log
-    elif [ $X = 18 ] || [ $Y = 18 ]
+    elif [ $X -eq 18 ] || [ $Y -eq 18 ]
     then
         GPU=3
         echo "### ------ Running On GPU $GPU ------ ###"
