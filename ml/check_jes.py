@@ -64,7 +64,7 @@ def main(args):
     class_tot_downshifts = {}
 
     ## using inflation to scale shifts
-    inflation = args.inflation
+    inflation = int(args.inflation)
     for class_name in classes:
         tot_upshift = [0, 0, 0, 0, 0, 0, 0, 0]
         for shift_name in upshifts:
