@@ -2,7 +2,7 @@
 
 WORKDIR=$1
 
-for INFLATION in 1 10 20 50 100
+for INFLATION in 0.5
 do 
     ## Create datacards
     echo "Creating Datacards"
