@@ -148,8 +148,8 @@ def main(args):
 
             ## Fill Bincontent
             for i in range(1, 9):
-                newhup.SetBinContent(i, h.GetBinContent(i) + class_tot_upshifts[name][i - 1])
-                newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name][i - 1])
+                newhup.SetBinContent(i, np.max([h.GetBinContent(i) + class_tot_upshifts[name][i - 1], 0]))
+                newhdown.SetBinContent(i, np.max([h.GetBinContent(i) - class_tot_downshifts[name][i - 1], 0]))
             
             ## Write content
             d.cd()
