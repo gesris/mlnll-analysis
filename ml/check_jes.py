@@ -63,6 +63,8 @@ def main(args):
     class_tot_upshifts = {}
     class_tot_downshifts = {}
 
+    ## using inflation to scale shifts
+    inflation = args.inflation
     for class_name in classes:
         tot_upshift = [0, 0, 0, 0, 0, 0, 0, 0]
         for shift_name in upshifts:
@@ -70,7 +72,7 @@ def main(args):
                 tot_upshift += upshifts[shift_name]
         tot_upshift[tot_upshift < 0] = 0
         tot_upshift = np.sqrt(np.array(tot_upshift))
-        class_tot_upshifts[class_name] = tot_upshift
+        class_tot_upshifts[class_name] = tot_upshift * inflation
         
         tot_downshift = [0, 0, 0, 0, 0, 0, 0, 0]
         for shift_name in downshifts:
@@ -78,7 +80,7 @@ def main(args):
                 tot_downshift += downshifts[shift_name]
         tot_downshift[tot_downshift < 0] = 0
         tot_downshift = np.sqrt(np.array(tot_downshift))
-        class_tot_downshifts[class_name] = tot_downshift
+        class_tot_downshifts[class_name] = tot_downshift * inflation
 
 
     ## Calculate weights resulting from shifts
@@ -144,10 +146,9 @@ def main(args):
             newhdown.SetName(name + "_scale_j_totDown")
 
             ## Fill Bincontent
-            inflation = args.inflation
             for i in range(1, 9):
-                newhup.SetBinContent(i, h.GetBinContent(i) + class_tot_upshifts[name][i - 1] * inflation)
-                newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name][i - 1] * inflation)
+                newhup.SetBinContent(i, h.GetBinContent(i) + class_tot_upshifts[name][i - 1])
+                newhdown.SetBinContent(i, h.GetBinContent(i) - class_tot_downshifts[name][i - 1])
             
             ## Write content
             d.cd()
