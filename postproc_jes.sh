@@ -2,7 +2,7 @@
 
 WORKDIR=$1
 
-for INFLATION in 12 14 16 18
+for INFLATION in 10
 do 
     ## Create datacards
     echo "Creating Datacards"
@@ -31,5 +31,5 @@ do
 
     ## Move scan.png to destined directory
     echo "Moving scan.png to webdir"
-    mv $WORKDIR/scan.png /etpwww/web/gristo/public_html/JES_scans/JES_totunc_trainnosys_x$INFLATION.png
+    #mv $WORKDIR/scan.png /etpwww/web/gristo/public_html/JES_scans/JES_totunc_trainnosys_x$INFLATION.png
 done
