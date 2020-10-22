@@ -240,7 +240,7 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
     qqh_wg1.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_wg1'.format(unc))))
     qqh_wg1.append(AddWeight(unc + 'Down', Weight('(1.0/{})'.format(unc), '{}_wg1'.format(unc))))
 
-## testing out combined jet_es
+## testing out combined jet_es instead of splitted
 jet_es = []
 for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
     if 'jpt_1_weights_up' in unc:
