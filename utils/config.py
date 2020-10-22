@@ -240,9 +240,10 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
     qqh_wg1.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_wg1'.format(unc))))
     qqh_wg1.append(AddWeight(unc + 'Down', Weight('(1.0/{})'.format(unc), '{}_wg1'.format(unc))))
 
+## testing out combined jet_es
 jet_es = []
-for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
-    jet_es.append(AddWeight(unc, Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
+jet_es.append(AddWeight('jpt_1_weights_up' + 'Up', Weight('({})'.format('jpt_1_weights_up'), '{}_jet_es'.format('jpt_1_weights_up'))))
+jet_es.append(AddWeight('jpt_1_weights_down' + 'Down', Weight('({})'.format('jpt_1_weights_down'), '{}_jet_es'.format('jpt_1_weights_down'))))
 
 """jet_es = []
 for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
