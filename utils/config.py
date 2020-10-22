@@ -247,7 +247,9 @@ jet_es = []
 for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
     if 'jpt_1_weights_up' in unc:
         jet_es.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
-    else:
+        jet_es.append(AddWeight(unc + 'Down', Weight('(1.0)', '{}_jet_es'.format(unc))))
+    elif 'jpt_1_weights_down' in unc:
+        jet_es.append(AddWeight(unc + 'Up', Weight('(1.0)', '{}_jet_es'.format(unc))))
         jet_es.append(AddWeight(unc + 'Down', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
     
 
