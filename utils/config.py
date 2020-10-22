@@ -241,6 +241,10 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
     qqh_wg1.append(AddWeight(unc + 'Down', Weight('(1.0/{})'.format(unc), '{}_wg1'.format(unc))))
 
 jet_es = []
+for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
+    jet_es.append(AddWeight(unc, Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
+
+"""jet_es = []
 for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
     jet_es += [ChangeDataset('CMS_scale_j_{}_2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
                ChangeDataset('CMS_scale_j_{}_2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
@@ -256,7 +260,7 @@ jet_es += [
         ChangeDataset('CMS_res_j_2018Up', 'jerUncUp'),
         ChangeDataset('CMS_res_j_2018Down', 'jerUncDown'),
         ]
-
+"""
 tau_es = [
         ChangeDataset('CMS_scale_t_3prong_2018Up', 'tauEsThreeProngUp'),
         ChangeDataset('CMS_scale_t_3prong_2018Down', 'tauEsThreeProngDown'),
