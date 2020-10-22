@@ -246,6 +246,7 @@ jet_es = []
 #jet_es.append(AddWeight('jpt_1_weights_down' + 'Down', Weight('({})'.format('jpt_1_weights_down'), '{}_jet_es'.format('jpt_1_weights_down'))))
 for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
     jet_es.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
+    jet_es.append(AddWeight(unc + 'Down', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
     
 
 """jet_es = []
