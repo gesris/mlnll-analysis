@@ -242,8 +242,6 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
 
 ## testing out combined jet_es
 jet_es = []
-#jet_es.append(AddWeight('jpt_1_weights_up' + 'Up', Weight('({})'.format('jpt_1_weights_up'), '{}_jet_es'.format('jpt_1_weights_up'))))
-#jet_es.append(AddWeight('jpt_1_weights_down' + 'Down', Weight('({})'.format('jpt_1_weights_down'), '{}_jet_es'.format('jpt_1_weights_down'))))
 for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
     if 'jpt_1_weights_up' in unc:
         jet_es.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
