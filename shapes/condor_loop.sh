@@ -10,7 +10,7 @@ step=0
 
 while $run; do
     sleep 120s
-    if [ $(ls -l $ANALYSISDIR/$WORKDIR/shapes_jobs/err | grep err | wc -l) -gt  46 ]; then
+    if [ $(ls -l $ANALYSISDIR/$WORKDIR/shapes_jobs/err | grep err | wc -l) -gt  47 ]; then
         printf "\n\n## --------------  All jobs done  --------------- ##\n\n"
         run=false
         break
