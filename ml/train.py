@@ -179,7 +179,7 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
     jpt_1_upshift_ph = tf.placeholder(tf.float64)
     jpt_1_downshift_ph = tf.placeholder(tf.float64)
-    magn_scale_ph = tf.placeholder(tf.float64)
+    magn_scale = 10
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
@@ -225,8 +225,8 @@ def main(args):
         # JES Uncertainty
         sys = 0.0
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * magn_scale_ph
-            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * magn_scale_ph
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * magn_scale
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * magn_scale
             sys += Delta_up + Delta_down
 
         # Expectations
@@ -290,11 +290,11 @@ def main(args):
             is_warmup = False
 
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train, magn_scale_ph: 10.0})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
         if is_warmup:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val, magn_scale_ph: 10.0})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
         else:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val, magn_scale_ph: 10.0})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
