@@ -223,7 +223,7 @@ def main(args):
             bkg += procs[p]
 
         # JES Uncertainty
-        sys = tf.constant(0.0, tf.float64)
+        sys = 0.0
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * magn_scale_ph
             Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * magn_scale_ph
