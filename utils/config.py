@@ -13,7 +13,7 @@ jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [jpt_1_basepath]
-ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_jes_trainnosys3/MLScores']
+ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_jes3/MLScores']
 
 # File list
 files = {
@@ -242,13 +242,8 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
 
 ## testing out combined jet_es instead of splitted
 jet_es = []
-for unc in ['jpt_1_weights_up', 'jpt_1_weights_down']:
-    if 'jpt_1_weights_up' in unc:
-        jet_es.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
-        jet_es.append(AddWeight(unc + 'Down', Weight('(1.0)', '{}_jet_es'.format(unc))))
-    elif 'jpt_1_weights_down' in unc:
-        jet_es.append(AddWeight(unc + 'Up', Weight('(1.0)', '{}_jet_es'.format(unc))))
-        jet_es.append(AddWeight(unc + 'Down', Weight('({})'.format(unc), '{}_jet_es'.format(unc))))
+jet_es.append(AddWeight('jpt_1_weights' + 'Up', Weight('({})'.format('jpt_1_weights_up'), '{}_jet_es'.format('jpt_1_weights'))))
+jet_es.append(AddWeight('jpt_1_weights' + 'Down', Weight('({})'.format('jpt_1_weights_down'), '{}_jet_es'.format('jpt_1_weights'))))
     
 
 """jet_es = []
