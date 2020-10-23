@@ -33,8 +33,7 @@ then
         echo False > available_gpu.log
     fi
 
-    #export CUDA_VISIBLE_DEVICES=$GPU
-    export CUDA_VISIBLE_DEVICES=2
+    export CUDA_VISIBLE_DEVICES=$GPU
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
     source /home/wunsch/workspace/root/build_ubuntu/bin/thisroot.sh
     export PATH=/usr/local/cuda-8.0/bin:$PATH
