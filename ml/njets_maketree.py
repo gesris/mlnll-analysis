@@ -68,8 +68,8 @@ def job(filename):
             #root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
             root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
             #tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
-            tdirectory = root_file.Get("mt_nominal")
-            tdirectory.cd()
+            #tdirectory = root_file.Get("mt_nominal")
+            #tdirectory.cd()
             #tree = ROOT.TTree('ntuple', 'ntuple')
             tree = root_file.Get("mt_nominal/ntuple")
 
