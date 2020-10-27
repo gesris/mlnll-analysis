@@ -79,8 +79,8 @@ def job(filename):
             y = array('f', [0])
 
             ## create the branches and assign the fill-variables to them as floats (F)
-            branch_up = tree.Branch('njets_weights_up', x, 'njets_weights_up/F')
-            branch_down = tree.Branch('njets_weights_down', y, 'njets_weights_down/F')
+            tree.Branch('njets_weights_up', x, 'njets_weights_up/F')
+            tree.Branch('njets_weights_down', y, 'njets_weights_down/F')
 
             ## Loading basepath root files
             path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
@@ -93,8 +93,7 @@ def job(filename):
                     ## assign weight 1 to entries out of bounds
                     x[0] = 1.
                     y[0] = 1.
-                    branch_up.Fill()
-                    branch_down.Fill()
+                    tree.Fill()
                 else:
                     left_binedge = binning[binning <= event.njets][-1]
                     index = np.where(binning==left_binedge)
