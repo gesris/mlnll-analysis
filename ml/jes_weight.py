@@ -43,7 +43,7 @@ for filename in cfg.files:
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
-                tree = nominal.Get("mt_nominal/ntuple")
+                #tree = nominal.Get("mt_nominal/ntuple")
                 
                 ## Prepatre for Hist
                 bins = 50
