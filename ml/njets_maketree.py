@@ -54,6 +54,7 @@ foldernames = [
         'mt_tauEsOneProngOnePiZeroDown',
         ]
 
+"""
 for folder in foldernames:
     for filename in cfg.files:
         if filename in ['singlemuon']:
@@ -71,11 +72,11 @@ for folder in foldernames:
                 tree_clone = t.Clone()
                 d_new.Write()
                 f.Close()
-            
+"""         
         
 
 
-"""
+
 #for filename in cfg.files:
     #if filename in 'ggh':
     # pass
@@ -89,7 +90,8 @@ def job(filename):
 
             
             ## Make new root file with new tree with two branches upweights and downweights
-            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            #root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
             tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
             tdirectory.cd()
             tree = ROOT.TTree('ntuple', 'ntuple')
@@ -135,4 +137,4 @@ if __name__=="__main__":
     p.map(job, filenames)
     p.close()
     p.join()
-"""
+
