@@ -73,7 +73,7 @@ for filename in cfg.files:
         #save_to_csv(weights_up, home_basepath + file_, '/{}_njets_weights_up.csv'.format(file_))
         np.savetxt(home_basepath + file_ + '/{}_njets_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
         np.savetxt(home_basepath + file_ + '/{}_njets_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-        np.savetxt(home_basepath + file_ + '/binning.csv', np.asarray(binning), delimiter=',')
+        np.savetxt(home_basepath + file_ + '/njets_binning.csv', np.asarray(binning), delimiter=',')
 
         
         ## Make Histogram

@@ -59,23 +59,32 @@ foldernames = [
 def job(filename):
     for file_ in cfg.files[filename]:
         if file_ in 'SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD':
-            binning = load_from_csv(home_basepath + file_ , '/binning.csv')
-            weights_up = load_from_csv(home_basepath + file_ , '/{}_njets_weights_up.csv'.format(file_))
-            weights_down = load_from_csv(home_basepath + file_ , '/{}_njets_weights_down.csv'.format(file_))
+            jpt1_binning = load_from_csv(home_basepath + file_ , '/jpt1_binning.csv')
+            njets_binning = load_from_csv(home_basepath + file_ , '/njets_binning.csv')
+            jpt1_weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
+            jpt1_weights_down = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_down.csv'.format(file_))
+            njets_weights_up = load_from_csv(home_basepath + file_ , '/{}_njets_weights_up.csv'.format(file_))
+            njets_weights_down = load_from_csv(home_basepath + file_ , '/{}_njets_weights_down.csv'.format(file_))
 
             
             ## Make new root file with new tree with two branches upweights and downweights
-            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
-            tree = root_file.Get("mt_nominal/ntuple")
+            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
+            tdirectory.cd()
+            tree = ROOT.TTree('ntuple', 'ntuple')
 
             ## create 1 dimensional float arrays as fill variables, in this way the float
             ## array serves as a pointer which can be passed to the branch
-            x = array('f', [0])
-            y = array('f', [0])
+            jpt1_x = array('f', [0])
+            jpt1_y = array('f', [0])
+            njets_x = array('f', [0])
+            njets_y = array('f', [0])
 
             ## create the branches and assign the fill-variables to them as floats (F)
-            branch = tree.Branch('njets_weights_up', x, 'njets_weights_up/F')
-            #tree.Branch('njets_weights_down', y, 'njets_weights_down/F')
+            tree.Branch('jpt_1_weights_up', jpt1_x, 'jpt_1_weights_up/F')
+            tree.Branch('jpt_1_weights_down', jpt1_y, 'jpt_1_weights_down/F')
+            tree.Branch('njets_weights_up', njets_x, 'njets_weights_up/F')
+            tree.Branch('njets_weights_down', njets_y, 'njets_weights_down/F')
 
             ## Loading basepath root files to match weight with event
             path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
@@ -83,24 +92,35 @@ def job(filename):
             tree_2 = nominal.Get("mt_nominal/ntuple")
             
             ## assigning specific weight to each event
+            ## NJETS & JPT1
             for event in tree_2:
-                if event.njets > binning[-2]:   #all entries over value of left bin edge of last bin are ignored
+                if event.njets > njets_binning[-2]:   #all entries over value of left bin edge of last bin are ignored
                     ## assign weight 1 to entries out of bounds
-                    x[0] = 1.
-                    #y[0] = 1.
-                    branch.Fill()
-                else:
-                    left_binedge = binning[binning <= event.njets][-1]
-                    index = np.where(binning==left_binedge)
+                    njets_x[0] = 1.
+                    njets_y[0] = 1.
+                    tree.Fill()
+                elif event.jpt_1 > jpt1_binning[-1]:
+                    jpt1_x[0] = 1.
+                    jpt1_y[0] = 1.
+                    tree.Fill()
+                elif event.njets <= njets_binning[-2]:
+                    left_binedge = njets_binning[njets_binning <= event.njets][-1]
+                    index = np.where(njets_binning==left_binedge)
                     print(left_binedge)
-                    x[0] = weights_up[index][0]
-                    #y[0] = weights_down[index][0]
-                    branch.Fill()
+                    njets_x[0] = njets_weights_up[index][0]
+                    njets_y[0] = njets_weights_down[index][0]
+                    tree.Fill()
+                elif event.jpt_1 <= jpt1_binning[-1]:
+                    left_binedge = jpt1_binning[jpt1_binning <= event.jpt_1][-1]
+                    index = np.where(jpt1_binning==left_binedge)
+                    jpt1_x[0] = jpt1_weights_up[index][0]
+                    jpt1_y[0] = jpt1_weights_down[index][0]
+                    tree.Fill()
             
             root_file.Write("", ROOT.TFile.kOverwrite)
             root_file.Close()
 
-"""
+
 def clone_to_all_tdirectories(tdirectories):
     for folder in tdirectories:
         for filename in cfg.files:
@@ -120,17 +140,17 @@ def clone_to_all_tdirectories(tdirectories):
                 tree_clone = t.Clone()
                 d_new.Write()
                 f.Close()
-"""
+
 
 ## With multiprozessing with 1 core per category
 if __name__=="__main__":
     filenames = []
     for filename in cfg.files:
         filenames.append(filename)
-    #p = mp.Pool(len(filenames))
-    p = mp.Pool(1)
+    p = mp.Pool(len(filenames))
+    #p = mp.Pool(1)
     p.map(job, filenames)
     p.close()
     p.join()
 
-    #clone_to_all_tdirectories(foldernames)
+    clone_to_all_tdirectories(foldernames)
