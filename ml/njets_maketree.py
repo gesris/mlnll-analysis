@@ -118,7 +118,7 @@ def job(filename):
                     y[0] = 1.
                     tree.Fill()
                 else:
-                    left_binedge = binning[binning <= event.njets][-1]
+                    left_binedge = binning[binning <= event.njets -1][-1]
                     index = np.where(binning==left_binedge)
                     print("LEFT BINEDGE: {}, INDEX: {}".format(left_binedge, index))
                     x[0] = weights_up[index][0]
