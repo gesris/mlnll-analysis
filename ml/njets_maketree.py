@@ -1,3 +1,4 @@
+from numpy.lib.twodim_base import tri
 import ROOT
 import numpy as np
 from utils import config as cfg
@@ -64,11 +65,13 @@ def job(filename):
 
             
             ## Make new root file with new tree with two branches upweights and downweights
-            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-            #root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
-            tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
+            #root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
+            #tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
+            tdirectory = root_file.Get("mt_nominal")
             tdirectory.cd()
-            tree = ROOT.TTree('ntuple', 'ntuple')
+            #tree = ROOT.TTree('ntuple', 'ntuple')
+            tree = root_file.Get("mt_nominal/ntuple")
 
             ## create 1 dimensional float arrays as fill variables, in this way the float
             ## array serves as a pointer which can be passed to the branch
