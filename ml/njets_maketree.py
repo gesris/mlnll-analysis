@@ -128,8 +128,8 @@ if __name__=="__main__":
     filenames = []
     for filename in cfg.files:
         filenames.append(filename)
-    p = mp.Pool(len(filenames))
-    #p = mp.Pool(1)
+    #p = mp.Pool(len(filenames))
+    p = mp.Pool(1)
     p.map(job, filenames)
     p.close()
     p.join()
