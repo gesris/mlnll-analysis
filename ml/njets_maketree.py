@@ -112,14 +112,14 @@ def job(filename):
             
             ## assigning specific weight to each event
             for event in tree_2:
-                if event.njets > binning[-1]:
+                if event.njets > binning[-2]:
                     ## assign weight 1 to entries out of bounds
                     x[0] = 1.
                     y[0] = 1.
                     tree.Fill()
                 else:
                     left_binedge = binning[binning <= event.njets][-1]
-                    index = np.where(binning==left_binedge - 1)
+                    index = np.where(binning==left_binedge)
                     print("LEFT BINEDGE: {}, INDEX: {}".format(left_binedge, index))
                     x[0] = weights_up[index][0]
                     y[0] = weights_down[index][0]
