@@ -112,7 +112,7 @@ def job(filename):
             
             ## assigning specific weight to each event
             for event in tree_2:
-                if event.njets > binning[-2]:
+                if event.njets > binning[-2]:   #all entries over value of 9 are ignored
                     ## assign weight 1 to entries out of bounds
                     x[0] = 1.
                     y[0] = 1.
