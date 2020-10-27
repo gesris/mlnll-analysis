@@ -51,7 +51,7 @@ for filename in cfg.files:
         maxrange = 10
         binning = np.linspace(minrange, maxrange, bins + 1)
         heights_nom, bins = np.histogram(nominal["njets"], bins=bins, range=(minrange, maxrange))
-        """
+        
         ## Calculate shifts
         ## Upshift: add 20% of first bin on first bin and substract same amount from second bin
         ## Downshift: addsubtract 20% of first bin from first bin and add same amount on second bin
@@ -74,10 +74,9 @@ for filename in cfg.files:
         #save_to_csv(weights_up, home_basepath + file_, '/{}_njets_weights_up.csv'.format(file_))
         np.savetxt(home_basepath + file_ + '/{}_njets_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
         np.savetxt(home_basepath + file_ + '/{}_njets_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-        """
         np.savetxt(home_basepath + file_ + '/njets_binning.csv', np.asarray(binning), delimiter=',')
 
-        """
+        
         ## Make Histogram
         bins_center = []
         for left, right in zip(bins[1:], bins[:-1]):
@@ -94,5 +93,5 @@ for filename in cfg.files:
         plt.xlabel("njets")
         plt.ylabel("Counts")
         plt.savefig(home_basepath + file_ + '/{}_njets_shapeshift.png'.format(file_), bbox_inches = "tight")
-        """
+        
                 

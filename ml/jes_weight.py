@@ -54,7 +54,7 @@ for filename in cfg.files:
         file_upshift = np.zeros(bins)
         file_downshift = np.zeros(bins)
         heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(minrange, maxrange))
-        """
+        
         ## Calculate shifts
         f = ROOT.TFile(path)
         for key in f.GetListOfKeys():
@@ -93,10 +93,9 @@ for filename in cfg.files:
         #save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights_up.csv'.format(file_))
         np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
         np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-        """
         np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
 
-        """
+        
         ## Make Histogram
         bins_center = []
         for left, right in zip(bins[1:], bins[:-1]):
@@ -114,4 +113,4 @@ for filename in cfg.files:
         plt.ylabel("Counts")
         plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
         
-        """
+        
