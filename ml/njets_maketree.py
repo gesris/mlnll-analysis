@@ -118,6 +118,7 @@ def job(filename):
             elif event.jpt_1 <= jpt1_binning[-1]:
                 left_binedge = jpt1_binning[jpt1_binning <= event.jpt_1][-1]
                 index = np.where(jpt1_binning==left_binedge)
+                print(left_binedge)
                 jpt1_x[0] = jpt1_weights_up[index][0]
                 jpt1_y[0] = jpt1_weights_down[index][0]
                 tree.Fill()
