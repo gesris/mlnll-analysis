@@ -97,25 +97,28 @@ def job(filename):
         
 
         ## assigning specific weight to each event
-        ## NJETS & JPT1
+        ## NJETS
         for event in tree_2:
             if event.njets > njets_binning[-2]:   #all entries over value of left bin edge of last bin are ignored
                 ## assign weight 1 to entries out of bounds
                 njets_x[0] = 1.
                 njets_y[0] = 1.
                 tree.Fill()
-            elif event.jpt_1 > jpt1_binning[-1]:
-                jpt1_x[0] = 1.
-                jpt1_y[0] = 1.
-                tree.Fill()
-            elif event.njets <= njets_binning[-2]:
+            else:
                 left_binedge = njets_binning[njets_binning <= event.njets][-1]
                 index = np.where(njets_binning==left_binedge)
                 print(left_binedge)
                 njets_x[0] = njets_weights_up[index][0]
                 njets_y[0] = njets_weights_down[index][0]
                 tree.Fill()
-            elif event.jpt_1 <= jpt1_binning[-1]:
+        
+        ## JPT1
+        for event in tree_2:
+            if event.jpt_1 > jpt1_binning[-1]:
+                jpt1_x[0] = 1.
+                jpt1_y[0] = 1.
+                tree.Fill()
+            else:
                 left_binedge = jpt1_binning[jpt1_binning <= event.jpt_1][-1]
                 index = np.where(jpt1_binning==left_binedge)
                 print(left_binedge)
@@ -123,7 +126,7 @@ def job(filename):
                 jpt1_y[0] = jpt1_weights_down[index][0]
                 tree.Fill()
         
-        root_file.Write("", ROOT.TFile.kOverwrite)
+        root_file.Write()
         root_file.Close()
 
 
