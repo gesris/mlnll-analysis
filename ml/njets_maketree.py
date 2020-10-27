@@ -119,9 +119,10 @@ def job(filename):
                     tree.Fill()
                 else:
                     left_binedge = binning[binning <= event.njets][-1]
+                    print(left_binedge)
                     index = np.where(binning==left_binedge)
-                    x[0] = weights_up[index - 1][0]
-                    y[0] = weights_down[index - 1][0]
+                    x[0] = weights_up[index][0]
+                    y[0] = weights_down[index][0]
                     tree.Fill()
             
             root_file.Write()
