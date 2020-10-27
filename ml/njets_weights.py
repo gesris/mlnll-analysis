@@ -45,9 +45,9 @@ for filename in cfg.files:
         nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["njets"])
         
         ## Prepatre for Hist
-        bins = 8
+        bins = 10
         minrange = 0
-        maxrange = 8
+        maxrange = 10
         binning = np.linspace(minrange, maxrange, bins + 1)
         heights_nom, bins = np.histogram(nominal["njets"], bins=bins, range=(minrange, maxrange))
         
