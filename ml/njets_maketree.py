@@ -64,8 +64,8 @@ def job(filename):
 
             
             ## Make new root file with new tree with two branches upweights and downweights
-            #root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
+            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            #root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
             tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
             tdirectory.cd()
             tree = ROOT.TTree('ntuple', 'ntuple')
