@@ -57,7 +57,7 @@ def count_masking(x, up, down):
 def main(args):
     ## Load dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, jpt_1_upshift, jpt_1_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w, njets_upshift, njets_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     fold_factor = 2.
     w = w * fold_factor
@@ -74,8 +74,8 @@ def main(args):
     
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    jpt_1_upshift_ph = tf.placeholder(tf.float64)
-    jpt_1_downshift_ph = tf.placeholder(tf.float64)
+    njets_upshift_ph = tf.placeholder(tf.float64)
+    njets_downshift_ph = tf.placeholder(tf.float64)
     scale_ph = tf.placeholder(tf.float64)
 
     bins = np.array(cfg.analysis_binning)
@@ -106,8 +106,8 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_upshift_ph
-            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_downshift_ph
+            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_upshift_ph
+            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
             procs_up[name] = tf.reduce_sum(proc_w_up)
             procs_down[name] = tf.reduce_sum(proc_w_down)
@@ -117,8 +117,8 @@ def main(args):
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
-        procs_up['qcd'] = tf.maximum(procs['qcd'] * jpt_1_upshift_ph, 0)
-        procs_down['qcd'] = tf.maximum(procs['qcd'] * jpt_1_downshift_ph, 0)
+        procs_up['qcd'] = tf.maximum(procs['qcd'] * njets_upshift_ph, 0)
+        procs_down['qcd'] = tf.maximum(procs['qcd'] * njets_downshift_ph, 0)
 
         # Nominal signal and background
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
@@ -140,7 +140,7 @@ def main(args):
     saver.restore(session, path)
 
     bincontent_nom_, bincontent_up_, bincontent_down_ = session.run([bincontent_nom, bincontent_up, bincontent_down], \
-                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor, jpt_1_downshift_ph: jpt_1_downshift, jpt_1_upshift_ph: jpt_1_upshift})
+                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor, njets_downshift_ph: njets_downshift, njets_upshift_ph: njets_upshift})
 
 
     ## Plotting histogram
