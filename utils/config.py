@@ -242,8 +242,8 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
 
 ## testing out combined jet_es instead of splitted
 jet_es = []
-jet_es.append(AddWeight('jpt_1_weights' + 'Up', Weight('({})'.format('jpt_1_weights_up'), '{}_jet_es'.format('jpt_1_weights'))))
-jet_es.append(AddWeight('jpt_1_weights' + 'Down', Weight('({})'.format('jpt_1_weights_down'), '{}_jet_es'.format('jpt_1_weights'))))
+jet_es.append(AddWeight('njets_weights' + 'Up', Weight('({})'.format('njets_weights_up'), '{}_jet_es'.format('njets_weights'))))
+jet_es.append(AddWeight('njets_weights' + 'Down', Weight('({})'.format('njets_weights_down'), '{}_jet_es'.format('njets_weights'))))
     
 
 """jet_es = []
