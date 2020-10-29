@@ -139,7 +139,7 @@ def main(args):
     logger.info("NJETS UPSHIFT: All weights over value of 2\n")
     for i, element in enumerate(njets_upshift):
         if element > 2 or element < 0:
-            logger.info(element, y[i])
+            logger.info(element)
 
     # Scale to expectation in the full dataset
     scale_train = 4.0 / 3.0 * 2.0 # train/test split + two fold
