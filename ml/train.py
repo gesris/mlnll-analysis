@@ -137,9 +137,9 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val, njets_upshift_train, njets_upshift_val, njets_downshift_train, njets_downshift_val = train_test_split(x, y, w, njets_upshift, njets_downshift, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
     logger.info("NJETS UPSHIFT: All weights over value of 2\n")
-    for element in njets_upshift:
-        if element > 2 or element < 0.5:
-            logger.info(element)
+    for i, element in enumerate(njets_upshift):
+        if element > 2 or element < 0:
+            logger.info(element, y[i], x[i])
 
     # Scale to expectation in the full dataset
     scale_train = 4.0 / 3.0 * 2.0 # train/test split + two fold
