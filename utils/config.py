@@ -242,8 +242,8 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
 
 ## njets instead of jes
 jet_es = []
-jet_es.append(AddWeight('njets_weights' + 'Up', Weight('({})'.format('njets_weights_up'), '{}_jet_es'.format('njets_weights'))))
-jet_es.append(AddWeight('njets_weights' + 'Down', Weight('({})'.format('njets_weights_down'), '{}_jet_es'.format('njets_weights'))))
+jet_es.append(AddWeight('njets_weights' + 'Up', Weight('(njets_weights_up)', 'njets_weights_jet_es')))
+jet_es.append(AddWeight('njets_weights' + 'Down', Weight('(njets_weights_down)', 'njets_weights_jet_es')))
     
 
 """jet_es = []
