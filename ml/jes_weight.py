@@ -81,13 +81,13 @@ for filename in cfg.files:
                 ## Calculate weights
                 epsilon = 1e-6
                 heights_nom = heights_nom.astype(float)
-                heights_nom[heights_nom == 0] = epsilon
+                heights_nom[heights_nom <= 0] = epsilon
 
                 weights_up = (heights_nom + file_upshift) / heights_nom
                 weights_down = (heights_nom - file_downshift) / heights_nom
 
-                weights_up[weights_up == 0] = epsilon
-                weights_down[weights_down == 0] = epsilon
+                weights_up[weights_up <= 0] = epsilon
+                weights_down[weights_down <= 0] = epsilon
 
                 ## Save weights to .csv
                 #save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights_up.csv'.format(file_))
