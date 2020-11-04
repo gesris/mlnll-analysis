@@ -137,7 +137,7 @@ def clone_to_all_tdirectories(tdirectories):
             for file_ in cfg.files[filename]:
                 if file_ in 'W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2':
                     ## Loadng TDirectory needet to clone
-                    f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+                    f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
                     t = f.Get("mt_nominal/ntuple")
 
                     ## Making new TDirectory
