@@ -111,8 +111,8 @@ def job(filename):
                     njets_x[0] = njets_weights_up[index][0]
                     njets_y[0] = njets_weights_down[index][0]
                     tree.Fill()
-            tree.Close()
-            
+
+            """
             ## JPT1
             for event in tree_2:
                 if event.jpt_1 > jpt1_binning[-1]:
@@ -126,7 +126,7 @@ def job(filename):
                     jpt1_x[0] = jpt1_weights_up[index][0]
                     jpt1_y[0] = jpt1_weights_down[index][0]
                     tree.Fill()
-            
+            """
             root_file.Write()
             root_file.Close()
 
