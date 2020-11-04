@@ -130,7 +130,7 @@ def main(args):
     ROOT.EnableImplicitMT(args.nthreads)
     
     # Collect nominal events
-    for process in [ggh, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
+    for process in [ggh]:#, qqh, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
         cutstr, weightstr = collect_cuts_weights(selections)
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
@@ -139,7 +139,7 @@ def main(args):
         logger.debug('Cut string: %s', cutstr)
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name, group, fold, weightstr, cutstr)
-
+    """
     # Collect events for QCD estimation
     for process in [data, ztt, zl, zj, w, ttt, ttl, ttj, vvt, vvl, vvj]:
         files, selections, name, group = process()
@@ -152,7 +152,7 @@ def main(args):
         d = make_dataset(files, cfg.ntuples_base, cfg.friends_base, 'mt_nominal')
         for fold in [0, 1]:
             write_dataset(d, args.workdir, name + '_ss', group + '_ss', fold, weightstr, cutstr_ss)
-
+    """
 
     # Collect systematic shifts
     '''
