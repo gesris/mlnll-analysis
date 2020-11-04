@@ -111,6 +111,7 @@ def job(filename):
                     njets_x[0] = njets_weights_up[index][0]
                     njets_y[0] = njets_weights_down[index][0]
                     tree.Fill()
+            tree.Close()
             
             ## JPT1
             for event in tree_2:
