@@ -132,7 +132,7 @@ def model(x, num_variables, num_classes, fold, reuse=False):
 def main(args):
     # Build nominal dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, njets_upshift, njets_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w, _, _, njets_upshift, njets_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     x_train, x_val, y_train, y_val, w_train, w_val, njets_upshift_train, njets_upshift_val, njets_downshift_train, njets_downshift_val = train_test_split(x, y, w, njets_upshift, njets_downshift, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
