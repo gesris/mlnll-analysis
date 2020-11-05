@@ -231,7 +231,7 @@ def main(args):
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + sys 
+        exp = mu * sig + bkg #+ sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
