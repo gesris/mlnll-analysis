@@ -328,7 +328,7 @@ def main(args):
     plt.plot(steps_list, loss_train_list)
     plt.plot(steps_list, loss_val_list)
     plt.xlabel("Steps")
-    plt.ylabel("Loss")
+    plt.ylabel("Loss (Train: {:.3f}, Val.: {:.3f})".format(loss_train_list[-1], loss_val_list[-1]))
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/minimization_fold{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
 
