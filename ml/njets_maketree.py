@@ -59,7 +59,7 @@ foldernames = [
 def job(filename):
     for file_ in cfg.files[filename]:
         print(file_)
-        if file_ in ['SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD', 'W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2', 'DY1JetsToLLM50_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2', 'TTTo2L2Nu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1', 'WW_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_pythia8_v2', 'GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2', 'VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
+        if file_ in ['TTTo2L2Nu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
             jpt1_binning = load_from_csv(home_basepath + file_ , '/jpt1_binning.csv')
             njets_binning = load_from_csv(home_basepath + file_ , '/njets_binning.csv')
             jpt1_weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
@@ -162,13 +162,13 @@ def clone_to_all_tdirectories(tdirectories):
 
 ## With multiprozessing with 1 core per category
 if __name__=="__main__":
-    # filenames = []
-    # for filename in cfg.files:
-    #     filenames.append(filename)
-    # p = mp.Pool(len(filenames))
-    # #p = mp.Pool(1)
-    # p.map(job, filenames)
-    # p.close()
-    # p.join()
+    filenames = []
+    for filename in cfg.files:
+        filenames.append(filename)
+    #p = mp.Pool(len(filenames))
+    p = mp.Pool(1)
+    p.map(job, filenames)
+    p.close()
+    p.join()
 
     clone_to_all_tdirectories(foldernames)
