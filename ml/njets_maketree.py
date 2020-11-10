@@ -162,13 +162,13 @@ def clone_to_all_tdirectories(tdirectories):
 
 ## With multiprozessing with 1 core per category
 if __name__=="__main__":
-    filenames = []
-    for filename in cfg.files:
-        filenames.append(filename)
-    p = mp.Pool(len(filenames))
-    #p = mp.Pool(1)
-    p.map(job, filenames)
-    p.close()
-    p.join()
+    # filenames = []
+    # for filename in cfg.files:
+    #     filenames.append(filename)
+    # p = mp.Pool(len(filenames))
+    # #p = mp.Pool(1)
+    # p.map(job, filenames)
+    # p.close()
+    # p.join()
 
     clone_to_all_tdirectories(foldernames)
