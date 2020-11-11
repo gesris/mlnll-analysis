@@ -59,7 +59,7 @@ foldernames = [
 def job(filename):
     for file_ in cfg.files[filename]:
         print(file_)
-        if file_ in ['TTTo2L2Nu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
+        if file_ in ['VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
             jpt1_binning = load_from_csv(home_basepath + file_ , '/jpt1_binning.csv')
             njets_binning = load_from_csv(home_basepath + file_ , '/njets_binning.csv')
             jpt1_weights_up = load_from_csv(home_basepath + file_ , '/{}_jpt1_weights_up.csv'.format(file_))
@@ -145,19 +145,19 @@ def clone_to_all_tdirectories(tdirectories):
         for filename in cfg.files:
             print(filename)
             for file_ in cfg.files[filename]:
-                #if file_ in 'W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2':
-                ## Loadng TDirectory needet to clone
-                f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
-                t = f.Get("mt_nominal/ntuple")
+                if file_ in 'VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1':
+                    ## Loadng TDirectory needet to clone
+                    f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
+                    t = f.Get("mt_nominal/ntuple")
 
-                ## Making new TDirectory
-                d_new = ROOT.TDirectoryFile(folder, folder)
-                d_new.cd()
+                    ## Making new TDirectory
+                    d_new = ROOT.TDirectoryFile(folder, folder)
+                    d_new.cd()
 
-                ## Cloning and Saving changes
-                tree_clone = t.Clone()
-                d_new.Write()
-                f.Close()
+                    ## Cloning and Saving changes
+                    tree_clone = t.Clone()
+                    d_new.Write()
+                    f.Close()
 
 
 ## With multiprozessing with 1 core per category
