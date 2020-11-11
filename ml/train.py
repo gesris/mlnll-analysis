@@ -236,9 +236,9 @@ def main(args):
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
-    # Nuisance constraints
-    #nuisances.append(n)
-    #for n in nuisances:
+    ## Nuisance constraints
+    # nuisances.append(n)
+    # for n in nuisances:
     #    nll -= tfp.distributions.Normal(
     #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
     #            ).log_prob(n)
