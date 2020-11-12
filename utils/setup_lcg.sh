@@ -7,7 +7,7 @@ touch available_gpu.log
 
 if uname -a | grep ekpdeepthought -q
 then
-    X=$(nvidia-smi | grep -n '15W' | head -1 | cut -f 1 -d ':')
+    X=$(nvidia-smi | grep -n '16W' | head -1 | cut -f 1 -d ':')
     if [ $X -eq 9 ]
     then
         GPU=0
