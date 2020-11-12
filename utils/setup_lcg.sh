@@ -37,6 +37,7 @@ then
             GPU=3
             echo "### ------ Running On GPU $GPU ------ ###"
             echo True > available_gpu.log
+        fi
 
     elif [ -z $Y ]
     then 
@@ -60,6 +61,7 @@ then
             GPU=3
             echo "### ------ Running On GPU $GPU ------ ###"
             echo True > available_gpu.log
+        fi
     # else
     #     echo "### -- Currently No Available GPU -- ###"
     #     echo False > available_gpu.log
