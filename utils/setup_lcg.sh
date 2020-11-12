@@ -63,7 +63,7 @@ then
     # else
     #     echo "### -- Currently No Available GPU -- ###"
     #     echo False > available_gpu.log
-    # fi
+    fi
 
     export CUDA_VISIBLE_DEVICES=$GPU
     source /home/gristo/workspace/py3_venv_ubuntu/bin/activate
