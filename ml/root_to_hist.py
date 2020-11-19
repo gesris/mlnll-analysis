@@ -14,10 +14,10 @@ import os
 
 for filename in cfg.files:
     print(filename)
-    if filename in 'qqh':
+    if filename in 'wjets':
         for file_ in cfg.files[filename]:
             print(file_)
-            if file_ in ['WplusHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
+            if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
                 
                 ## Loading root file
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
