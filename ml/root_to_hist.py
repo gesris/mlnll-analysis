@@ -10,7 +10,7 @@ mpl.rc("font", size=16, family="serif")
 
 import os
             
-
+home_basepath = "/home/gristo/workspace/jpt_1_plots/"
 
 for filename in cfg.files:
     print(filename)
@@ -18,7 +18,16 @@ for filename in cfg.files:
         for file_ in cfg.files[filename]:
             print(file_)
             if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
-                
+                if os.path.exists(home_basepath + file_):
+                    print("Directory {} exists".format(home_basepath + file_))
+                else:
+                    try:
+                        os.mkdir(home_basepath + file_)
+                    except OSError:
+                        print("Creating directory {} failed".format(home_basepath + file_))
+                    else:
+                        print("Successfully created directory %s " % [home_basepath + file_])
+
                 ## Loading root file
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
                 file = ROOT.TFile(path)
@@ -62,7 +71,7 @@ for filename in cfg.files:
                     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
                     plt.xlabel("jpt_1")
                     plt.ylabel("Counts")
-                    plt.savefig('/home/gristo/workspace/jpt_1_plots/{}.png'.format(uncertainty_up), bbox_inches = "tight")
+                    plt.savefig(home_basepath + file_+ '/' + '{}.png'.format(uncertainty_up), bbox_inches = "tight")
 
 
 
