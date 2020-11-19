@@ -50,8 +50,8 @@ for filename in cfg.files:
                     bins_center.append(left + (right - left) / 2)
                 
                 for uncertainty_up, uncertainty_down in zip(hist_upshifts, hist_upshifts):
-                    print("UP:" + hist_upshifts)
-                    print("DOWN:" + hist_downshifts)
+                    print("UP:" + uncertainty_up)
+                    print("DOWN:" + uncertainty_down)
                     # plt.figure(figsize=(7, 6))
                     # plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
                     # plt.hist(bins_center, weights=hist_upshifts[uncertainty_up], bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
