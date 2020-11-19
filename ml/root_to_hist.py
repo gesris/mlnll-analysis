@@ -24,11 +24,11 @@ for filename in cfg.files:
                 file = ROOT.TFile(path)
 
                 ## Prepare for hist
-                bins = 20
+                bins = 10
                 #minrange = -10
                 #maxrange = 800
-                minrange = 20
-                maxrange = 100
+                minrange = 0
+                maxrange = 60
                 binning = np.linspace(minrange, maxrange, bins + 1)
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
                 heights_nom, _ = np.histogram(nominal["jpt_1"], bins=bins, range=(minrange, maxrange))
