@@ -47,13 +47,12 @@ for filename in cfg.files:
         for key in file.GetListOfKeys():
             name = key.GetName()
             if 'mt_jecUnc' in name:
+                print(name)
                 if 'Up' in name:
-                    print(name)
                     upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                     hist_upshifts[name], _ = np.histogram(upshift["jpt_1"], bins=bins, range=(minrange, maxrange))
                     
                 elif 'Down' in name: 
-                    print(name)
                     downshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                     hist_downshifts[name], _ = np.histogram(downshift["jpt_1"], bins=bins, range=(minrange, maxrange))           
                     
