@@ -50,17 +50,19 @@ for filename in cfg.files:
                     bins_center.append(left + (right - left) / 2)
                 
                 for uncertainty_up, uncertainty_down in zip(hist_upshifts, hist_upshifts):
-                    plt.figure(figsize=(7, 6))
-                    plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
-                    plt.hist(bins_center, weights=hist_upshifts[uncertainty_up], bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
-                    plt.hist(bins_center, weights=hist_downshifts[uncertainty_down], bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
-                    plt.plot([0], [0], lw=2, color='C0', label="nominal")
-                    plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
-                    plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
-                    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-                    plt.xlabel("jpt_1")
-                    plt.ylabel("Counts")
-                    plt.savefig('/home/gristo/workspace/jpt_1_plots/{}.png'.format(uncertainty_up), bbox_inches = "tight")
+                    print("UP:" + hist_upshifts)
+                    print("DOWN:" + hist_downshifts)
+                    # plt.figure(figsize=(7, 6))
+                    # plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
+                    # plt.hist(bins_center, weights=hist_upshifts[uncertainty_up], bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
+                    # plt.hist(bins_center, weights=hist_downshifts[uncertainty_down], bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
+                    # plt.plot([0], [0], lw=2, color='C0', label="nominal")
+                    # plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
+                    # plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
+                    # plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+                    # plt.xlabel("jpt_1")
+                    # plt.ylabel("Counts")
+                    # plt.savefig('/home/gristo/workspace/jpt_1_plots/{}.png'.format(uncertainty_up), bbox_inches = "tight")
 
 
 
