@@ -24,10 +24,10 @@ for filename in cfg.files:
                 file = ROOT.TFile(path)
 
                 ## Prepare for hist
-                bins = 50
+                bins = 20
                 #minrange = -10
                 #maxrange = 800
-                minrange = 0
+                minrange = 20
                 maxrange = 100
                 binning = np.linspace(minrange, maxrange, bins + 1)
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
