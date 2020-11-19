@@ -14,10 +14,10 @@ import os
 
 for filename in cfg.files:
     print(filename)
-    if filename in 'wjets':
+    if filename in 'qqh':
         for file_ in cfg.files[filename]:
             print(file_)
-            if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
+            if file_ in ['WplusHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 
                 ## Loading root file
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
@@ -28,7 +28,7 @@ for filename in cfg.files:
                 #minrange = -10
                 #maxrange = 800
                 minrange = 0
-                maxrange = 60
+                maxrange = 200
                 binning = np.linspace(minrange, maxrange, bins + 1)
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["jpt_1"])
                 heights_nom, _ = np.histogram(nominal["jpt_1"], bins=bins, range=(minrange, maxrange))
