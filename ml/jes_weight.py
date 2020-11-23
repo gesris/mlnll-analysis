@@ -50,7 +50,8 @@ for filename in cfg.files:
                 bins = 50
                 minrange = -10
                 maxrange = 800
-                binning = [-10, 0] + np.linspace(0, maxrange, bins)
+                binning = [-10, 0] 
+                binning.append(np.linspace(0, maxrange, bins))
                 file_upshift = np.zeros(bins)
                 file_downshift = np.zeros(bins)
                 heights_nom, bins = np.histogram(nominal["jpt_1"], bins=bins, range=(minrange, maxrange))
