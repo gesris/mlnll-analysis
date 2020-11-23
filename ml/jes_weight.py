@@ -47,9 +47,9 @@ for filename in cfg.files:
                 #tree = nominal.Get("mt_nominal/ntuple")
                 
                 ## Prepatre for Hist
-                bins = 50
-                minrange = -10
-                maxrange = 800
+                bins = 10
+                minrange = 0
+                maxrange = 200
                 binning = [-10, 0] 
                 binning.append(np.linspace(0, maxrange, bins))
                 file_upshift = np.zeros(bins)
