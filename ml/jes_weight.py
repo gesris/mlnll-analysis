@@ -26,10 +26,10 @@ def load_from_csv(path, filename):
 
 for filename in cfg.files:
     print(filename)
-    if filename in 'wjets':
+    if filename in 'ggh':
         for file_ in cfg.files[filename]:
             print(file_)
-            if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
+            if file_ in ['GluGluHToTauTauM125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
                     print("Directory {} exists".format(home_basepath + file_))
@@ -91,9 +91,10 @@ for filename in cfg.files:
 
                 ## Save weights to .csv
                 #save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights_up.csv'.format(file_))
-                np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
-                np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-                np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
+                
+                #np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
+                #np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
+                #np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
 
                 
                 ## Make Histogram
@@ -111,6 +112,7 @@ for filename in cfg.files:
                 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
                 plt.xlabel("jpt_1")
                 plt.ylabel("Counts")
-                plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
+                #plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
+                plt.savefig('/home/gristo/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
             
             
