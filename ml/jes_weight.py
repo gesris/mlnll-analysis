@@ -65,8 +65,8 @@ for filename in cfg.files:
                 name = key.GetName()
 
                 if 'mt_jecUnc' in name:
-                    number_of_unc += 1
                     if 'Up' in name:
+                        number_of_unc += 1
                         upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                         heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(minrange, maxrange))
                         
