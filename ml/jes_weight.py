@@ -79,7 +79,8 @@ for filename in cfg.files:
                         
                         ## SUM Of SQUARE DIFF
                         file_downshift += np.square(heights_nom - heights_down)
-
+            
+            print(number_of_unc)
             file_upshift = np.sqrt(file_upshift) / number_of_unc
             file_downshift = np.sqrt(file_downshift) / number_of_unc
 
