@@ -58,13 +58,11 @@ for filename in cfg.files:
                 
                 ## Calculate shifts
                 f = ROOT.TFile(path)
-                number_of_unc = 0
                 for key in f.GetListOfKeys():
                     name = key.GetName()
 
                     if 'mt_jecUnc' in name:
                         if 'Up' in name:
-                            number_of_unc += 1
                             upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                             heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(minrange, maxrange))
                             
@@ -78,9 +76,8 @@ for filename in cfg.files:
                             ## SUM Of SQUARE DIFF
                             file_downshift += np.square(heights_nom - heights_down)
                 
-                print(number_of_unc)
-                file_upshift = np.sqrt(file_upshift) / number_of_unc
-                file_downshift = np.sqrt(file_downshift) / number_of_unc
+                file_upshift = np.sqrt(file_upshift)
+                file_downshift = np.sqrt(file_downshift)
 
                 ## Calculate weights
                 epsilon = 1e-6
