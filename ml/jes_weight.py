@@ -47,9 +47,9 @@ for filename in cfg.files:
                 #tree = nominal.Get("mt_nominal/ntuple")
                 
                 ## Prepatre for Hist
-                #bins = 50
-                #minrange = -10
-                #maxrange = 800
+                # bins = 50
+                # minrange = -10
+                # maxrange = 800
                 bins = 10
                 minrange = 0
                 maxrange = 200
@@ -60,10 +60,12 @@ for filename in cfg.files:
                 
                 ## Calculate shifts
                 f = ROOT.TFile(path)
+                number_of_unc = 0
                 for key in f.GetListOfKeys():
                     name = key.GetName()
 
                     if 'mt_jecUnc' in name:
+                        number_of_unc += 1
                         if 'Up' in name:
                             upshift = ROOT.RDataFrame(name + '/ntuple', path).AsNumpy(["jpt_1"])
                             heights_up, _ = np.histogram(upshift["jpt_1"], bins=bins, range=(minrange, maxrange))
@@ -78,8 +80,8 @@ for filename in cfg.files:
                             ## SUM Of SQUARE DIFF
                             file_downshift += np.square(heights_nom - heights_down)
 
-                file_upshift = np.sqrt(file_upshift)
-                file_downshift = np.sqrt(file_downshift)
+                file_upshift = np.sqrt(file_upshift) / number_of_unc
+                file_downshift = np.sqrt(file_downshift) / number_of_unc
 
                 ## Calculate weights
                 epsilon = 1e-6
@@ -95,9 +97,9 @@ for filename in cfg.files:
                 ## Save weights to .csv
                 #save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights_up.csv'.format(file_))
                 
-                #np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
-                #np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-                #np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
+                # np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
+                # np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
+                # np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
 
                 
                 ## Make Histogram
@@ -117,5 +119,5 @@ for filename in cfg.files:
                 plt.ylabel("Counts")
                 #plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
                 plt.savefig('/home/gristo/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
-            
+                
             
