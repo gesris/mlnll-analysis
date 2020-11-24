@@ -48,8 +48,8 @@ for filename in cfg.files:
                 
                 ## Prepatre for Hist
                 bins = 10
-                minrange = 0
-                maxrange = 200
+                minrange = -10
+                maxrange = 800
                 binning = [-10, 0] 
                 binning.append(np.linspace(0, maxrange, bins))
                 file_upshift = np.zeros(bins)
@@ -93,9 +93,9 @@ for filename in cfg.files:
                 ## Save weights to .csv
                 #save_to_csv(weights_up, home_basepath + file_, '/{}_jpt1_weights_up.csv'.format(file_))
                 
-                # np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
-                # np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-                # np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
+                np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
+                np.savetxt(home_basepath + file_ + '/{}_jpt1_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
+                np.savetxt(home_basepath + file_ + '/jpt1_binning.csv', np.asarray(binning), delimiter=',')
 
                 
                 ## Make Histogram
@@ -113,7 +113,7 @@ for filename in cfg.files:
                 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
                 plt.xlabel("jpt_1")
                 plt.ylabel("Counts")
-                #plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
-                plt.savefig('/home/gristo/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
+                plt.savefig(home_basepath + file_ + '/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
+                # plt.savefig('/home/gristo/{}_jpt1_totshift.png'.format(file_), bbox_inches = "tight")
                     
                 
