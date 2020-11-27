@@ -31,6 +31,7 @@ for filename in cfg.files:
                 
                 ## Loading root files
                 path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
+                ## Read branch in dictionary
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["met"])
                 
                 ## Prepatre for Hist
@@ -43,11 +44,11 @@ for filename in cfg.files:
                 ## Calculate shifts
                 ## Upshift: scale every event by 1.1
                 ## Downshift: scale every event by 0.9
-                #heights_up = nominal * 1.1
-                #heights_down = nominal * 0.9
+                upshift = nominal['met'] * 1.1
+                #downshift = nominal['met'] * 0.9
 
-                print(nominal)
-                #print(heights_up)
+                print(nominal['met'])
+                print(upshift['met'])
                 #print(heights_down)
 
                 # ## Calculate weights
