@@ -13,10 +13,10 @@ import os
 home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 for filename in cfg.files:
-    print(filename)
+    #print(filename)
     if filename in 'wjets':
         for file_ in cfg.files[filename]:
-            print(file_)
+            #print(file_)
             if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
@@ -48,7 +48,7 @@ for filename in cfg.files:
                 #downshift = nominal['met'] * 0.9
 
                 print(nominal['met'])
-                print(upshift['met'])
+                print(upshift)
                 #print(heights_down)
 
                 # ## Calculate weights
