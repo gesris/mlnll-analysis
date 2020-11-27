@@ -10,7 +10,7 @@ mpl.rc("font", size=16, family="serif")
 import os
 
 
-home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath = '/home/gristo/workspace_met/htautau/deeptau_02-20/2018/ntuples/'
 
 for filename in cfg.files:
     print(filename)
