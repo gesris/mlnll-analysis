@@ -171,4 +171,4 @@ if __name__=="__main__":
     p.close()
     p.join()
 
-    clone_to_all_tdirectories(foldernames)
+    #clone_to_all_tdirectories(foldernames)
