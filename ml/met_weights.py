@@ -37,7 +37,7 @@ for filename in cfg.files:
                 ## Prepatre for Hist
                 bins = 15
                 minrange = 0
-                maxrange = 200
+                maxrange = 250
                 binning = np.linspace(minrange, maxrange, bins + 1)
                 heights_nom, bins = np.histogram(nominal["met"], bins=bins, range=(minrange, maxrange))
                 
