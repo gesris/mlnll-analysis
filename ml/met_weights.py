@@ -43,11 +43,12 @@ for filename in cfg.files:
                 ## Calculate shifts
                 ## Upshift: scale every event by 1.1
                 ## Downshift: scale every event by 0.9
-                heights_up = nominal * 1.1
-                heights_down = nominal * 0.9
+                #heights_up = nominal * 1.1
+                #heights_down = nominal * 0.9
 
-                print(heights_up)
-                print(heights_down)
+                print(nominal)
+                #print(heights_up)
+                #print(heights_down)
 
                 # ## Calculate weights
                 # epsilon = 1e-6
