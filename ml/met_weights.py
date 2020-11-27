@@ -14,10 +14,10 @@ home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 for filename in cfg.files:
     print(filename)
-    if filename in 'tt':
+    if filename in 'vv':
         for file_ in cfg.files[filename]:
             print(file_)
-            if file_ in ['TTTo2L2Nu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
+            if file_ in ['WW_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
                     print("Directory {} exists".format(home_basepath + file_))
@@ -35,9 +35,9 @@ for filename in cfg.files:
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["met"])
                 
                 ## Prepatre for Hist
-                bins = 15
+                bins = 20
                 minrange = 0
-                maxrange = 250
+                maxrange = 300
                 binning = np.linspace(minrange, maxrange, bins + 1)
                 heights_nom, bins = np.histogram(nominal["met"], bins=bins, range=(minrange, maxrange))
                 
