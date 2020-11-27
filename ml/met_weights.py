@@ -43,7 +43,7 @@ for filename in cfg.files:
                 perc = np.linspace(0, 100, bins)
                 binning = []
                 for entry in perc:
-                    bins.append(np.percentile(nominal['met'], entry))
+                    binning.append(np.percentile(nominal['met'], entry))
                 heights_nom, bins = np.histogram(nominal["met"], bins=bins, range=(minrange, maxrange))
                 
                 ## Calculate shifts
