@@ -14,10 +14,10 @@ home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 for filename in cfg.files:
     print(filename)
-    if filename in 'wjets':
+    if filename in 'dy':
         for file_ in cfg.files[filename]:
             print(file_)
-            if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
+            if file_ in ['DY1JetsToLLM50_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
                     print("Directory {} exists".format(home_basepath + file_))
