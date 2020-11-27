@@ -1,4 +1,3 @@
-from numpy.linalg.linalg import norm
 import ROOT
 import numpy as np
 from utils import config as cfg
@@ -35,15 +34,11 @@ for filename in cfg.files:
                 ## Read branch in dictionary
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["met"])
                 
-                # ## Prepatre for Hist
-                bins = 10
+                ## Prepatre for Hist
+                bins = 15
                 minrange = 0
-                maxrange = 700
-                # binning = np.linspace(minrange, maxrange, bins + 1)
-                perc = np.linspace(0, 100, bins)
-                binning = []
-                for entry in perc:
-                    binning.append(np.percentile(nominal['met'], entry))
+                maxrange = 250
+                binning = np.linspace(minrange, maxrange, bins + 1)
                 heights_nom, bins = np.histogram(nominal["met"], bins=bins, range=(minrange, maxrange))
                 
                 ## Calculate shifts
