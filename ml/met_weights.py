@@ -44,49 +44,46 @@ for filename in cfg.files:
                 ## Calculate shifts
                 ## Upshift: scale every event by 1.1
                 ## Downshift: scale every event by 0.9
-                upshift = nominal['met'] * 1.1
-                #downshift = nominal['met'] * 0.9
+                heights_up, _ = np.histogram(nominal["met"] * 1.1, bins=bins, range=(minrange, maxrange))
+                heights_down, _ = np.histogram(nominal["met"] * 0.9, bins=bins, range=(minrange, maxrange))
 
-                print(nominal['met'])
-                print(upshift)
-                #print(heights_down)
 
-                # ## Calculate weights
-                # epsilon = 1e-6
-                # heights_nom = heights_nom.astype(float)
-                # heights_up = heights_up.astype(float)
-                # heights_down = heights_down.astype(float)
-                # heights_nom[heights_nom <= 0] = epsilon
-                # heights_up[heights_up <= 0] = epsilon
-                # heights_down[heights_down <= 0] = epsilon
+                ## Calculate weights
+                epsilon = 1e-6
+                heights_nom = heights_nom.astype(float)
+                heights_up = heights_up.astype(float)
+                heights_down = heights_down.astype(float)
+                heights_nom[heights_nom <= 0] = epsilon
+                heights_up[heights_up <= 0] = epsilon
+                heights_down[heights_down <= 0] = epsilon
 
-                # weights_up = heights_up / heights_nom
-                # weights_down = heights_down / heights_nom
+                weights_up = heights_up / heights_nom
+                weights_down = heights_down / heights_nom
 
-                # weights_up[weights_up <= 0] = epsilon
-                # weights_down[weights_down <= 0] = epsilon
+                weights_up[weights_up <= 0] = epsilon
+                weights_down[weights_down <= 0] = epsilon
 
-                # ## Save weights to .csv
-                # np.savetxt(home_basepath + file_ + '/{}_met_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
-                # np.savetxt(home_basepath + file_ + '/{}_met_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-                # np.savetxt(home_basepath + file_ + '/met_binning.csv', np.asarray(binning), delimiter=',')
+                ## Save weights to .csv
+                np.savetxt(home_basepath + file_ + '/{}_met_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
+                np.savetxt(home_basepath + file_ + '/{}_met_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
+                np.savetxt(home_basepath + file_ + '/met_binning.csv', np.asarray(binning), delimiter=',')
 
                 
-                # ## Make Histogram
-                # bins_center = []
-                # for left, right in zip(bins[1:], bins[:-1]):
-                #     bins_center.append(left + (right - left) / 2)
+                ## Make Histogram
+                bins_center = []
+                for left, right in zip(bins[1:], bins[:-1]):
+                    bins_center.append(left + (right - left) / 2)
 
-                # plt.figure(figsize=(7, 6))
-                # plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
-                # plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
-                # plt.hist(bins_center, weights=heights_down, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
-                # plt.plot([0], [0], lw=2, color='C0', label="nominal")
-                # plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
-                # plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
-                # plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-                # plt.xlabel("met")
-                # plt.ylabel("Counts")
-                # plt.savefig(home_basepath + file_ + '/{}_met_shapeshift.png'.format(file_), bbox_inches = "tight")
+                plt.figure(figsize=(7, 6))
+                plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
+                plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
+                plt.hist(bins_center, weights=heights_down, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
+                plt.plot([0], [0], lw=2, color='C0', label="nominal")
+                plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
+                plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
+                plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+                plt.xlabel("met")
+                plt.ylabel("Counts")
+                plt.savefig(home_basepath + file_ + '/{}_met_shapeshift.png'.format(file_), bbox_inches = "tight")
         
                 
