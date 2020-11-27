@@ -59,51 +59,51 @@ foldernames = [
 def job(filename):
     for file_ in cfg.files[filename]:
         print(file_)
-        if file_ in ['VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
-            met_binning = load_from_csv(home_basepath + file_ , '/met_binning.csv')
-            met_weights_up = load_from_csv(home_basepath + file_ , '/{}_met_weights_up.csv'.format(file_))
-            met_weights_down = load_from_csv(home_basepath + file_ , '/{}_met_weights_down.csv'.format(file_))
+        #if file_ in ['VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
+        met_binning = load_from_csv(home_basepath + file_ , '/met_binning.csv')
+        met_weights_up = load_from_csv(home_basepath + file_ , '/{}_met_weights_up.csv'.format(file_))
+        met_weights_down = load_from_csv(home_basepath + file_ , '/{}_met_weights_down.csv'.format(file_))
 
-            
-            ## Make new root file with new tree with two branches upweights and downweights
-            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-            tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
-            tdirectory.cd()
-            tree = ROOT.TTree('ntuple', 'ntuple')
-
-
-            ## create 1 dimensional float arrays as fill variables, in this way the float
-            ## array serves as a pointer which can be passed to the branch
-            met_x = array('f', [0])
-            met_y = array('f', [0])
+        
+        ## Make new root file with new tree with two branches upweights and downweights
+        root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+        tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
+        tdirectory.cd()
+        tree = ROOT.TTree('ntuple', 'ntuple')
 
 
-            ## create the branches and assign the fill-variables to them as floats (F)
-            tree.Branch('met_weights_up', met_x, 'met_weights_up/F')
-            tree.Branch('met_weights_down', met_y, 'met_weights_down/F')
+        ## create 1 dimensional float arrays as fill variables, in this way the float
+        ## array serves as a pointer which can be passed to the branch
+        met_x = array('f', [0])
+        met_y = array('f', [0])
 
 
-            ## Loading basepath root files to match weight with event
-            path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
-            nominal = ROOT.TFile(path)
-            tree_2 = nominal.Get("mt_nominal/ntuple")
-            
+        ## create the branches and assign the fill-variables to them as floats (F)
+        tree.Branch('met_weights_up', met_x, 'met_weights_up/F')
+        tree.Branch('met_weights_down', met_y, 'met_weights_down/F')
 
-            ## assigning specific weight to each event
-            ## MET
-            for event in tree_2:
-                if event.met > met_binning[-1]:
-                    met_x[0] = 1.
-                    met_y[0] = 1.
-                else:
-                    left_binedge = met_binning[met_binning <= event.met][-1]
-                    index = np.where(met_binning==left_binedge)
-                    print(left_binedge)
-                    met_x[0] = met_weights_up[index][0]
-                    met_y[0] = met_weights_down[index][0]                    
-                tree.Fill()
-            root_file.Write()
-            root_file.Close()
+
+        ## Loading basepath root files to match weight with event
+        path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
+        nominal = ROOT.TFile(path)
+        tree_2 = nominal.Get("mt_nominal/ntuple")
+        
+
+        ## assigning specific weight to each event
+        ## MET
+        for event in tree_2:
+            if event.met > met_binning[-1]:
+                met_x[0] = 1.
+                met_y[0] = 1.
+            else:
+                left_binedge = met_binning[met_binning <= event.met][-1]
+                index = np.where(met_binning==left_binedge)
+                print(left_binedge)
+                met_x[0] = met_weights_up[index][0]
+                met_y[0] = met_weights_down[index][0]                    
+            tree.Fill()
+        root_file.Write()
+        root_file.Close()
 
 
 def clone_to_all_tdirectories(tdirectories):
@@ -131,10 +131,10 @@ if __name__=="__main__":
     filenames = []
     for filename in cfg.files:
         filenames.append(filename)
-    #p = mp.Pool(len(filenames))
-    p = mp.Pool(1)
+    p = mp.Pool(len(filenames))
+    #p = mp.Pool(1)
     p.map(job, filenames)
     p.close()
     p.join()
 
-    # clone_to_all_tdirectories(foldernames)
+    clone_to_all_tdirectories(foldernames)
