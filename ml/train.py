@@ -60,12 +60,12 @@ def tree2numpy(path, tree, columns):
 
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True):
-    columns = cfg.ml_variables + [cfg.ml_weight] + ['njets_weights_up'] + ['njets_weights_down']
+    columns = cfg.ml_variables + [cfg.ml_weight] + ['met_weights_up'] + ['met_weights_down']
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
-    njets_upshifts = [] # JES upshift weights
-    njets_downshifts = [] # # JES downshift weights
+    met_upshifts = [] # JES upshift weights
+    met_downshifts = [] # # JES downshift weights
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float64) for k in cfg.ml_variables]).T)
@@ -74,10 +74,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape, dtype=np.float64) * i)
 
         # JES Weights
-        njets_upshift = np.array(d['njets_weights_up'], dtype=np.float64)
-        njets_upshifts.append(njets_upshift)
-        njets_downshift = np.array(d['njets_weights_down'], dtype=np.float64)
-        njets_downshifts.append(njets_downshift)
+        met_upshift = np.array(d['met_weights_up'], dtype=np.float64)
+        met_upshifts.append(met_upshift)
+        met_downshift = np.array(d['met_weights_down'], dtype=np.float64)
+        met_downshifts.append(met_downshift)
 
     # Stack inputs
     xs = np.vstack(xs)
@@ -92,10 +92,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
     # Stack JES weights
-    njets_upshifts = np.hstack(njets_upshifts)
-    njets_downshifts = np.hstack(njets_downshifts)
-    logger.debug('JES upshift weights (shape): {}'.format(njets_upshifts.shape))
-    logger.debug('JES downshift weights (shape): {}'.format(njets_downshifts.shape))
+    met_upshifts = np.hstack(met_upshifts)
+    met_downshifts = np.hstack(met_downshifts)
+    logger.debug('JES upshift weights (shape): {}'.format(met_upshifts.shape))
+    logger.debug('JES downshift weights (shape): {}'.format(met_downshifts.shape))
 
     # Multiply class weights to event weights
     if use_class_weights:
@@ -110,7 +110,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
 
-    return xs, ys, ws, njets_upshifts, njets_downshifts
+    return xs, ys, ws, met_upshifts, met_downshifts
 
 
 def model(x, num_variables, num_classes, fold, reuse=False):
@@ -132,9 +132,9 @@ def model(x, num_variables, num_classes, fold, reuse=False):
 def main(args):
     # Build nominal dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, njets_upshift, njets_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w, met_upshift, met_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
-    x_train, x_val, y_train, y_val, w_train, w_val, njets_upshift_train, njets_upshift_val, njets_downshift_train, njets_downshift_val = train_test_split(x, y, w, njets_upshift, njets_downshift, test_size=0.25, random_state=1234)
+    x_train, x_val, y_train, y_val, w_train, w_val, met_upshift_train, met_upshift_val, met_downshift_train, met_downshift_val = train_test_split(x, y, w, met_upshift, met_downshift, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     # Scale to expectation in the full dataset
@@ -177,9 +177,9 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    njets_upshift_ph = tf.placeholder(tf.float64)
-    njets_downshift_ph = tf.placeholder(tf.float64)
-    shift_magn_scale = 2.0
+    met_upshift_ph = tf.placeholder(tf.float64)
+    met_downshift_ph = tf.placeholder(tf.float64)
+    shift_magn_scale = 1.0
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
@@ -201,8 +201,8 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_upshift_ph
-            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_downshift_ph
+            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_upshift_ph
+            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
             procs_up[name] = tf.reduce_sum(proc_w_up)
             procs_down[name] = tf.reduce_sum(proc_w_down)
@@ -290,11 +290,11 @@ def main(args):
             is_warmup = False
 
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, njets_upshift_ph: njets_upshift_train, njets_downshift_ph: njets_downshift_train})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, met_upshift_ph: met_upshift_train, met_downshift_ph: met_downshift_train})
         if is_warmup:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, njets_upshift_ph: njets_upshift_val, njets_downshift_ph: njets_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
         else:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, njets_upshift_ph: njets_upshift_val, njets_downshift_ph: njets_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
@@ -309,7 +309,7 @@ def main(args):
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, njets_upshift_ph: njets_upshift_val, njets_downshift_ph: njets_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
