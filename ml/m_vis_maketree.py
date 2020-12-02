@@ -10,7 +10,7 @@ from csv import reader
 
 import multiprocessing.dummy as mp
 
-home_basepath = '/home/gristo/workspace_met/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath = '/home/gristo/workspace_m_vis/htautau/deeptau_02-20/2018/ntuples/'
 
 def save_to_csv(nparray, path, filename):
     data = np.asarray(nparray)
@@ -60,9 +60,9 @@ def job(filename):
     for file_ in cfg.files[filename]:
         print(file_)
         #if file_ in ['VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
-        met_binning = load_from_csv(home_basepath + file_ , '/met_binning.csv')
-        met_weights_up = load_from_csv(home_basepath + file_ , '/{}_met_weights_up.csv'.format(file_))
-        met_weights_down = load_from_csv(home_basepath + file_ , '/{}_met_weights_down.csv'.format(file_))
+        m_vis_binning = load_from_csv(home_basepath + file_ , '/m_vis_binning.csv')
+        m_vis_weights_up = load_from_csv(home_basepath + file_ , '/{}_m_vis_weights_up.csv'.format(file_))
+        m_vis_weights_down = load_from_csv(home_basepath + file_ , '/{}_m_vis_weights_down.csv'.format(file_))
 
         
         ## Make new root file with new tree with two branches upweights and downweights
@@ -74,13 +74,13 @@ def job(filename):
 
         ## create 1 dimensional float arrays as fill variables, in this way the float
         ## array serves as a pointer which can be passed to the branch
-        met_x = array('f', [0])
-        met_y = array('f', [0])
+        m_vis_x = array('f', [0])
+        m_vis_y = array('f', [0])
 
 
         ## create the branches and assign the fill-variables to them as floats (F)
-        tree.Branch('met_weights_up', met_x, 'met_weights_up/F')
-        tree.Branch('met_weights_down', met_y, 'met_weights_down/F')
+        tree.Branch('m_vis_weights_up', m_vis_x, 'm_vis_weights_up/F')
+        tree.Branch('m_vis_weights_down', m_vis_y, 'm_vis_weights_down/F')
 
 
         ## Loading basepath root files to match weight with event
@@ -90,17 +90,17 @@ def job(filename):
         
 
         ## assigning specific weight to each event
-        ## MET
+        ## m_vis
         for event in tree_2:
-            if event.met > met_binning[-1]:
-                met_x[0] = 1.
-                met_y[0] = 1.
+            if event.m_vis > m_vis_binning[-1]:
+                m_vis_x[0] = 1.
+                m_vis_y[0] = 1.
             else:
-                left_binedge = met_binning[met_binning <= event.met][-1]
-                index = np.where(met_binning==left_binedge)
+                left_binedge = m_vis_binning[m_vis_binning <= event.m_vis][-1]
+                index = np.where(m_vis_binning==left_binedge)
                 print(left_binedge)
-                met_x[0] = met_weights_up[index][0]
-                met_y[0] = met_weights_down[index][0]                    
+                m_vis_x[0] = m_vis_weights_up[index][0]
+                m_vis_y[0] = m_vis_weights_down[index][0]                    
             tree.Fill()
         root_file.Write()
         root_file.Close()

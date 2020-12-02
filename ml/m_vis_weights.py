@@ -10,7 +10,7 @@ mpl.rc("font", size=16, family="serif")
 import os
 
 
-home_basepath = '/home/gristo/workspace_met/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath = '/home/gristo/workspace_m_vis/htautau/deeptau_02-20/2018/ntuples/'
 
 for filename in cfg.files:
     print(filename)
@@ -32,20 +32,20 @@ for filename in cfg.files:
         ## Loading root files
         path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
         ## Read branch in dictionary
-        nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["met"])
+        nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["m_vis"])
         
         ## Prepatre for Hist
         bins = 20
         minrange = 0
         maxrange = 300
         binning = np.linspace(minrange, maxrange, bins + 1)
-        heights_nom, bins = np.histogram(nominal["met"], bins=bins, range=(minrange, maxrange))
+        heights_nom, bins = np.histogram(nominal["m_vis"], bins=bins, range=(minrange, maxrange))
         
         ## Calculate shifts
         ## Upshift: scale every event by 1.1
         ## Downshift: scale every event by 0.9
-        heights_up, _ = np.histogram(nominal["met"] * 1.1, bins=bins, range=(minrange, maxrange))
-        heights_down, _ = np.histogram(nominal["met"] * 0.9, bins=bins, range=(minrange, maxrange))
+        heights_up, _ = np.histogram(nominal["m_vis"] * 1.2, bins=bins, range=(minrange, maxrange))
+        heights_down, _ = np.histogram(nominal["m_vis"] * 0.8, bins=bins, range=(minrange, maxrange))
 
 
         ## Calculate weights
@@ -65,9 +65,9 @@ for filename in cfg.files:
 
         ## Save weights to .csv
         print("Saving weights as .csv")
-        np.savetxt(home_basepath + file_ + '/{}_met_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
-        np.savetxt(home_basepath + file_ + '/{}_met_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-        np.savetxt(home_basepath + file_ + '/met_binning.csv', np.asarray(binning), delimiter=',')
+        np.savetxt(home_basepath + file_ + '/{}_m_vis_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
+        np.savetxt(home_basepath + file_ + '/{}_m_vis_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
+        np.savetxt(home_basepath + file_ + '/m_vis_binning.csv', np.asarray(binning), delimiter=',')
 
         
         ## Make Histogram
@@ -84,7 +84,7 @@ for filename in cfg.files:
         plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
         plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-        plt.xlabel("met")
+        plt.xlabel("m_vis")
         plt.ylabel("Counts")
-        plt.savefig(home_basepath + file_ + '/{}_met_shapeshift.png'.format(file_), bbox_inches = "tight")
+        plt.savefig(home_basepath + file_ + '/{}_m_vis_shapeshift.png'.format(file_), bbox_inches = "tight")
         print("Done \n\n")
