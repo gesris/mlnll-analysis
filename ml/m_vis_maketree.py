@@ -57,84 +57,86 @@ foldernames = [
         ]
 
 def job(filename):
-    for file_ in cfg.files[filename]:
-        print(file_)
-        #if file_ in ['VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1']:
-        m_vis_binning = load_from_csv(home_basepath + file_ , '/m_vis_binning.csv')
-        m_vis_weights_up = load_from_csv(home_basepath + file_ , '/{}_m_vis_weights_up.csv'.format(file_))
-        m_vis_weights_down = load_from_csv(home_basepath + file_ , '/{}_m_vis_weights_down.csv'.format(file_))
+    if filename in ['singlemuon']:
+        for file_ in cfg.files[filename]:
+            print(file_)
+            #if file_ in ['SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD']:
+            m_vis_binning = load_from_csv(home_basepath + file_ , '/m_vis_binning.csv')
+            m_vis_weights_up = load_from_csv(home_basepath + file_ , '/{}_m_vis_weights_up.csv'.format(file_))
+            m_vis_weights_down = load_from_csv(home_basepath + file_ , '/{}_m_vis_weights_down.csv'.format(file_))
 
-        
-        ## Make new root file with new tree with two branches upweights and downweights
-        root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
-        tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
-        tdirectory.cd()
-        tree = ROOT.TTree('ntuple', 'ntuple')
-
-
-        ## create 1 dimensional float arrays as fill variables, in this way the float
-        ## array serves as a pointer which can be passed to the branch
-        m_vis_x = array('f', [0])
-        m_vis_y = array('f', [0])
+            
+            ## Make new root file with new tree with two branches upweights and downweights
+            root_file = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'RECREATE')
+            tdirectory = ROOT.TDirectoryFile('mt_nominal', 'mt_nominal')
+            tdirectory.cd()
+            tree = ROOT.TTree('ntuple', 'ntuple')
 
 
-        ## create the branches and assign the fill-variables to them as floats (F)
-        tree.Branch('m_vis_weights_up', m_vis_x, 'm_vis_weights_up/F')
-        tree.Branch('m_vis_weights_down', m_vis_y, 'm_vis_weights_down/F')
+            ## create 1 dimensional float arrays as fill variables, in this way the float
+            ## array serves as a pointer which can be passed to the branch
+            m_vis_x = array('f', [0])
+            m_vis_y = array('f', [0])
 
 
-        ## Loading basepath root files to match weight with event
-        path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
-        nominal = ROOT.TFile(path)
-        tree_2 = nominal.Get("mt_nominal/ntuple")
-        
+            ## create the branches and assign the fill-variables to them as floats (F)
+            tree.Branch('m_vis_weights_up', m_vis_x, 'm_vis_weights_up/F')
+            tree.Branch('m_vis_weights_down', m_vis_y, 'm_vis_weights_down/F')
 
-        ## assigning specific weight to each event
-        ## m_vis
-        for event in tree_2:
-            if event.m_vis > m_vis_binning[-1]:
-                m_vis_x[0] = 1.
-                m_vis_y[0] = 1.
-            else:
-                left_binedge = m_vis_binning[m_vis_binning <= event.m_vis][-1]
-                index = np.where(m_vis_binning==left_binedge)
-                print(left_binedge)
-                m_vis_x[0] = m_vis_weights_up[index][0]
-                m_vis_y[0] = m_vis_weights_down[index][0]                    
-            tree.Fill()
-        root_file.Write()
-        root_file.Close()
+
+            ## Loading basepath root files to match weight with event
+            path = cfg.basepath + 'ntuples/' + file_ + '/' + file_ + '.root'
+            nominal = ROOT.TFile(path)
+            tree_2 = nominal.Get("mt_nominal/ntuple")
+            
+
+            ## assigning specific weight to each event
+            ## m_vis
+            for event in tree_2:
+                if event.m_vis > m_vis_binning[-1]:
+                    m_vis_x[0] = 1.
+                    m_vis_y[0] = 1.
+                else:
+                    left_binedge = m_vis_binning[m_vis_binning <= event.m_vis][-1]
+                    index = np.where(m_vis_binning==left_binedge)
+                    print(left_binedge)
+                    m_vis_x[0] = m_vis_weights_up[index][0]
+                    m_vis_y[0] = m_vis_weights_down[index][0]                    
+                tree.Fill()
+            root_file.Write()
+            root_file.Close()
 
 
 def clone_to_all_tdirectories(tdirectories):
     for folder in tdirectories:
         for filename in cfg.files:
             print(filename)
-            for file_ in cfg.files[filename]:
-                #if file_ in 'VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1':
-                ## Loadng TDirectory needet to clone
-                f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
-                t = f.Get("mt_nominal/ntuple")
+            if filename in ['singlemuon']:
+                for file_ in cfg.files[filename]:
+                    #if file_ in 'VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1':
+                    ## Loadng TDirectory needet to clone
+                    f = ROOT.TFile(home_basepath + file_ + '/' + file_ + '.root', 'UPDATE')
+                    t = f.Get("mt_nominal/ntuple")
 
-                ## Making new TDirectory
-                d_new = ROOT.TDirectoryFile(folder, folder)
-                d_new.cd()
+                    ## Making new TDirectory
+                    d_new = ROOT.TDirectoryFile(folder, folder)
+                    d_new.cd()
 
-                ## Cloning and Saving changes
-                tree_clone = t.Clone()
-                d_new.Write()
-                f.Close()
+                    ## Cloning and Saving changes
+                    tree_clone = t.Clone()
+                    d_new.Write()
+                    f.Close()
 
 
 ## With multiprozessing with 1 core per category
 if __name__=="__main__":
-    # filenames = []
-    # for filename in cfg.files:
-    #     filenames.append(filename)
-    # p = mp.Pool(len(filenames))
-    # #p = mp.Pool(1)
-    # p.map(job, filenames)
-    # p.close()
-    # p.join()
+    filenames = []
+    for filename in cfg.files:
+        filenames.append(filename)
+    #p = mp.Pool(len(filenames))
+    p = mp.Pool(1)
+    p.map(job, filenames)
+    p.close()
+    p.join()
 
     clone_to_all_tdirectories(foldernames)
