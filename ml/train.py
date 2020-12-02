@@ -60,12 +60,12 @@ def tree2numpy(path, tree, columns):
 
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True):
-    columns = cfg.ml_variables + [cfg.ml_weight] + ['met_weights_up'] + ['met_weights_down']
+    columns = cfg.ml_variables + [cfg.ml_weight] + ['m_vis_weights_up'] + ['m_vis_weights_down']
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
-    met_upshifts = [] # JES upshift weights
-    met_downshifts = [] # # JES downshift weights
+    m_vis_upshifts = [] # JES upshift weights
+    m_vis_downshifts = [] # # JES downshift weights
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float64) for k in cfg.ml_variables]).T)
@@ -74,10 +74,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys.append(np.ones(d[cfg.ml_weight].shape, dtype=np.float64) * i)
 
         # JES Weights
-        met_upshift = np.array(d['met_weights_up'], dtype=np.float64)
-        met_upshifts.append(met_upshift)
-        met_downshift = np.array(d['met_weights_down'], dtype=np.float64)
-        met_downshifts.append(met_downshift)
+        m_vis_upshift = np.array(d['m_vis_weights_up'], dtype=np.float64)
+        m_vis_upshifts.append(m_vis_upshift)
+        m_vis_downshift = np.array(d['m_vis_weights_down'], dtype=np.float64)
+        m_vis_downshifts.append(m_vis_downshift)
 
     # Stack inputs
     xs = np.vstack(xs)
@@ -92,10 +92,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
     # Stack JES weights
-    met_upshifts = np.hstack(met_upshifts)
-    met_downshifts = np.hstack(met_downshifts)
-    logger.debug('JES upshift weights (shape): {}'.format(met_upshifts.shape))
-    logger.debug('JES downshift weights (shape): {}'.format(met_downshifts.shape))
+    m_vis_upshifts = np.hstack(m_vis_upshifts)
+    m_vis_downshifts = np.hstack(m_vis_downshifts)
+    logger.debug('JES upshift weights (shape): {}'.format(m_vis_upshifts.shape))
+    logger.debug('JES downshift weights (shape): {}'.format(m_vis_downshifts.shape))
 
     # Multiply class weights to event weights
     if use_class_weights:
@@ -110,7 +110,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
 
-    return xs, ys, ws, met_upshifts, met_downshifts
+    return xs, ys, ws, m_vis_upshifts, m_vis_downshifts
 
 
 def model(x, num_variables, num_classes, fold, reuse=False):
@@ -132,9 +132,9 @@ def model(x, num_variables, num_classes, fold, reuse=False):
 def main(args):
     # Build nominal dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, met_upshift, met_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w, m_vis_upshift, m_vis_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
-    x_train, x_val, y_train, y_val, w_train, w_val, met_upshift_train, met_upshift_val, met_downshift_train, met_downshift_val = train_test_split(x, y, w, met_upshift, met_downshift, test_size=0.25, random_state=1234)
+    x_train, x_val, y_train, y_val, w_train, w_val, m_vis_upshift_train, m_vis_upshift_val, m_vis_downshift_train, m_vis_downshift_val = train_test_split(x, y, w, m_vis_upshift, m_vis_downshift, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     # Scale to expectation in the full dataset
@@ -177,8 +177,8 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    met_upshift_ph = tf.placeholder(tf.float64)
-    met_downshift_ph = tf.placeholder(tf.float64)
+    m_vis_upshift_ph = tf.placeholder(tf.float64)
+    m_vis_downshift_ph = tf.placeholder(tf.float64)
     shift_magn_scale = 1.0
 
     nll = 0.0
@@ -201,8 +201,8 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_upshift_ph
-            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_downshift_ph
+            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * m_vis_upshift_ph
+            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * m_vis_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
             procs_up[name] = tf.reduce_sum(proc_w_up)
             procs_down[name] = tf.reduce_sum(proc_w_down)
@@ -213,7 +213,7 @@ def main(args):
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
 
-        # Nominal signal and background
+        ## Nominal signal and background
         sig = 0
         for p in ['ggh', 'qqh']:
             sig += procs[p]
@@ -222,26 +222,26 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # JES Uncertainty
-        # sys = 0.0
-        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-        #     Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
-        #     Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
-        #     sys += Delta_up + Delta_down
+        ## JES Uncertainty
+        sys = 0.0
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
+            sys += Delta_up + Delta_down
 
-        # Expectations
+        ## Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg# + sys 
+        exp = mu * sig + bkg + sys 
 
-        # Likelihood
+        ## Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
     ## Nuisance constraints
-    # nuisances.append(n)
-    # for n in nuisances:
-    #    nll -= tfp.distributions.Normal(
-    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #            ).log_prob(n)
+    nuisances.append(n)
+    for n in nuisances:
+       nll -= tfp.distributions.Normal(
+               loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+               ).log_prob(n)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -290,11 +290,11 @@ def main(args):
             is_warmup = False
 
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, met_upshift_ph: met_upshift_train, met_downshift_ph: met_downshift_train})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, m_vis_upshift_ph: m_vis_upshift_train, m_vis_downshift_ph: m_vis_downshift_train})
         if is_warmup:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val})
         else:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
@@ -309,7 +309,7 @@ def main(args):
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
