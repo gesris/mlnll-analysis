@@ -57,7 +57,7 @@ foldernames = [
         ]
 
 def job(filename):
-    if filename in ['ggh']:
+    if filename in ['qqh']:
         for file_ in cfg.files[filename]:
             print(file_)
             #if file_ in ['SingleMuon_Run2018A_17Sep2018v2_13TeV_MINIAOD']:
@@ -111,7 +111,7 @@ def clone_to_all_tdirectories(tdirectories):
     for folder in tdirectories:
         for filename in cfg.files:
             print(filename)
-            if filename in ['ggh']:
+            if filename in ['qqh']:
                 for file_ in cfg.files[filename]:
                     #if file_ in 'VBFHToTauTauHTXSFilterSTXS1p1Bin203to205M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v1':
                     ## Loadng TDirectory needet to clone
