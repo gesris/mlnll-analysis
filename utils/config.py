@@ -9,11 +9,11 @@ from ntuple_processor.variations import ReplaceCut, AddWeight, ChangeDataset
 # Base path to main ntuples
 basepath = '/ceph/htautau/deeptau_02-20/2018/'
 ntuples_base = path.join(basepath, 'ntuples')
-home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
+# home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 home_basepath_met = '/home/gristo/workspace_met/htautau/deeptau_02-20/2018/ntuples/'
 
 # Friend trees
-friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [home_basepath] + [home_basepath_met]
+friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [home_basepath_met]# + [home_basepath]
 ml_score_base = ['/work/gristo/third_mlnll-analysis/output/8_bins_met_nosys/MLScores']
 
 # File list
