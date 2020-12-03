@@ -61,7 +61,8 @@ for filename in cfg.files:
 
                 ## New more advanced shift: add/subtract 1 to every event, except edges
                 ## Upshift
-                print(nominal["njets"][nominal["njets"] == 0])
+                print(len(nominal["njets"][nominal["njets"] == 0]))
+                print(len(nominal["njets"]))
 
 
                 # ## Calculate weights
