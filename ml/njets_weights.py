@@ -66,7 +66,7 @@ for filename in cfg.files:
                 heights_up, _ = np.histogram(upshift, bins=bins, range=(minrange, maxrange))
 
                 ## Downshift
-                print("Events == 10: {}".format(len(nominal["njets"][nominal["njets"] == 0])))
+                print("Events == 10: {}".format(len(nominal["njets"][nominal["njets"] == 10])))
                 print("Events != 0 (BEFORE): {}".format(len(nominal["njets"][nominal["njets"] != 0])))
 
                 nominal["njets"][nominal["njets"] != 0] = nominal["njets"][nominal["njets"] != 0] - 1
