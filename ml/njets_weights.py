@@ -66,11 +66,12 @@ for filename in cfg.files:
                 heights_up, _ = np.histogram(upshift, bins=bins, range=(minrange, maxrange))
 
                 ## Downshift
-                # downshift = nominal["njets"]
-                # downshift[downshift <= 10] = downshift[downshift <= 10] + 1
-                # heights_down, _ = np.histogram(downshift, bins=bins, range=(minrange, maxrange))
-                print(nominal["njets"])
-                print(nominal["njets"] +1)
+                downshift = nominal["njets"]
+                downshift[downshift <= 10] = downshift[downshift <= 10] + 1
+                heights_down, _ = np.histogram(downshift, bins=bins, range=(minrange, maxrange))
+                print(heights_nom)
+                print(heights_up)
+                print(heights_down)
 
                 # ## Calculate weights
                 # epsilon = 1e-6
