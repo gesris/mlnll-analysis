@@ -25,10 +25,10 @@ def load_from_csv(path, filename):
 
 
 for filename in cfg.files:
-    print(filename)
+    #print(filename)
     if filename in 'wjets':
         for file_ in cfg.files[filename]:
-            print(file_)
+            #print(file_)
             if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
@@ -61,8 +61,9 @@ for filename in cfg.files:
 
                 ## New more advanced shift: add/subtract 1 to every event, except edges
                 ## Upshift
-                print(len(nominal["njets"][nominal["njets"] == 0]))
-                print(len(nominal["njets"]))
+                print(len(nominal["njets"][nominal["njets"] != 0]))
+                print(nominal["njets"][nominal["njets"] != 0])
+                print("Tot events: {}".format(len(nominal["njets"])))
 
 
                 # ## Calculate weights
