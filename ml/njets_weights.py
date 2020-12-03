@@ -61,7 +61,9 @@ for filename in cfg.files:
 
                 ## New more advanced shift: add/subtract 1 to every event, except edges
                 ## Upshift
-                print(len(nominal["njets"][nominal["njets"] != 0]))
+                print("Events == 0: {}".format(len(nominal["njets"][nominal["njets"] == 0])))
+                print(nominal["njets"][nominal["njets"] == 0])
+                print("Events != 0: {}".format(len(nominal["njets"][nominal["njets"] != 0])))
                 print(nominal["njets"][nominal["njets"] != 0])
                 nominal["njets"][nominal["njets"] != 0] = nominal["njets"][nominal["njets"] != 0] - 1
                 print(len(nominal["njets"][nominal["njets"] != 0]))
