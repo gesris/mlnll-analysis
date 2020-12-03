@@ -26,10 +26,10 @@ def load_from_csv(path, filename):
 
 for filename in cfg.files:
     #print(filename)
-    if filename in 'wjets':
+    if filename in 'ggh':
         for file_ in cfg.files[filename]:
             #print(file_)
-            if file_ in ['W1JetsToLNu_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_madgraph-pythia8_v2']:
+            if file_ in ['GluGluHToTauTauHTXSFilterSTXS1p1Bin101M125_RunIIAutumn18MiniAOD_102X_13TeV_MINIAOD_powheg-pythia8_v2']:
                 ## Make directory for Hist and .csv with weights
                 if os.path.exists(home_basepath + file_):
                     print("Directory {} exists".format(home_basepath + file_))
