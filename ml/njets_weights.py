@@ -61,11 +61,16 @@ for filename in cfg.files:
 
                 ## New more advanced shift: add/subtract 1 to every event, except edges
                 ## Upshift
-                print("Events == 0: {}".format(len(nominal["njets"][nominal["njets"] == 0])))
+                upshift = nominal["njets"]
+                upshift[upshift != 0] = upshift[upshift != 0] - 1
+                heights_up, _ = np.histogram(upshift, bins=bins, range=(minrange, maxrange))
+
+                ## Downshift
+                print("Events == 10: {}".format(len(nominal["njets"][nominal["njets"] == 0])))
                 print("Events != 0 (BEFORE): {}".format(len(nominal["njets"][nominal["njets"] != 0])))
 
                 nominal["njets"][nominal["njets"] != 0] = nominal["njets"][nominal["njets"] != 0] - 1
-                
+
                 print("Events != 0 (AFTER): {}".format(len(nominal["njets"][nominal["njets"] != 0])))
                 print("Tot events: {}".format(len(nominal["njets"])))
 
