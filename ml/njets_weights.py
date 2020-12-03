@@ -13,7 +13,7 @@ import csv
 from csv import reader
 
 
-home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath = '/home/gristo/workspace_njets/htautau/deeptau_02-20/2018/ntuples/'
 
 def save_to_csv(nparray, path, filename):
     data = np.asarray(nparray)
@@ -55,47 +55,52 @@ for filename in cfg.files:
                 ## Calculate shifts
                 ## Upshift: add 20% of first bin on first bin and substract same amount from second bin
                 ## Downshift: addsubtract 20% of first bin from first bin and add same amount on second bin
-                diff = heights_nom[0] * 0.2
-                heights_up = np.append([heights_nom[0] + diff, heights_nom[1] - diff], heights_nom[2:])
-                heights_down = np.append([heights_nom[0] - diff, heights_nom[1] + diff], heights_nom[2:])
+                # diff = heights_nom[0] * 0.2
+                # heights_up = np.append([heights_nom[0] + diff, heights_nom[1] - diff], heights_nom[2:])
+                # heights_down = np.append([heights_nom[0] - diff, heights_nom[1] + diff], heights_nom[2:])
 
-                ## Calculate weights
-                epsilon = 1e-6
-                heights_nom = heights_nom.astype(float)
-                heights_up = heights_up.astype(float)
-                heights_down = heights_down.astype(float)
-                heights_nom[heights_nom <= 0] = epsilon
-                heights_up[heights_up <= 0] = epsilon
-                heights_down[heights_down <= 0] = epsilon
+                ## New more advanced shift: add/subtract 1 to every event, except edges
+                ## Upshift
+                print(nominal["m_vis"][nominal["m_vis"] == 0])
 
-                weights_up = heights_up / heights_nom
-                weights_down = heights_down / heights_nom
 
-                weights_up[weights_up <= 0] = epsilon
-                weights_down[weights_down <= 0] = epsilon
+                # ## Calculate weights
+                # epsilon = 1e-6
+                # heights_nom = heights_nom.astype(float)
+                # heights_up = heights_up.astype(float)
+                # heights_down = heights_down.astype(float)
+                # heights_nom[heights_nom <= 0] = epsilon
+                # heights_up[heights_up <= 0] = epsilon
+                # heights_down[heights_down <= 0] = epsilon
 
-                ## Save weights to .csv
-                #save_to_csv(weights_up, home_basepath + file_, '/{}_njets_weights_up.csv'.format(file_))
-                np.savetxt(home_basepath + file_ + '/{}_njets_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
-                np.savetxt(home_basepath + file_ + '/{}_njets_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
-                np.savetxt(home_basepath + file_ + '/njets_binning.csv', np.asarray(binning), delimiter=',')
+                # weights_up = heights_up / heights_nom
+                # weights_down = heights_down / heights_nom
+
+                # weights_up[weights_up <= 0] = epsilon
+                # weights_down[weights_down <= 0] = epsilon
+
+                # ## Save weights to .csv
+                # #save_to_csv(weights_up, home_basepath + file_, '/{}_njets_weights_up.csv'.format(file_))
+                # np.savetxt(home_basepath + file_ + '/{}_njets_weights_up.csv'.format(file_), np.asarray(weights_up), delimiter=',')
+                # np.savetxt(home_basepath + file_ + '/{}_njets_weights_down.csv'.format(file_), np.asarray(weights_down), delimiter=',')
+                # np.savetxt(home_basepath + file_ + '/njets_binning.csv', np.asarray(binning), delimiter=',')
 
                 
-                ## Make Histogram
-                bins_center = []
-                for left, right in zip(bins[1:], bins[:-1]):
-                    bins_center.append(left + (right - left) / 2)
+                # ## Make Histogram
+                # bins_center = []
+                # for left, right in zip(bins[1:], bins[:-1]):
+                #     bins_center.append(left + (right - left) / 2)
 
-                plt.figure(figsize=(7, 6))
-                plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
-                plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
-                plt.hist(bins_center, weights=heights_down, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
-                plt.plot([0], [0], lw=2, color='C0', label="nominal")
-                plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
-                plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
-                plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
-                plt.xlabel("njets")
-                plt.ylabel("Counts")
-                plt.savefig(home_basepath + file_ + '/{}_njets_shapeshift.png'.format(file_), bbox_inches = "tight")
+                # plt.figure(figsize=(7, 6))
+                # plt.hist(bins_center, weights=heights_nom, bins=bins, histtype="step", lw=1.5, color='C0')
+                # plt.hist(bins_center, weights=heights_up, bins=bins, histtype="step", lw=1.5, ls=':', color='C1')
+                # plt.hist(bins_center, weights=heights_down, bins=bins, histtype="step", lw=1.5, ls='--', color='C1')
+                # plt.plot([0], [0], lw=2, color='C0', label="nominal")
+                # plt.plot([0], [0], lw=2, ls=':', color='C1', label="up shift")
+                # plt.plot([0], [0], lw=2, ls='--', color='C1', label="down shift")
+                # plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0., prop={'size': 14})
+                # plt.xlabel("njets")
+                # plt.ylabel("Counts")
+                # plt.savefig(home_basepath + file_ + '/{}_njets_shapeshift.png'.format(file_), bbox_inches = "tight")
         
                 
