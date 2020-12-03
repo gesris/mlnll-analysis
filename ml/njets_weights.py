@@ -63,6 +63,9 @@ for filename in cfg.files:
                 ## Upshift
                 print(len(nominal["njets"][nominal["njets"] != 0]))
                 print(nominal["njets"][nominal["njets"] != 0])
+                nominal["njets"][nominal["njets"] != 0] = nominal["njets"][nominal["njets"] != 0] - 1
+                print(len(nominal["njets"][nominal["njets"] != 0]))
+                print(nominal["njets"][nominal["njets"] != 0])
                 print("Tot events: {}".format(len(nominal["njets"])))
 
 
