@@ -70,12 +70,13 @@ for filename in cfg.files:
                 downshift[downshift >= 0] = downshift[downshift >= 0] + 1
                 heights_down, _ = np.histogram(downshift, bins=nbins, range=(minrange, maxrange))
                 print(heights_nom)
-                print(heights_up)
-                print(heights_down)
+                #print(heights_up)
+                #print(heights_down)
 
                 test = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
                     step = element * 0.1
+                    print(step)
                     test[i] = test[i] - step
                     test[i + 1] = test[i + 1] + step
                     if i == 8:
