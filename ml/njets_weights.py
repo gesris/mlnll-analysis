@@ -76,7 +76,7 @@ for filename in cfg.files:
                 upshift = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
                     step = element * 0.1
-                    upshift[i] = element - step
+                    upshift[i] = upshift[i] + element - step
                     upshift[i + 1] = upshift[i + 1] + step
                     if i == 8:
                         break
@@ -88,7 +88,7 @@ for filename in cfg.files:
                         pass
                     else:
                         step = element * 0.1
-                        downshift[i] = element - step
+                        downshift[i] = downshift[i] + element - step
                         downshift[i - 1] = downshift[i - 1] + step
                 heights_down = downshift
 
