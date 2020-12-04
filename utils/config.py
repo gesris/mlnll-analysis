@@ -9,11 +9,14 @@ from ntuple_processor.variations import ReplaceCut, AddWeight, ChangeDataset
 # Base path to main ntuples
 basepath = '/ceph/htautau/deeptau_02-20/2018/'
 ntuples_base = path.join(basepath, 'ntuples')
-home_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath_njets = '/home/gristo/workspace_njets/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath_met = '/home/gristo/workspace_met/htautau/deeptau_02-20/2018/ntuples/'
+home_basepath_m_vis = '/home/gristo/workspace_m_vis/htautau/deeptau_02-20/2018/ntuples/'
+
 
 # Friend trees
-friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [home_basepath]
-ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_njets_tot_shift_x3/MLScores']
+friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [home_basepath_njets] + [home_basepath_met] + [home_basepath_m_vis]
+ml_score_base = ['/work/gristo/third_mlnll-analysis/output/8_bins_njets_tot_shift/MLScores']
 
 # File list
 files = {
@@ -246,6 +249,10 @@ jet_es = []
 #jet_es.append(AddWeight('jpt_1_weights' + 'Down', Weight('(jpt_1_weights_down)', 'jpt_1_weights_jet_es')))
 jet_es.append(AddWeight('njets_weights' + 'Up', Weight('(njets_weights_up)', 'njets_weights_jet_es')))
 jet_es.append(AddWeight('njets_weights' + 'Down', Weight('(njets_weights_down)', 'njets_weights_jet_es')))
+jet_es.append(AddWeight('met_weights' + 'Up', Weight('(met_weights_up)', 'met_weights_jet_es')))
+jet_es.append(AddWeight('met_weights' + 'Down', Weight('(met_weights_down)', 'met_weights_jet_es')))
+jet_es.append(AddWeight('m_vis_weights' + 'Up', Weight('(m_vis_weights_up)', 'm_vis_weights_jet_es')))
+jet_es.append(AddWeight('m_vis_weights' + 'Down', Weight('(m_vis_weights_down)', 'm_vis_weights_jet_es')))
     
 
 """jet_es = []
