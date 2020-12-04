@@ -92,9 +92,9 @@ for filename in cfg.files:
                         downshift[i - 1] = downshift[i - 1] + step
                 heights_down = downshift
 
-                print(heights_nom)
-                print(heights_up)
-                print(heights_down)
+                print(heights_nom, np.sum(heights_nom))
+                print(heights_up, np.sum(heights_up))
+                print(heights_down, np.sum(heights_down))
 
 
                 # ## Calculate weights
