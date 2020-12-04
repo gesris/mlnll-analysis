@@ -82,7 +82,7 @@ for filename in cfg.files:
                     test[i + 1] = test[i + 1] + step
                     if i == 8:
                         break
-                np.set_printoptions(precision=0)
+                np.set_printoptions(precision=1)
                 print(test)
                 print(steps)
 
