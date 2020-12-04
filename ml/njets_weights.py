@@ -75,9 +75,12 @@ for filename in cfg.files:
 
                 test = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
-                    # step = element * 0.1
-                    # test
-                    print(i, element)
+                    step = element * 0.1
+                    test[i] = test[i] - step
+                    test[i + 1] = test[i + 1] + step
+                    if i == 8:
+                        break
+                print(test)
 
                 # ## Calculate weights
                 # epsilon = 1e-6
