@@ -61,30 +61,41 @@ for filename in cfg.files:
 
                 ## New more advanced shift: add/subtract 1 to every event, except edges
                 ## Upshift
-                upshift = nominal["njets"]
-                upshift[upshift != 0] = upshift[upshift != 0] - 1
-                heights_up, _ = np.histogram(upshift, bins=nbins, range=(minrange, maxrange))
+                # upshift = nominal["njets"]
+                # upshift[upshift != 0] = upshift[upshift != 0] - 1
+                # heights_up, _ = np.histogram(upshift, bins=nbins, range=(minrange, maxrange))
 
-                ## Downshift
-                downshift = nominal["njets"]
-                downshift[downshift >= 0] = downshift[downshift >= 0] + 1
-                heights_down, _ = np.histogram(downshift, bins=nbins, range=(minrange, maxrange))
-                print(heights_nom)
-                #print(heights_up)
-                #print(heights_down)
+                # ## Downshift
+                # downshift = nominal["njets"]
+                # downshift[downshift >= 0] = downshift[downshift >= 0] + 1
+                # heights_down, _ = np.histogram(downshift, bins=nbins, range=(minrange, maxrange))
+                # print(heights_nom)
+                # #print(heights_up)
+                # #print(heights_down)
 
-                test = np.zeros(nbins)
-                steps = [0]
+                upshift = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
                     step = element * 0.1
-                    steps.append(step)
-                    test[i] = element - step
-                    test[i + 1] = test[i + 1] + step
+                    upshift[i] = element - step
+                    upshift[i + 1] = upshift[i + 1] + step
                     if i == 8:
                         break
-                np.set_printoptions(precision=1)
-                print(test)
-                print(steps)
+                heights_up, _ = np.histogram(upshift, bins=nbins, range=(minrange, maxrange))
+                
+                downshift = np.zeros(nbins)
+                for i, element in enumerate(heights_nom):
+                    if i == 0:
+                        pass
+                    else:
+                        step = element * 0.1
+                        downshift[i] = element - step
+                        downshift[i - 1] = downshift[i - 1] + step
+                heights_down, _ = np.histogram(downshift, bins=nbins, range=(minrange, maxrange))
+
+                print(heights_nom)
+                print(heights_up)
+                print(heights_down)
+
 
                 # ## Calculate weights
                 # epsilon = 1e-6
