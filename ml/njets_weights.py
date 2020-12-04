@@ -80,7 +80,7 @@ for filename in cfg.files:
                     upshift[i + 1] = upshift[i + 1] + step
                     if i == 8:
                         break
-                heights_up, _ = np.histogram(upshift, bins=nbins, range=(minrange, maxrange))
+                heights_up = upshift
                 
                 downshift = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
@@ -90,7 +90,7 @@ for filename in cfg.files:
                         step = element * 0.1
                         downshift[i] = element - step
                         downshift[i - 1] = downshift[i - 1] + step
-                heights_down, _ = np.histogram(downshift, bins=nbins, range=(minrange, maxrange))
+                heights_down = downshift
 
                 print(heights_nom)
                 print(heights_up)
