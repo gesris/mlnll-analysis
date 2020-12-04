@@ -73,12 +73,11 @@ for filename in cfg.files:
                 print(heights_up)
                 print(heights_down)
 
-                test = np.zeros(10)
-                print(test)
-                # for element in enumerate(heights_nom):
-                #     step = element * 0.1
-                #     test.append(element - step)
-
+                test = np.zeros(bins)
+                for i, element in enumerate(heights_nom):
+                    # step = element * 0.1
+                    # test
+                    print(i, element)
 
                 # ## Calculate weights
                 # epsilon = 1e-6
