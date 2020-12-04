@@ -76,8 +76,7 @@ for filename in cfg.files:
                 test = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
                     step = element * 0.1
-                    print(step)
-                    test[i] = test[i] - step
+                    test[i] = element - step
                     test[i + 1] = test[i + 1] + step
                     if i == 8:
                         break
