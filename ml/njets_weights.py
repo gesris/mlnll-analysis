@@ -46,11 +46,11 @@ for filename in cfg.files:
                 nominal = ROOT.RDataFrame('mt_nominal/ntuple', path).AsNumpy(["njets"])
                 
                 ## Prepatre for Hist
-                bins = 10
+                nbins = 10
                 minrange = 0
                 maxrange = 10
-                binning = np.linspace(minrange, maxrange, bins + 1)
-                heights_nom, bins = np.histogram(nominal["njets"], bins=bins, range=(minrange, maxrange))
+                binning = np.linspace(minrange, maxrange, nbins + 1)
+                heights_nom, bins = np.histogram(nominal["njets"], bins=nbins, range=(minrange, maxrange))
                 
                 ## Calculate shifts
                 ## Upshift: add 20% of first bin on first bin and substract same amount from second bin
@@ -63,17 +63,17 @@ for filename in cfg.files:
                 ## Upshift
                 upshift = nominal["njets"]
                 upshift[upshift != 0] = upshift[upshift != 0] - 1
-                heights_up, _ = np.histogram(upshift, bins=bins, range=(minrange, maxrange))
+                heights_up, _ = np.histogram(upshift, bins=nbins, range=(minrange, maxrange))
 
                 ## Downshift
                 downshift = nominal["njets"]
                 downshift[downshift >= 0] = downshift[downshift >= 0] + 1
-                heights_down, _ = np.histogram(downshift, bins=bins, range=(minrange, maxrange))
+                heights_down, _ = np.histogram(downshift, bins=nbins, range=(minrange, maxrange))
                 print(heights_nom)
                 print(heights_up)
                 print(heights_down)
 
-                test = np.zeros(bins)
+                test = np.zeros(nbins)
                 for i, element in enumerate(heights_nom):
                     # step = element * 0.1
                     # test
