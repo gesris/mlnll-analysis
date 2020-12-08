@@ -209,8 +209,10 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        procs_up = {}
-        procs_down = {}
+        procs_up_m_vis = {}
+        procs_down_m_vis = {}
+        procs_up_met = {}
+        procs_down_met = {}
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
@@ -219,10 +221,10 @@ def main(args):
             proc_w_up_met = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_upshift_ph
             proc_w_down_met = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_up[name] = tf.reduce_sum(proc_w_up_m_vis)
-            procs_down[name] = tf.reduce_sum(proc_w_down_m_vis)
-            procs_up[name] = tf.reduce_sum(proc_w_up_met)
-            procs_down[name] = tf.reduce_sum(proc_w_down_met)
+            procs_up_m_vis[name] = tf.reduce_sum(proc_w_up_m_vis)
+            procs_down_m_vis[name] = tf.reduce_sum(proc_w_down_m_vis)
+            procs_up_met[name] = tf.reduce_sum(proc_w_up_met)
+            procs_down_met[name] = tf.reduce_sum(proc_w_down_met)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -242,10 +244,10 @@ def main(args):
         # JES Uncertainty
         sys = 0.0
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
-            Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
-            Delta_up_met = tf.maximum(n_met, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
-            Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
+            Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p]) * shift_magn_scale
+            Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p]) * shift_magn_scale
+            Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p]) * shift_magn_scale
+            Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p]) * shift_magn_scale
             sys += Delta_up_m_vis + Delta_down_m_vis + Delta_up_met + Delta_down_met
 
         # Expectations
