@@ -77,12 +77,12 @@ def write_dataset(d, workdir, name, group, fold, weightstr, cutstr):
     variables.push_back(cfg.ml_weight)
     #variables.push_back("jpt_1_weights_up")
     #variables.push_back("jpt_1_weights_down")
-    variables.push_back("njets_weights_up")
-    variables.push_back("njets_weights_down")
-    # variables.push_back("met_weights_up")
-    # variables.push_back("met_weights_down")
-    # variables.push_back("m_vis_weights_up")
-    # variables.push_back("m_vis_weights_down")
+    # variables.push_back("njets_weights_up")
+    # variables.push_back("njets_weights_down")
+    variables.push_back("met_weights_up")
+    variables.push_back("met_weights_down")
+    variables.push_back("m_vis_weights_up")
+    variables.push_back("m_vis_weights_down")
     df.Filter('event % 2 == {}'.format(fold))\
       .Filter(cutstr)\
       .Define(cfg.ml_weight, weightstr)\

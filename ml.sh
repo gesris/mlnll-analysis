@@ -11,4 +11,4 @@ mkdir -p $WORKDIR
 ml/train.sh $WORKDIR
 
 # Validate model
-ml/test_model.sh $WORKDIR
+#ml/test_model.sh $WORKDIR
