@@ -64,10 +64,10 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
-    m_vis_upshifts = [] # JES upshift weights
-    m_vis_downshifts = [] # # JES downshift weights
-    met_upshifts = [] # JES upshift weights
-    met_downshifts = [] # # JES downshift weights
+    m_vis_upshifts = []
+    m_vis_downshifts = []
+    met_upshifts = []
+    met_downshifts = []
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float64) for k in cfg.ml_variables]).T)
