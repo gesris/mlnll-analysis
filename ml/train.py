@@ -241,29 +241,29 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # JES Uncertainty
-        sys = 0.0
-        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p]) * shift_magn_scale
-            Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p]) * shift_magn_scale
-            Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p]) * shift_magn_scale
-            Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p]) * shift_magn_scale
-            sys += Delta_up_m_vis + Delta_down_m_vis + Delta_up_met + Delta_down_met
+        # # JES Uncertainty
+        # sys = 0.0
+        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+        #     Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p]) * shift_magn_scale
+        #     Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p]) * shift_magn_scale
+        #     Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p]) * shift_magn_scale
+        #     Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p]) * shift_magn_scale
+        #     sys += Delta_up_m_vis + Delta_down_m_vis + Delta_up_met + Delta_down_met
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg + sys 
+        exp = mu * sig + bkg# + sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
-    ## Nuisance constraints
-    nuisances.append(n_m_vis)
-    nuisances.append(n_met)
-    for n in nuisances:
-       nll -= tfp.distributions.Normal(
-               loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-               ).log_prob(n)
+    # ## Nuisance constraints
+    # nuisances.append(n_m_vis)
+    # nuisances.append(n_met)
+    # for n in nuisances:
+    #    nll -= tfp.distributions.Normal(
+    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+    #            ).log_prob(n)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
