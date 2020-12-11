@@ -12,7 +12,7 @@ ntuples_base = path.join(basepath, 'ntuples')
 jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 # Friend trees
-friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [jpt_1_basepath]
+friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
 ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_jes_signal_shift3/MLScores']
 
 # File list
@@ -240,13 +240,9 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
     qqh_wg1.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_wg1'.format(unc))))
     qqh_wg1.append(AddWeight(unc + 'Down', Weight('(1.0/{})'.format(unc), '{}_wg1'.format(unc))))
 
-## testing out combined jet_es instead of splitted
-jet_es = []
-jet_es.append(AddWeight('jpt_1_weights' + 'Up', Weight('({})'.format('jpt_1_weights_up'), '{}_jet_es'.format('jpt_1_weights'))))
-jet_es.append(AddWeight('jpt_1_weights' + 'Down', Weight('({})'.format('jpt_1_weights_down'), '{}_jet_es'.format('jpt_1_weights'))))
-    
 
-"""jet_es = []
+
+jet_es = []
 for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
     jet_es += [ChangeDataset('CMS_scale_j_{}_2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
                ChangeDataset('CMS_scale_j_{}_2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
@@ -262,7 +258,7 @@ jet_es += [
         ChangeDataset('CMS_res_j_2018Up', 'jerUncUp'),
         ChangeDataset('CMS_res_j_2018Down', 'jerUncDown'),
         ]
-"""
+
 tau_es = [
         ChangeDataset('CMS_scale_t_3prong_2018Up', 'tauEsThreeProngUp'),
         ChangeDataset('CMS_scale_t_3prong_2018Down', 'tauEsThreeProngDown'),
