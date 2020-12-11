@@ -13,7 +13,7 @@ jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
-ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_jes_signal_shift3/MLScores']
+ml_score_base = ['/work/gristo/fourth_mlnll-analysis/output/8_bins_sig_norm_shift_trainsys/MLScores']
 
 # File list
 files = {
@@ -243,21 +243,21 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
 
 
 jet_es = []
-for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
-    jet_es += [ChangeDataset('CMS_scale_j_{}_2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
-               ChangeDataset('CMS_scale_j_{}_2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
-               ChangeDataset('CMS_scale_j_{}Up'.format(name), 'jecUnc{}Up'.format(name)),
-               ChangeDataset('CMS_scale_j_{}Down'.format(name), 'jecUnc{}Down'.format(name))]
-jet_es += [
-        ChangeDataset('CMS_scale_j_RelativeBalUp', 'jecUncRelativeBalUp'),
-        ChangeDataset('CMS_scale_j_RelativeBalDown', 'jecUncRelativeBalDown'),
-        ChangeDataset('CMS_scale_j_RelativeSample_2018Up', 'jecUncRelativeSampleYearUp'),
-        ChangeDataset('CMS_scale_j_RelativeSample_2018Down', 'jecUncRelativeSampleYearDown'),
-        ChangeDataset('CMS_scale_j_FlavorQCDUp', 'jecUncFlavorQCDUp'),
-        ChangeDataset('CMS_scale_j_FlavorQCDDown', 'jecUncFlavorQCDDown'),
-        ChangeDataset('CMS_res_j_2018Up', 'jerUncUp'),
-        ChangeDataset('CMS_res_j_2018Down', 'jerUncDown'),
-        ]
+# for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
+#     jet_es += [ChangeDataset('CMS_scale_j_{}_2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
+#                ChangeDataset('CMS_scale_j_{}_2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
+#                ChangeDataset('CMS_scale_j_{}Up'.format(name), 'jecUnc{}Up'.format(name)),
+#                ChangeDataset('CMS_scale_j_{}Down'.format(name), 'jecUnc{}Down'.format(name))]
+# jet_es += [
+#         ChangeDataset('CMS_scale_j_RelativeBalUp', 'jecUncRelativeBalUp'),
+#         ChangeDataset('CMS_scale_j_RelativeBalDown', 'jecUncRelativeBalDown'),
+#         ChangeDataset('CMS_scale_j_RelativeSample_2018Up', 'jecUncRelativeSampleYearUp'),
+#         ChangeDataset('CMS_scale_j_RelativeSample_2018Down', 'jecUncRelativeSampleYearDown'),
+#         ChangeDataset('CMS_scale_j_FlavorQCDUp', 'jecUncFlavorQCDUp'),
+#         ChangeDataset('CMS_scale_j_FlavorQCDDown', 'jecUncFlavorQCDDown'),
+#         ChangeDataset('CMS_res_j_2018Up', 'jerUncUp'),
+#         ChangeDataset('CMS_res_j_2018Down', 'jerUncDown'),
+#         ]
 
 tau_es = [
         ChangeDataset('CMS_scale_t_3prong_2018Up', 'tauEsThreeProngUp'),
