@@ -60,24 +60,16 @@ def tree2numpy(path, tree, columns):
 
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True):
-    columns = cfg.ml_variables + [cfg.ml_weight] + ['jpt_1_weights_up'] + ['jpt_1_weights_down']
+    columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
-    jpt_1_upshifts = [] # JES upshift weights
-    jpt_1_downshifts = [] # # JES downshift weights
     for i, c in enumerate(classes):
         d = tree2numpy(path, c, columns)
         xs.append(np.vstack([np.array(d[k], dtype=np.float64) for k in cfg.ml_variables]).T)
         w = np.array(d[cfg.ml_weight], dtype=np.float64)
         ws.append(w)
         ys.append(np.ones(d[cfg.ml_weight].shape, dtype=np.float64) * i)
-
-        # JES Weights
-        jpt_1_upshift = np.array(d['jpt_1_weights_up'], dtype=np.float64)
-        jpt_1_upshifts.append(jpt_1_upshift)
-        jpt_1_downshift = np.array(d['jpt_1_weights_down'], dtype=np.float64)
-        jpt_1_downshifts.append(jpt_1_downshift)
 
     # Stack inputs
     xs = np.vstack(xs)
@@ -91,11 +83,6 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
     ws = np.hstack(ws)
     logger.debug('Weights, without class weights (shape, sum): {}, {}'.format(ws.shape, np.sum(ws)))
 
-    # Stack JES weights
-    jpt_1_upshifts = np.hstack(jpt_1_upshifts)
-    jpt_1_downshifts = np.hstack(jpt_1_downshifts)
-    logger.debug('JES upshift weights (shape): {}'.format(jpt_1_upshifts.shape))
-    logger.debug('JES downshift weights (shape): {}'.format(jpt_1_downshifts.shape))
 
     # Multiply class weights to event weights
     if use_class_weights:
@@ -110,7 +97,7 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
         ys = tf.keras.utils.to_categorical(ys)
         logger.debug('Targets, categorical (shape): {}'.format(ys.shape))
 
-    return xs, ys, ws, jpt_1_upshifts, jpt_1_downshifts
+    return xs, ys, ws
 
 
 def model(x, num_variables, num_classes, fold, reuse=False):
@@ -132,9 +119,9 @@ def model(x, num_variables, num_classes, fold, reuse=False):
 def main(args):
     # Build nominal dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, jpt_1_upshift, jpt_1_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
-    x_train, x_val, y_train, y_val, w_train, w_val, jpt_1_upshift_train, jpt_1_upshift_val, jpt_1_downshift_train, jpt_1_downshift_val = train_test_split(x, y, w, jpt_1_upshift, jpt_1_downshift, test_size=0.25, random_state=1234)
+    x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     # Scale to expectation in the full dataset
@@ -177,9 +164,7 @@ def main(args):
     # Build NLL loss
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    jpt_1_upshift_ph = tf.placeholder(tf.float64)
-    jpt_1_downshift_ph = tf.placeholder(tf.float64)
-    shift_magn_scale = 10
+    shift_magn_scale = 1
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
@@ -201,11 +186,12 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_upshift_ph
-            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_up[name] = tf.reduce_sum(proc_w_up)
-            procs_down[name] = tf.reduce_sum(proc_w_down)
+
+            # Systematic normalization uncertainty shift
+            procs_up[name] = procs[name] * 1.1
+            procs_down[name] = procs[name] * 0.9
+
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -224,7 +210,7 @@ def main(args):
 
         # JES Uncertainty
         sys = 0.0
-        for p in ['ggh', 'qqh']:#, 'ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['ggh', 'qqh']:
             Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
             Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
             sys += Delta_up + Delta_down
@@ -290,11 +276,11 @@ def main(args):
             is_warmup = False
 
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, jpt_1_upshift_ph: jpt_1_upshift_train, jpt_1_downshift_ph: jpt_1_downshift_train})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})
         if is_warmup:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
         else:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
@@ -309,7 +295,7 @@ def main(args):
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
