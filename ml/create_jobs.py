@@ -123,7 +123,7 @@ error = err/$(cluster).$(Process).err
 log = log/$(cluster).$(Process).log
 Requirements = ( (TARGET.Cloudsite =!= "blade") && (TARGET.ProvidesEKPResources == True) )
 +RequestWalltime = 1800
-RequestMemory = 2000
+RequestMemory = 4000
 RequestCpus = 1
 max_retries = 5
 accounting_group = cms.higgs
