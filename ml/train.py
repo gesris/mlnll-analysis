@@ -191,13 +191,13 @@ def main(args):
     m_vis_downshift_ph = tf.placeholder(tf.float64)
     met_upshift_ph = tf.placeholder(tf.float64)
     met_downshift_ph = tf.placeholder(tf.float64)
-    shift_magn_scale = 2.0
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     n_m_vis = tf.constant(0.0, tf.float64)
     n_met = tf.constant(0.0, tf.float64)
+    n_norm = tf.constant(0.0, tf.float64)
     nuisances = []
     zero = tf.constant(0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
@@ -213,6 +213,8 @@ def main(args):
         procs_down_m_vis = {}
         procs_up_met = {}
         procs_down_met = {}
+        procs_up_norm = {}
+        procs_down_norm = {}
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
@@ -225,6 +227,9 @@ def main(args):
             procs_down_m_vis[name] = tf.reduce_sum(proc_w_down_m_vis)
             procs_up_met[name] = tf.reduce_sum(proc_w_up_met)
             procs_down_met[name] = tf.reduce_sum(proc_w_down_met)
+            procs_up_norm[name] = procs[name] * 1.2
+            procs_down_norm[name] = procs[name] * 0.8
+
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -241,29 +246,32 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # # JES Uncertainty
-        # sys = 0.0
-        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-        #     Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p]) * shift_magn_scale
-        #     Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p]) * shift_magn_scale
-        #     Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p]) * shift_magn_scale
-        #     Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p]) * shift_magn_scale
-        #     sys += Delta_up_m_vis + Delta_down_m_vis + Delta_up_met + Delta_down_met
+        # JES Uncertainty
+        sys = 0.0
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+            Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p])
+            Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p])
+            Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p])
+            Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p])
+            Delta_up_norm = tf.maximum(n_norm, zero) * (procs_up_norm[p] - procs[p])
+            Delta_down_norm = tf.minimum(n_norm, zero) * (procs[p] - procs_down_norm[p])
+            sys += Delta_up_m_vis + Delta_down_m_vis + Delta_up_met + Delta_down_met + Delta_up_norm + Delta_down_norm
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg# + sys 
+        exp = mu * sig + bkg + sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
-    # ## Nuisance constraints
-    # nuisances.append(n_m_vis)
-    # nuisances.append(n_met)
-    # for n in nuisances:
-    #    nll -= tfp.distributions.Normal(
-    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #            ).log_prob(n)
+    ## Nuisance constraints
+    nuisances.append(n_m_vis)
+    nuisances.append(n_met)
+    nuisances.append(n_norm)
+    for n in nuisances:
+       nll -= tfp.distributions.Normal(
+               loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+               ).log_prob(n)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
