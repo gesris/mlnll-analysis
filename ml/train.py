@@ -189,8 +189,8 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
 
             # Systematic normalization uncertainty shift
-            procs_up[name] = procs[name] * 1.1
-            procs_down[name] = procs[name] * 0.9
+            procs_up[name] = procs[name] * 1.2
+            procs_down[name] = procs[name] * 0.8
 
 
         # QCD estimation
@@ -208,26 +208,26 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # # JES Uncertainty
-        # sys = 0.0
-        # for p in ['ggh', 'qqh']:
-        #     Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
-        #     Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
-        #     sys += Delta_up + Delta_down
+        # JES Uncertainty
+        sys = 0.0
+        for p in ['ggh', 'qqh']:
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
+            sys += Delta_up + Delta_down
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg# + sys 
+        exp = mu * sig + bkg + sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
-    # # Nuisance constraints
-    # nuisances.append(n)
-    # for n in nuisances:
-    #     nll -= tfp.distributions.Normal(
-    #             loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #             ).log_prob(n)
+    # Nuisance constraints
+    nuisances.append(n)
+    for n in nuisances:
+        nll -= tfp.distributions.Normal(
+                loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+                ).log_prob(n)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -314,7 +314,7 @@ def main(args):
     plt.plot(steps_list, loss_train_list)
     plt.plot(steps_list, loss_val_list)
     plt.xlabel("Steps")
-    plt.ylabel("Loss")
+    plt.ylabel("Loss (Train: {:.3f}, Val.: {:.3f})".format(loss_train_list[-1], loss_val_list[-1]))
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/minimization_fold{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
 
