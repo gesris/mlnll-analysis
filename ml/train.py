@@ -179,7 +179,7 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
     met_upshift_ph = tf.placeholder(tf.float64)
     met_downshift_ph = tf.placeholder(tf.float64)
-    shift_magn_scale = 2.0
+    shift_magn_scale = 4.0
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
