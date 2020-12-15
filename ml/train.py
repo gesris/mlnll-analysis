@@ -189,8 +189,8 @@ def main(args):
             procs[name] = tf.reduce_sum(proc_w)
 
             # Systematic normalization uncertainty shift
-            procs_up[name] = procs[name] * 1.2
-            procs_down[name] = procs[name] * 0.8
+            procs_up[name] = procs[name] * 1.1
+            procs_down[name] = procs[name] * 0.9
 
 
         # QCD estimation
@@ -259,7 +259,7 @@ def main(args):
     tolerance = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 0
+    warmup_steps = 80
 
     steps_list = []
     loss_train_list = []
