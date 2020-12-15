@@ -179,7 +179,7 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
     met_upshift_ph = tf.placeholder(tf.float64)
     met_downshift_ph = tf.placeholder(tf.float64)
-    shift_magn_scale = 1.0
+    shift_magn_scale = 2.0
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
@@ -222,26 +222,26 @@ def main(args):
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bkg += procs[p]
 
-        # JES Uncertainty
-        # sys = 0.0
-        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-        #     Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
-        #     Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
-        #     sys += Delta_up + Delta_down
+        ## JES Uncertainty
+        sys = 0.0
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
+            sys += Delta_up + Delta_down
 
         # Expectations
         obs = sig + bkg
-        exp = mu * sig + bkg# + sys 
+        exp = mu * sig + bkg + sys 
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
     ## Nuisance constraints
-    # nuisances.append(n)
-    # for n in nuisances:
-    #    nll -= tfp.distributions.Normal(
-    #            loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #            ).log_prob(n)
+    nuisances.append(n)
+    for n in nuisances:
+       nll -= tfp.distributions.Normal(
+               loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+               ).log_prob(n)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
