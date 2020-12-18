@@ -227,8 +227,8 @@ def main(args):
             # procs_down_m_vis[name] = tf.reduce_sum(proc_w_down_m_vis)
             procs_up_met[name] = tf.reduce_sum(proc_w_up_met)
             procs_down_met[name] = tf.reduce_sum(proc_w_down_met)
-            procs_up_norm[name] = procs[name] * 1.1
-            procs_down_norm[name] = procs[name] * 0.9
+            procs_up_norm[name] = procs[name] * 1.2
+            procs_down_norm[name] = procs[name] * 0.8
 
 
         # QCD estimation
