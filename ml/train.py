@@ -189,14 +189,14 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
     # m_vis_upshift_ph = tf.placeholder(tf.float64)
     # m_vis_downshift_ph = tf.placeholder(tf.float64)
-    # met_upshift_ph = tf.placeholder(tf.float64)
-    # met_downshift_ph = tf.placeholder(tf.float64)
+    met_upshift_ph = tf.placeholder(tf.float64)
+    met_downshift_ph = tf.placeholder(tf.float64)
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     # n_m_vis = tf.constant(0.0, tf.float64)
-    # n_met = tf.constant(0.0, tf.float64)
+    n_met = tf.constant(0.0, tf.float64)
     n_norm = tf.constant(0.0, tf.float64)
     nuisances = []
     zero = tf.constant(0, tf.float64)
@@ -211,8 +211,8 @@ def main(args):
         procs = {}
         # procs_up_m_vis = {}
         # procs_down_m_vis = {}
-        # procs_up_met = {}
-        # procs_down_met = {}
+        procs_up_met = {}
+        procs_down_met = {}
         procs_up_norm = {}
         procs_down_norm = {}
 
@@ -220,13 +220,13 @@ def main(args):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             # proc_w_up_m_vis = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * m_vis_upshift_ph
             # proc_w_down_m_vis = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * m_vis_downshift_ph
-            # proc_w_up_met = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_upshift_ph
-            # proc_w_down_met = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_downshift_ph
+            proc_w_up_met = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_upshift_ph
+            proc_w_down_met = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * met_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
             # procs_up_m_vis[name] = tf.reduce_sum(proc_w_up_m_vis)
             # procs_down_m_vis[name] = tf.reduce_sum(proc_w_down_m_vis)
-            # procs_up_met[name] = tf.reduce_sum(proc_w_up_met)
-            # procs_down_met[name] = tf.reduce_sum(proc_w_down_met)
+            procs_up_met[name] = tf.reduce_sum(proc_w_up_met)
+            procs_down_met[name] = tf.reduce_sum(proc_w_down_met)
             procs_up_norm[name] = procs[name] * 1.1
             procs_down_norm[name] = procs[name] * 0.9
 
@@ -248,12 +248,12 @@ def main(args):
 
         # JES Uncertainty
         sys = 0.0
-        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             # Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p])
             # Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p])
-            # Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p])
-            # Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p])
-            # sys += Delta_up_m_vis + Delta_down_m_vis + Delta_up_met + Delta_down_met
+            Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p])
+            Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p])
+            sys += Delta_up_met + Delta_down_met #+ Delta_up_m_vis + Delta_down_m_vis
         for p in ['ztt']:
             Delta_up_norm = tf.maximum(n_norm, zero) * (procs_up_norm[p] - procs[p])
             Delta_down_norm = tf.minimum(n_norm, zero) * (procs[p] - procs_down_norm[p])
@@ -268,7 +268,7 @@ def main(args):
     
     ## Nuisance constraints
     # nuisances.append(n_m_vis)
-    # nuisances.append(n_met)
+    nuisances.append(n_met)
     nuisances.append(n_norm)
     for n in nuisances:
        nll -= tfp.distributions.Normal(
@@ -322,11 +322,11 @@ def main(args):
             is_warmup = False
 
         loss_train, _ = session.run([loss, minimize],
-                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train})#, m_vis_upshift_ph: m_vis_upshift_train, m_vis_downshift_ph: m_vis_downshift_train, met_upshift_ph: met_upshift_train, met_downshift_ph: met_downshift_train})
+                feed_dict={x_ph: x_train_preproc, y_ph: y_train, w_ph: w_train, met_upshift_ph: met_upshift_train, met_downshift_ph: met_downshift_train})#, m_vis_upshift_ph: m_vis_upshift_train, m_vis_downshift_ph: m_vis_downshift_train})
         if is_warmup:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})#, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})#, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val})
         else:
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})#, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})#, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val})
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
@@ -341,7 +341,7 @@ def main(args):
         if step % validation_steps == 0:
             logger.info('Step / patience: {} / {}'.format(step, patience_count))
             logger.info('Train loss: {:.5f}'.format(loss_train))
-            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val})#, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})
+            loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, met_upshift_ph: met_upshift_val, met_downshift_ph: met_downshift_val})#, m_vis_upshift_ph: m_vis_upshift_val, m_vis_downshift_ph: m_vis_downshift_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
             path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
             logger.info('Save model to {}'.format(path))
