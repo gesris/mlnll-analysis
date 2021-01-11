@@ -248,12 +248,12 @@ def main(args):
 
         # JES Uncertainty
         sys = 0.0
-        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p])
-            Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p])
-            Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p])
-            Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p])
-            sys += Delta_up_met + Delta_down_met + Delta_up_m_vis + Delta_down_m_vis
+        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+        #     Delta_up_m_vis = tf.maximum(n_m_vis, zero) * (procs_up_m_vis[p] - procs[p])
+        #     Delta_down_m_vis = tf.minimum(n_m_vis, zero) * (procs[p] - procs_down_m_vis[p])
+        #     Delta_up_met = tf.maximum(n_met, zero) * (procs_up_met[p] - procs[p])
+        #     Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p])
+        #     sys += Delta_up_met + Delta_down_met + Delta_up_m_vis + Delta_down_m_vis
         for p in ['ztt']:
             Delta_up_norm = tf.maximum(n_norm, zero) * (procs_up_norm[p] - procs[p])
             Delta_down_norm = tf.minimum(n_norm, zero) * (procs[p] - procs_down_norm[p])
@@ -267,8 +267,8 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
     ## Nuisance constraints
-    nuisances.append(n_m_vis)
-    nuisances.append(n_met)
+    # nuisances.append(n_m_vis)
+    # nuisances.append(n_met)
     nuisances.append(n_norm)
     for n in nuisances:
        nll -= tfp.distributions.Normal(
@@ -305,7 +305,7 @@ def main(args):
     tolerance = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 80
+    warmup_steps = 200
 
     steps_list = []
     loss_train_list = []
