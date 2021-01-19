@@ -106,26 +106,26 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_upshift_ph
-            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_downshift_ph
+            # proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_upshift_ph
+            # proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_up[name] = tf.reduce_sum(proc_w_up)
-            procs_down[name] = tf.reduce_sum(proc_w_down)
+            procs_up[name] = tf.reduce_sum(proc_w) * 1.2
+            procs_down[name] = tf.reduce_sum(proc_w) * 0.8
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
-        procs_up['qcd'] = tf.maximum(procs['qcd'] * njets_upshift_ph, 0)
-        procs_down['qcd'] = tf.maximum(procs['qcd'] * njets_downshift_ph, 0)
+        # procs_up['qcd'] = tf.maximum(procs['qcd'] * njets_upshift_ph, 0)
+        # procs_down['qcd'] = tf.maximum(procs['qcd'] * njets_downshift_ph, 0)
 
         # Nominal signal and background
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             counts_nom[p] = procs[p]
         
         # Shifted signal and background
-        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+        for p in ['ztt']:
             counts_up[p] = procs_up[p]
             counts_down[p] = procs_down[p]
 
