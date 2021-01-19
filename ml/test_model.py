@@ -153,16 +153,17 @@ def main(args):
                 content.append(classes[element])
             plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
             plt.plot([0], [0], lw=2, color=color[i], label=element)
-            content_up = []
-            for id, classes_up in bincontent_up.items():
-                content_up.append(classes_up[element])
-            plt.hist(bins_center, weights=content_up, bins=bins, histtype="step", lw=2, ls=':', color=color[i])
-            plt.plot([0], [0], lw=2, ls=':', color=color[i], label=element + ' up')
-            content_down = []
-            for id, classes_down in bincontent_down.items():
-                content_down.append(classes_down[element])
-            plt.hist(bins_center, weights=content_down, bins=bins, histtype="step", lw=2, ls='--', color=color[i])
-            plt.plot([0], [0], lw=2, ls='--', color=color[i], label=element + ' down')
+            if element in ['ztt']:
+                content_up = []
+                for id, classes_up in bincontent_up.items():
+                    content_up.append(classes_up[element])
+                plt.hist(bins_center, weights=content_up, bins=bins, histtype="step", lw=2, ls=':', color=color[i])
+                plt.plot([0], [0], lw=2, ls=':', color=color[i], label=element + ' up')
+                content_down = []
+                for id, classes_down in bincontent_down.items():
+                    content_down.append(classes_down[element])
+                plt.hist(bins_center, weights=content_down, bins=bins, histtype="step", lw=2, ls='--', color=color[i])
+                plt.plot([0], [0], lw=2, ls='--', color=color[i], label=element + ' down')
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=3, mode="expand", borderaxespad=0., prop={'size': 14})
         plt.xlabel("$f$")
         plt.ylabel("Counts")
