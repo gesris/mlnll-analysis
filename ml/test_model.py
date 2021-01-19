@@ -57,7 +57,7 @@ def count_masking(x, up, down):
 def main(args):
     ## Load dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, njets_upshift, njets_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w, m_vis_upshift, m_vis_downshift, met_upshift, met_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     fold_factor = 2.
     w = w * fold_factor
@@ -74,8 +74,8 @@ def main(args):
     
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    njets_upshift_ph = tf.placeholder(tf.float64)
-    njets_downshift_ph = tf.placeholder(tf.float64)
+    # njets_upshift_ph = tf.placeholder(tf.float64)
+    # njets_downshift_ph = tf.placeholder(tf.float64)
     scale_ph = tf.placeholder(tf.float64)
 
     bins = np.array(cfg.analysis_binning)
@@ -140,7 +140,7 @@ def main(args):
     saver.restore(session, path)
 
     bincontent_nom_, bincontent_up_, bincontent_down_ = session.run([bincontent_nom, bincontent_up, bincontent_down], \
-                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor, njets_downshift_ph: njets_downshift, njets_upshift_ph: njets_upshift})
+                        feed_dict={x_ph: x_preproc, y_ph: y, w_ph: w, scale_ph: fold_factor})
 
 
     ## Plotting histogram
