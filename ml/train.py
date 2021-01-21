@@ -60,7 +60,7 @@ def tree2numpy(path, tree, columns):
 
 
 def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=True):
-    columns = cfg.ml_variables + [cfg.ml_weight] + ['met_weights_up'] + ['met_weights_down'] + ['m_vis_weights_up'] + ['m_vis_weights_down']
+    columns = cfg.ml_variables + [cfg.ml_weight]
     xs = [] # Inputs
     ys = [] # Targets
     ws = [] # Event weights
