@@ -57,7 +57,7 @@ def count_masking(x, up, down):
 def main(args):
     ## Load dataset
     classes = cfg.ml_classes + [n + '_ss' for n in cfg.ml_classes if n not in ['ggh', 'qqh']] + ['data_ss']
-    x, y, w, m_vis_upshift, m_vis_downshift, met_upshift, met_downshift = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
+    x, y, w = build_dataset(os.path.join(args.workdir, 'fold{}.root'.format(args.fold)), classes, args.fold,
                             use_class_weights=False, make_categorical=False)
     fold_factor = 2.
     w = w * fold_factor
@@ -74,8 +74,6 @@ def main(args):
     
     y_ph = tf.placeholder(tf.float64, shape=(None,))
     w_ph = tf.placeholder(tf.float64, shape=(None,))
-    # njets_upshift_ph = tf.placeholder(tf.float64)
-    # njets_downshift_ph = tf.placeholder(tf.float64)
     scale_ph = tf.placeholder(tf.float64)
 
     bins = np.array(cfg.analysis_binning)
@@ -106,8 +104,6 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            # proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_upshift_ph
-            # proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * njets_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
             procs_up[name] = tf.reduce_sum(proc_w) * 1.2
             procs_down[name] = tf.reduce_sum(proc_w) * 0.8
@@ -153,7 +149,7 @@ def main(args):
                 content.append(classes[element])
             plt.hist(bins_center, weights=content, bins=bins, histtype="step", lw=2, color=color[i])
             plt.plot([0], [0], lw=2, color=color[i], label=element)
-            if element in ['ztt']:
+            if element in ['ztt', 'w']:
                 content_up = []
                 for id, classes_up in bincontent_up.items():
                     content_up.append(classes_up[element])

@@ -9,13 +9,10 @@ from ntuple_processor.variations import ReplaceCut, AddWeight, ChangeDataset
 # Base path to main ntuples
 basepath = '/ceph/htautau/deeptau_02-20/2018/'
 ntuples_base = path.join(basepath, 'ntuples')
-home_basepath_njets = '/home/gristo/workspace_njets/htautau/deeptau_02-20/2018/ntuples/'
-home_basepath_met = '/home/gristo/workspace_met/htautau/deeptau_02-20/2018/ntuples/'
-home_basepath_m_vis = '/home/gristo/workspace_m_vis/htautau/deeptau_02-20/2018/ntuples/'
 
 
 # Friend trees
-friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [home_basepath_met] + [home_basepath_m_vis]# + [home_basepath_njets]
+friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']]
 ml_score_base = ['/work/gristo/fourth_mlnll-analysis/output/8_bins_met_ztt_norm_shift2_trainsys/MLScores']
 
 # File list
@@ -243,19 +240,8 @@ for unc in ['THU_qqH_25', 'THU_qqH_JET01', 'THU_qqH_Mjj1000', 'THU_qqH_Mjj120', 
     qqh_wg1.append(AddWeight(unc + 'Up', Weight('({})'.format(unc), '{}_wg1'.format(unc))))
     qqh_wg1.append(AddWeight(unc + 'Down', Weight('(1.0/{})'.format(unc), '{}_wg1'.format(unc))))
 
-## njets instead of jes
-jet_es = []
-# jet_es.append(AddWeight('jpt_1_weights' + 'Up', Weight('(jpt_1_weights_up)', 'jpt_1_weights_jet_es')))
-# jet_es.append(AddWeight('jpt_1_weights' + 'Down', Weight('(jpt_1_weights_down)', 'jpt_1_weights_jet_es')))
-# jet_es.append(AddWeight('njets_weights' + 'Up', Weight('(njets_weights_up)', 'njets_weights_jet_es')))
-# jet_es.append(AddWeight('njets_weights' + 'Down', Weight('(njets_weights_down)', 'njets_weights_jet_es')))
-jet_es.append(AddWeight('met_weights' + 'Up', Weight('(met_weights_up)', 'met_weights_jet_es')))
-jet_es.append(AddWeight('met_weights' + 'Down', Weight('(met_weights_down)', 'met_weights_jet_es')))
-jet_es.append(AddWeight('m_vis_weights' + 'Up', Weight('(m_vis_weights_up)', 'm_vis_weights_jet_es')))
-jet_es.append(AddWeight('m_vis_weights' + 'Down', Weight('(m_vis_weights_down)', 'm_vis_weights_jet_es')))
-    
 
-"""jet_es = []
+jet_es = []
 for name in ['Absolute', 'BBEC1', 'EC2', 'HF']:
     jet_es += [ChangeDataset('CMS_scale_j_{}_2018Up'.format(name), 'jecUnc{}YearUp'.format(name)),
                ChangeDataset('CMS_scale_j_{}_2018Down'.format(name), 'jecUnc{}YearDown'.format(name)),
@@ -271,7 +257,7 @@ jet_es += [
         ChangeDataset('CMS_res_j_2018Up', 'jerUncUp'),
         ChangeDataset('CMS_res_j_2018Down', 'jerUncDown'),
         ]
-"""
+
 tau_es = [
         ChangeDataset('CMS_scale_t_3prong_2018Up', 'tauEsThreeProngUp'),
         ChangeDataset('CMS_scale_t_3prong_2018Down', 'tauEsThreeProngDown'),
