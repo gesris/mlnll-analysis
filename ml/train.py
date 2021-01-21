@@ -102,9 +102,9 @@ def build_dataset(path, classes, fold, make_categorical=True, use_class_weights=
 def model(x, num_variables, num_classes, fold, reuse=False):
     hidden_nodes = 100
     with tf.variable_scope('model_fold{}'.format(fold), reuse=reuse):
-        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_ztt_normal_initializer(), dtype=tf.float64)
+        w1 = tf.get_variable('w1', shape=(num_variables, hidden_nodes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
         b1 = tf.get_variable('b1', shape=(hidden_nodes), initializer=tf.constant_initializer(), dtype=tf.float64)
-        w2 = tf.get_variable('w2', shape=(hidden_nodes, num_classes), initializer=tf.random_ztt_normal_initializer(), dtype=tf.float64)
+        w2 = tf.get_variable('w2', shape=(hidden_nodes, num_classes), initializer=tf.random_normal_initializer(), dtype=tf.float64)
         b2 = tf.get_variable('b2', shape=(num_classes), initializer=tf.constant_initializer(), dtype=tf.float64)
 
     l1 = tf.tanh(tf.add(b1, tf.matmul(x, w1)))
