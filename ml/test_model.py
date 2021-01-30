@@ -121,7 +121,7 @@ def main(args):
             counts_nom[p] = procs[p]
         
         # Shifted signal and background
-        for p in ['ztt']:
+        for p in ['ztt', 'w']:
             counts_up[p] = procs_up[p]
             counts_down[p] = procs_down[p]
 
