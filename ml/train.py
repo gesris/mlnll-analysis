@@ -123,9 +123,9 @@ def main(args):
     x_train, x_val, y_train, y_val, w_train, w_val = train_test_split(x, y, w, test_size=0.25, random_state=1234)
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
-    print("\n\n\nWEIGHTS: {}".format(w_val[10:]))
-    print("LABELS: {}".format(y_val[10:]))
-    print("INPUT: {}".format(x_val[10:]))
+    print("\n\n\nWEIGHTS TOT: {}".format(np.sum(w_val)))
+    for i in range(0, 10):
+        print("WEIGHTS Class {}: {}".format(i, np.sum(w_val[y_val==i])))
 
     # Scale to expectation in the full dataset
     scale_train = 4.0 / 3.0 * 2.0 # train/test split + two fold
