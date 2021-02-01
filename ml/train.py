@@ -129,10 +129,6 @@ def main(args):
     scale_val = 4.0 * 2.0
     w_train = w_train * scale_train
     w_val = w_val * scale_val
-
-    print("\n\n\nWEIGHTS TOT: {}".format(np.sum(w_val)))
-    for i in range(0, 10):
-        print("WEIGHTS Class {}: {}".format(i, np.sum(w_val[y_val==i])))
     
     for i, name in enumerate(classes):
         s_train = np.sum(w_train[y_train == i])
