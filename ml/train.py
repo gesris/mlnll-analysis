@@ -125,6 +125,7 @@ def main(args):
 
     print("\n\n\nWEIGHTS: {}".format(w_val[10:]))
     print("LABELS: {}".format(y_val[10:]))
+    print("INPUT: {}".format(x_val[10:]))
 
     # Scale to expectation in the full dataset
     scale_train = 4.0 / 3.0 * 2.0 # train/test split + two fold
