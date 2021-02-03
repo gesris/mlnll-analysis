@@ -124,7 +124,7 @@ def main(args):
     logger.info('Number of train/val events in nominal dataset: {} / {}'.format(x_train.shape[0], x_val.shape[0]))
 
     for i in range(0, 10):
-        logger.debug("SUM LABELS: {}, {}".format(y[y==i], i))
+        logger.debug("SUM LABELS: {}, {}".format(np.sum(y[y==i]), i))
 
 
     # Scale to expectation in the full dataset
