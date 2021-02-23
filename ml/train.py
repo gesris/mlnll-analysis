@@ -298,6 +298,8 @@ def main(args):
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
+                path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
+                logger.info('Save model to {}'.format(path))
             else:
                 patience_count -= 1
 
@@ -311,8 +313,8 @@ def main(args):
             logger.info('Train loss: {:.5f}'.format(loss_train))
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
             logger.info('Validation loss: {:.5f}'.format(loss_val))
-            path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
-            logger.info('Save model to {}'.format(path))
+            # path = saver.save(session, os.path.join(args.workdir, 'model_fold{}/model.ckpt'.format(args.fold)), global_step=step)
+            # logger.info('Save model to {}'.format(path))
 
         if is_warmup:
             logger.info('Warmup: {} / {}'.format(step, warmup_steps))
