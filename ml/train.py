@@ -197,7 +197,8 @@ def main(args):
     mu = tf.constant(1.0, tf.float64)
     n_m_vis = tf.constant(0.0, tf.float64)
     n_met = tf.constant(0.0, tf.float64)
-    n_norm = tf.constant(0.0, tf.float64)
+    n_z_norm = tf.constant(0.0, tf.float64)
+    n_w_norm = tf.constant(0.0, tf.float64)
     nuisances = []
     zero = tf.constant(0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
@@ -213,8 +214,10 @@ def main(args):
         procs_down_m_vis = {}
         procs_up_met = {}
         procs_down_met = {}
-        procs_up_norm = {}
-        procs_down_norm = {}
+        procs_up_z_norm = {}
+        procs_down_z_norm = {}
+        procs_up_w_norm = {}
+        procs_down_w_norm = {}
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
@@ -227,8 +230,10 @@ def main(args):
             procs_down_m_vis[name] = tf.reduce_sum(proc_w_down_m_vis)
             procs_up_met[name] = tf.reduce_sum(proc_w_up_met)
             procs_down_met[name] = tf.reduce_sum(proc_w_down_met)
-            procs_up_norm[name] = procs[name] * 1.2
-            procs_down_norm[name] = procs[name] * 0.8
+            procs_up_z_norm[name] = procs[name] * 1.2
+            procs_down_z_norm[name] = procs[name] * 0.8
+            procs_up_w_norm[name] = procs[name] * 1.2
+            procs_down_w_norm[name] = procs[name] * 0.8
 
 
         # QCD estimation
@@ -255,9 +260,13 @@ def main(args):
             Delta_down_met = tf.minimum(n_met, zero) * (procs[p] - procs_down_met[p])
             sys += Delta_up_met + Delta_down_met + Delta_up_m_vis + Delta_down_m_vis
         for p in ['ztt']:
-            Delta_up_norm = tf.maximum(n_norm, zero) * (procs_up_norm[p] - procs[p])
-            Delta_down_norm = tf.minimum(n_norm, zero) * (procs[p] - procs_down_norm[p])
+            Delta_up_norm = tf.maximum(n_z_norm, zero) * (procs_up_z_norm[p] - procs[p])
+            Delta_down_norm = tf.minimum(n_z_norm, zero) * (procs[p] - procs_down_z_norm[p])
             sys += Delta_up_norm + Delta_down_norm
+        for p in ['w']:
+            Delta_up_w_norm = tf.maximum(n_w_norm, zero) * (procs_up_w_norm[p] - procs[p])
+            Delta_down_w_norm = tf.minimum(n_w_norm, zero) * (procs[p] - procs_down_w_norm[p])
+            sys += Delta_up_w_norm + Delta_down_w_norm
 
         # Expectations
         obs = sig + bkg
@@ -269,7 +278,8 @@ def main(args):
     ## Nuisance constraints
     nuisances.append(n_m_vis)
     nuisances.append(n_met)
-    nuisances.append(n_norm)
+    nuisances.append(n_z_norm)
+    nuisances.append(n_w_norm)
     for n in nuisances:
        nll -= tfp.distributions.Normal(
                loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
