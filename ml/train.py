@@ -270,7 +270,8 @@ def main(args):
     patience = 7000
     patience_count = patience
     min_loss = 1e9
-    tolerance = 0.001
+    tolerance_init = 0.01
+    tolerance_min = 0.001
     step = 0
     validation_steps = 20
     warmup_steps = 100
@@ -295,6 +296,7 @@ def main(args):
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
         else:
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
+            tolerance = np.minimum(tolerance_init  * (100 / (100 + step - warmup_steps)), tolerance_min)
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
