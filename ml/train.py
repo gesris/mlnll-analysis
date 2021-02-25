@@ -274,7 +274,7 @@ def main(args):
     tolerance_min = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 100
+    warmup_steps = 300
 
     steps_list = []
     loss_train_list = []
