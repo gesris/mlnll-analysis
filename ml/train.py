@@ -224,7 +224,7 @@ def main(args):
 
         # JES Uncertainty
         sys = 0.0
-        for p in ['ggh', 'qqh']:#, 'ztt', 'zl', 'w', 'tt', 'vv']:
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
             Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
             Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
             sys += Delta_up + Delta_down
@@ -267,13 +267,13 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 30
+    patience = 7000
     patience_count = patience
     min_loss = 1e9
     tolerance = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 0
+    warmup_steps = 100
 
     steps_list = []
     loss_train_list = []
