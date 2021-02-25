@@ -296,7 +296,7 @@ def main(args):
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
         else:
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
-            tolerance = np.minimum(tolerance_init  * (100 / (100 + step - warmup_steps)), tolerance_min)
+            tolerance = np.maximum(tolerance_init  * (100 / (100 + step - warmup_steps)), tolerance_min)
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
