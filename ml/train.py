@@ -200,11 +200,11 @@ def main(args):
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
-            # proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_upshift_ph
-            # proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_downshift_ph
+            proc_w_up = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_upshift_ph
+            proc_w_down = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph * jpt_1_downshift_ph
             procs[name] = tf.reduce_sum(proc_w)
-            # procs_up[name] = tf.reduce_sum(proc_w_up)
-            # procs_down[name] = tf.reduce_sum(proc_w_down)
+            procs_up[name] = tf.reduce_sum(proc_w_up)
+            procs_down[name] = tf.reduce_sum(proc_w_down)
 
         # QCD estimation
         procs['qcd'] = procs['data_ss']
@@ -223,10 +223,10 @@ def main(args):
 
         # JES Uncertainty
         sys = 0.0
-        # for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-        #     Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
-        #     Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
-        #     sys += Delta_up + Delta_down
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
+            sys += Delta_up + Delta_down
 
         # Expectations
         obs = sig + bkg
@@ -236,11 +236,11 @@ def main(args):
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
     # Nuisance constraints
-    # nuisances.append(n)
-    # for n in nuisances:
-    #     nll -= tfp.distributions.Normal(
-    #             loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
-    #             ).log_prob(n)
+    nuisances.append(n)
+    for n in nuisances:
+        nll -= tfp.distributions.Normal(
+                loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
+                ).log_prob(n)
 
     # Compute constraint of mu
     def get_constraint(nll, params):
@@ -295,8 +295,7 @@ def main(args):
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
         else:
             loss_val = session.run(loss, feed_dict={x_ph: x_val_preproc, y_ph: y_val, w_ph: w_val, jpt_1_upshift_ph: jpt_1_upshift_val, jpt_1_downshift_ph: jpt_1_downshift_val})
-            # tolerance = np.maximum(tolerance_init  * (100 / (100 + step - warmup_steps)), tolerance_min)
-            tolerance = tolerance_min
+            tolerance = np.maximum(tolerance_init  * (100 / (100 + step - warmup_steps)), tolerance_min)
             if min_loss > loss_val and np.abs(min_loss - loss_val) / min_loss > tolerance:
                 min_loss = loss_val
                 patience_count = patience
