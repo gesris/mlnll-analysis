@@ -13,7 +13,7 @@ jpt_1_basepath = '/home/gristo/workspace/htautau/deeptau_02-20/2018/ntuples/'
 
 # Friend trees
 friends_base = [path.join(basepath, 'friends', f) for f in ['TauTriggers', 'SVFit']] + [jpt_1_basepath]
-ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_JES_shift_trainsys/MLScores']
+ml_score_base = ['/work/gristo/second_mlnll-analysis/output/8_bins_JES_shift_trainnosys/MLScores']
 
 # File list
 files = {
