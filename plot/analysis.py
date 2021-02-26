@@ -200,7 +200,8 @@ def main(args):
             max(2 * plot.subplot(0).get_hist("total_bkg").GetMaximum(),
                 split_value * 2))
 
-        plot.subplot(2).setYlims(0.75, 1.35)
+        #plot.subplot(2).setYlims(0.75, 1.35)
+        plot.subplot(2).setYlims(0.5, 1.35)
         if not linear:
             plot.subplot(1).setYlims(0.1, split_value)
             plot.subplot(1).setLogY()
