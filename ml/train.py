@@ -179,7 +179,6 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
     jpt_1_upshift_ph = tf.placeholder(tf.float64)
     jpt_1_downshift_ph = tf.placeholder(tf.float64)
-    shift_magn_scale = 10
 
     nll = 0.0
     bins = np.array(cfg.analysis_binning)
@@ -225,8 +224,8 @@ def main(args):
         # JES Uncertainty
         sys = 0.0
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p]) * shift_magn_scale
-            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p]) * shift_magn_scale
+            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
+            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
             sys += Delta_up + Delta_down
 
         # Expectations
