@@ -62,7 +62,7 @@ for filename in cfg.files:
                 for left, right in zip(bins[1:], bins[:-1]):
                     bins_center.append(left + (right - left) / 2)
                 lw = 2
-                label = "$\\cancel{E}_{\\mathrm{T}}$ in GeV"
+                label = "$E_{\\mathrm{T}}$ in GeV"
                 plt.figure(figsize=(6, 6))
                 plt.subplots_adjust(hspace=0.05)
                 gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1])
