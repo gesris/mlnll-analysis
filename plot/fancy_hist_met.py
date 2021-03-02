@@ -79,7 +79,7 @@ for filename in cfg.files:
                 ax1.set_xlim((bins[0], bins[-1]))
                 ax2.set_xlim((bins[0], bins[-1]))
                 ax2.set_xlabel(label)
-                ax1.set_ylabel("Count")
+                ax1.set_ylabel("Count\n")
                 ax2.set_ylabel("Ratio to nominal")
                 ax1.set_xticklabels([])
                 #ax1.set_yticks([50, 100, 150, 200, 250])
