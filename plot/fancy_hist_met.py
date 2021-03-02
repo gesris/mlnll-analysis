@@ -30,7 +30,7 @@ for filename in cfg.files:
                 ## Prepatre for Hist
                 bins = 20
                 minrange = 0
-                maxrange = 220
+                maxrange = 150
                 binning = np.linspace(minrange, maxrange, bins + 1)
                 heights_nom, bins = np.histogram(nominal["met"], bins=bins, range=(minrange, maxrange))
                 
@@ -80,7 +80,7 @@ for filename in cfg.files:
                 ax2.set_xlim((bins[0], bins[-1]))
                 ax2.set_xlabel(label)
                 ax1.set_ylabel("Count")
-                ax2.set_ylabel("Ratio to nominal\n")
+                ax2.set_ylabel("Ratio to nominal")
                 ax1.set_xticklabels([])
                 #ax1.set_yticks([50, 100, 150, 200, 250])
                 ax1.set_ylim([0, np.max([np.max(h_up), np.max(h_down)]) * 1.2])
