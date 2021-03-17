@@ -27,7 +27,8 @@ def setup_logging(output_file, level=logging.DEBUG):
 def main(args, variable, category):
     # Config
     linear = True
-    bkg_processes = ['qcd', 'vvt', 'vvl', 'vvj', 'w', 'ttt', 'ttl', 'ttj', 'zj', 'zl', 'ztt']
+    # bkg_processes = ['qcd', 'vvt', 'vvl', 'vvj', 'w', 'ttt', 'ttl', 'ttj', 'zj', 'zl', 'ztt']
+    bkg_processes = ['qcd', 'vv', 'w', 'tt','zl', 'ztt']
     name = '{}_{}'.format(variable, category)
 
     # Read histograms

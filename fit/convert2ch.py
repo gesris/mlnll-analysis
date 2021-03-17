@@ -21,17 +21,28 @@ def setup_logging(output_file, level=logging.DEBUG):
     logger.addHandler(file_handler)
 
 
+# process_map = {
+#         'data': 'data_obs',
+#         'ztt': 'ZTT',
+#         'zl': 'ZL',
+#         'zj': 'ZL',
+#         'ttt': 'TT',
+#         'ttl': 'TT',
+#         'ttj': 'TT',
+#         'vvt': 'VV',
+#         'vvl': 'VV',
+#         'vvj': 'VV',
+#         'w': 'W',
+#         'qcd': 'QCD',
+#         'ggh': 'ggH125',
+#         'qqh': 'qqH125',
+#         }
 process_map = {
         'data': 'data_obs',
         'ztt': 'ZTT',
         'zl': 'ZL',
-        'zj': 'ZL',
-        'ttt': 'TT',
-        'ttl': 'TT',
-        'ttj': 'TT',
-        'vvt': 'VV',
-        'vvl': 'VV',
-        'vvj': 'VV',
+        'tt': 'TT',
+        'vv': 'VV',
         'w': 'W',
         'qcd': 'QCD',
         'ggh': 'ggH125',
