@@ -47,14 +47,9 @@ def main(args):
 
     bkg_processes = [
         "QCD",
-        "VVT",
-        "VVL",
-        "VVJ",
+        "VV",
         "W",
-        "TTT",
-        "TTL",
-        "TTJ",
-        "ZJ",
+        "TT",
         "ZL",
         "ZTT"]
     all_bkg_processes = [b for b in bkg_processes]
