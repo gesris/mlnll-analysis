@@ -25,13 +25,8 @@ process_map = {
         'data': 'data_obs',
         'ztt': 'ZTT',
         'zl': 'ZL',
-        'zj': 'ZJ',
-        'ttt': 'TTT',
-        'ttl': 'TTL',
-        'ttj': 'TTJ',
-        'vvt': 'VVT',
-        'vvl': 'VVL',
-        'vvj': 'VVJ',
+        'tt': 'TT',
+        'vv': 'VV',
         'w': 'W',
         'qcd': 'QCD',
         'ggh': 'ggH125',
@@ -47,7 +42,7 @@ def main(args):
         outfile.mkdir('mt_' + category)
 
     # Convert shapes
-    for filename in ['shapes_main.root', 'shapes_qcd.root']:
+    for filename in ['shapes_nosplit.root', 'shapes_qcd.root']:
         f = ROOT.TFile(os.path.join(args.workdir, filename), 'READ')
         for category in analysis_categories:
             # Get folder of this category

@@ -23,13 +23,13 @@ def setup_logging(output_file, level=logging.DEBUG):
 
 
 def main(args):
-    r = Reader([os.path.join(args.workdir, 'shapes_main.root')])
+    r = Reader([os.path.join(args.workdir, 'shapes_nosplit.root')])
     f = ROOT.TFile(os.path.join(args.workdir, 'shapes_qcd.root'), 'RECREATE')
     for variable in [v + '_inclusive' for v in control_variables] + \
                     [analysis_variable + '_' + c for c in analysis_categories]:
         logger.debug('Produce qcd shape for variable %s', variable)
         data = r.get('data', 'same_sign', variable)
-        for process in ['w', 'ztt', 'zl', 'zj', 'ttt', 'ttl', 'ttj', 'vvt', 'vvl', 'vvj']:
+        for process in ['w', 'ztt', 'zl', 'tt', 'vv']:
             h = r.get(process, 'same_sign', variable)
             data.Add(h, -1)
 
