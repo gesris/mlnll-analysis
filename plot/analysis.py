@@ -65,7 +65,7 @@ def main(args):
         if linear:
             split_value = 0
         else:
-            split_value = 1001
+            split_value = 10001
 
         rootfile = rootfile_parser.Rootfile_parser(os.path.join(args.workdir, "shapes_{}.root".format(args.fittype)))
         bkg_processes = [b for b in all_bkg_processes]
