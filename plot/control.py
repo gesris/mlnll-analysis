@@ -32,7 +32,7 @@ def main(args, variable, category):
 
     # Read histograms
     hists = {}
-    reader = Reader([os.path.join(args.workdir, f) for f in ['shapes_main.root', 'shapes_qcd.root']])
+    reader = Reader([os.path.join(args.workdir, f) for f in ['shapes_nosplit.root', 'shapes_qcd.root']])
     total_bkg = None
     for process in bkg_processes:
         h = reader.get(process, 'Nominal', name)

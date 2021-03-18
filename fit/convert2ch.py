@@ -42,7 +42,7 @@ def main(args):
         outfile.mkdir('mt_' + category)
 
     # Convert shapes
-    for filename in ['shapes_main.root', 'shapes_qcd.root']:
+    for filename in ['shapes_nosplit.root', 'shapes_qcd.root']:
         f = ROOT.TFile(os.path.join(args.workdir, filename), 'READ')
         for category in analysis_categories:
             # Get folder of this category
