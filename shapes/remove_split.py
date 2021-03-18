@@ -83,7 +83,7 @@ def main(args):
                 pass
 
 
-    for type in ['met_weightsUp', 'met_weightsDown', 'm_vis_weightsUp', 'm_vis_weightsDown', 'njets_weightsUp', 'njets_weightsDown', 'jpt_1_weightsUp', 'jpt_1_weightsDown']: 
+    for type in ['jpt_1_weightsUp', 'jpt_1_weightsDown']: 
         variable = 'ml_score_nll_cat'
         try:
             # ## Data ##
