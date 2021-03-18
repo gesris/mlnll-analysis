@@ -17,18 +17,18 @@ fit/workspace.sh $WORKDIR
 fit/workspace2shapes.sh $WORKDIR
 plot/analysis.sh $WORKDIR
 
-# # Signal strenght
-# fit/signal_strength.sh $WORKDIR
+# Signal strenght
+fit/signal_strength.sh $WORKDIR
 
-# # NLL scan
-# fit/scan.sh $WORKDIR
-# plot/scan.sh $WORKDIR
+# NLL scan
+fit/scan.sh $WORKDIR
+plot/scan.sh $WORKDIR
 
-# # Significance
-# fit/significance.sh $WORKDIR
+# Significance
+fit/significance.sh $WORKDIR
 
-# # Pulls
-# fit/pulls.sh $WORKDIR
+# Pulls
+fit/pulls.sh $WORKDIR
 
-# # Impacts
-# fit/impacts.sh $WORKDIR
+# Impacts
+fit/impacts.sh $WORKDIR
