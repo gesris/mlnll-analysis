@@ -262,9 +262,12 @@ def main(args):
         optimizer = tf.train.AdamOptimizer()
         return optimizer.minimize(loss, var_list=w_vars)
 
-    minimize_fullnll = get_minimize_op(loss_fullnll)
     minimize_statsonly = get_minimize_op(loss_statsonly)
+
     logger.info('Mark 1')
+    minimize_fullnll = get_minimize_op(loss_fullnll)
+
+
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
     session = tf.Session(config=config)
