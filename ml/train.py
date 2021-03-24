@@ -230,7 +230,7 @@ def main(args):
 
         # Bin by bin uncertainties
         sys = tf.constant(0.0, tf.float64)
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+        for p in ['ztt']:#, 'zl', 'w', 'tt', 'vv', 'qcd']:
             n = tf.constant(0.0, tf.float64)
             nuisances.append(n)
             sys += n * tf.sqrt(procs_sumw2[p])
