@@ -215,6 +215,7 @@ def main(args):
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
+        procs_sumw2['qcd'] = procs['qcd']
 
         # Nominal signal and background
         sig = 0
