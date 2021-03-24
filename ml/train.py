@@ -230,9 +230,11 @@ def main(args):
 
         # Bin by bin uncertainties
         sys = tf.constant(0.0, tf.float64)
+        bbb = tf.constant(0.0, tf.float64)
         n = tf.constant(0.0, tf.float64)
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-            sys += n * tf.sqrt(procs_sumw2[p])
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
+            bbb += procs_sumw2[p]
+        sys += n * tf.sqrt(bbb)
         
         nuisances.append(n)
 
