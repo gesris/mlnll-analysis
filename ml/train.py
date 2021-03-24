@@ -201,8 +201,7 @@ def main(args):
 
         # Bin by bin uncertainties
         sys = tf.constant(0.0, tf.float64)
-        #for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-        for p in ['w']:
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             n = tf.constant(0.0, tf.float64)
             nuisances.append(n)
             sys += n * tf.sqrt(procs_sumw2[p])
@@ -309,6 +308,7 @@ def main(args):
     plt.plot(steps_list, loss_val_list)
     plt.xlabel("Steps")
     plt.ylabel("Loss")
+    plt.legend( prop={'size': 11})
     plt.savefig(os.path.join(args.workdir, 'model_fold{}/minimization_fold{}.png'.format(args.fold, args.fold)), bbox_inches = "tight")
 
 
