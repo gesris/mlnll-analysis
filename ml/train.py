@@ -264,12 +264,13 @@ def main(args):
 
     minimize_fullnll = get_minimize_op(loss_fullnll)
     minimize_statsonly = get_minimize_op(loss_statsonly)
-
+    logger.info('Mark 1')
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
     session = tf.Session(config=config)
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
+    logger.info('Mark 2')
 
     patience = 5000
     patience_count = patience
