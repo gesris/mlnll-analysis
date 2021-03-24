@@ -246,7 +246,7 @@ def main(args):
        nll -= tfp.distributions.Normal(
                loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
                ).log_prob(n)
-
+    logger.info('Finished calculating NLL')
     # Compute constraint of mu
     def get_constraint(nll, params):
         hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
