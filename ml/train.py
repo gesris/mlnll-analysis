@@ -246,7 +246,7 @@ def main(args):
        nll -= tfp.distributions.Normal(
                loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
                ).log_prob(n)
-    logger.info('Finished calculating NLL')
+
     # Compute constraint of mu
     def get_constraint(nll, params):
         hessian = [tf.gradients(g, params) for g in tf.unstack(tf.gradients(nll, params))]
@@ -267,8 +267,9 @@ def main(args):
         return optimizer.minimize(loss, var_list=w_vars)
 
     minimize_statsonly = get_minimize_op(loss_statsonly)
+    logger.info('Mark 3')
     minimize_fullnll = get_minimize_op(loss_fullnll)
-
+    logger.info('Mark 4')
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
