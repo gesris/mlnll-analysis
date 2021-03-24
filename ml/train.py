@@ -189,6 +189,7 @@ def main(args):
     w_ph = tf.placeholder(tf.float64, shape=(None,))
 
     nll = 0.0
+    nll_statsonly = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
     nuisances = []
@@ -240,6 +241,8 @@ def main(args):
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+
     
     ## Nuisance constraints
     for n in nuisances:
@@ -255,7 +258,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
     
-    loss_statsonly = get_constraint(nll, [mu])
+    loss_statsonly = get_constraint(nll_statsonly, [mu])
     logger.info('Mark 1')
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
     logger.info('Mark 2')
