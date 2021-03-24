@@ -282,9 +282,10 @@ def main(args):
     steps_list = []
     loss_train_list = []
     loss_val_list = []
-
+    logger.info('Strating Training')
     while True:
         if step < warmup_steps:
+            logger.info('Warmup')
             loss = loss_statsonly
             minimize = minimize_statsonly
             is_warmup = True
