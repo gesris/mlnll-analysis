@@ -203,12 +203,12 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        procs_sumw2 = {}
+        # procs_sumw2 = {}
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) 
+            # procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) 
 
 
         # QCD estimation
@@ -216,7 +216,7 @@ def main(args):
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
-        procs_sumw2['qcd'] = procs['qcd']
+        # procs_sumw2['qcd'] = procs['qcd']
 
         # Nominal signal and background
         sig = 0
@@ -233,7 +233,8 @@ def main(args):
         bbb = tf.constant(0.0, tf.float64)
         n = tf.constant(0.0, tf.float64)
         for p in ['ztt', 'zl', 'w', 'tt', 'vv']:
-            bbb += procs_sumw2[p]
+            # bbb += procs_sumw2[p]
+            bbb += procs[p]
         sys += n * tf.sqrt(bbb)
         
         nuisances.append(n)
@@ -295,7 +296,7 @@ def main(args):
     steps_list = []
     loss_train_list = []
     loss_val_list = []
-    logger.info('Strating Training')
+    # logger.info('Strating Training')
     while True:
         if step < warmup_steps:
             loss = loss_statsonly
