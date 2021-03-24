@@ -254,8 +254,12 @@ def main(args):
         covariance_poi = inverse[0][0]
         constraint = tf.sqrt(covariance_poi)
         return constraint
-    loss_fullnll = get_constraint(nll, [mu] + nuisances)
+    
     loss_statsonly = get_constraint(nll, [mu])
+    logger.info('Mark 1')
+    loss_fullnll = get_constraint(nll, [mu] + nuisances)
+    logger.info('Mark 2')
+    
 
     # Add minimization ops
     def get_minimize_op(loss):
@@ -263,8 +267,6 @@ def main(args):
         return optimizer.minimize(loss, var_list=w_vars)
 
     minimize_statsonly = get_minimize_op(loss_statsonly)
-
-    logger.info('Mark 1')
     minimize_fullnll = get_minimize_op(loss_fullnll)
 
 
@@ -273,7 +275,7 @@ def main(args):
     session = tf.Session(config=config)
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
-    logger.info('Mark 2')
+    
 
     patience = 5000
     patience_count = patience
