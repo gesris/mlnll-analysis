@@ -230,10 +230,11 @@ def main(args):
 
         # Bin by bin uncertainties
         sys = tf.constant(0.0, tf.float64)
-        for p in ['ztt']:#, 'zl', 'w', 'tt', 'vv', 'qcd']:
-            n = tf.constant(0.0, tf.float64)
-            nuisances.append(n)
+        n = tf.constant(0.0, tf.float64)
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             sys += n * tf.sqrt(procs_sumw2[p])
+        
+        nuisances.append(n)
 
         # Expectations
         obs = sig + bkg
@@ -295,7 +296,6 @@ def main(args):
     logger.info('Strating Training')
     while True:
         if step < warmup_steps:
-            logger.info('Warmup')
             loss = loss_statsonly
             minimize = minimize_statsonly
             is_warmup = True
