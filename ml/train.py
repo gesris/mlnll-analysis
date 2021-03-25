@@ -203,12 +203,21 @@ def main(args):
         # Processes
         mask = count_masking(f, up, down)
         procs = {}
-        # procs_sumw2 = {}
+        procs_noweight = {}
+        scale_bbb = 0.0
+        sum_weighted = 0.0
+        sum_nonweighted = 0.0
 
         for j, name in enumerate(classes):
             proc_w = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64) * w_ph
             procs[name] = tf.reduce_sum(proc_w)
-            # procs_sumw2[name] = tf.reduce_sum(tf.square(proc_w)) 
+
+            # BBB
+            proc_noweight = mask * tf.cast(tf.equal(y_ph, tf.constant(j, tf.float64)), tf.float64)
+            procs_noweight[name] = tf.reduce_sum(proc_noweight) 
+            sum_weighted += procs[name]
+            sum_nonweighted += procs_noweight[name]
+        scale_bbb += sum_weighted / sum_nonweighted
 
 
         # QCD estimation
@@ -228,16 +237,15 @@ def main(args):
             bkg += procs[p]
 
 
-        # Bin by bin uncertainties
-        sys = tf.constant(0.0, tf.float64)
+        # BBB Uncertainty
+        sys = 0.0
         bbb = tf.constant(0.0, tf.float64)
-        n = tf.constant(0.0, tf.float64)
+        n_bbb = tf.constant(0.0, tf.float64)
         for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
-            # bbb += procs_sumw2[p]
-            bbb += procs[p]
-        sys += n * tf.sqrt(bbb)
-        
-        nuisances.append(n)
+            bbb += procs_noweight[p]
+        sys += n_bbb * (tf.sqrt(bbb) * scale_bbb) 
+        nuisances.append(n_bbb)
+
 
         # Expectations
         obs = sig + bkg
