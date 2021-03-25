@@ -225,7 +225,9 @@ def main(args):
         for p in [n for n in cfg.ml_classes if not n in ['ggh', 'qqh']]:
             procs['qcd'] -= procs[p + '_ss']
         procs['qcd'] = tf.maximum(procs['qcd'], 0)
-        # procs_sumw2['qcd'] = procs['qcd']
+        sum_weighted += procs['qcd']
+        sum_nonweighted += procs['qcd']
+        scale_bbb += sum_weighted / sum_nonweighted
 
         # Nominal signal and background
         sig = 0
@@ -241,7 +243,7 @@ def main(args):
         sys = 0.0
         bbb = tf.constant(0.0, tf.float64)
         n_bbb = tf.constant(0.0, tf.float64)
-        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+        for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
             bbb += procs_noweight[p]
         sys += n_bbb * (tf.sqrt(bbb) * scale_bbb) 
         nuisances.append(n_bbb)
