@@ -295,7 +295,7 @@ def main(args):
     saver = tf.train.Saver(max_to_keep=1)
     
 
-    patience = 5000
+    patience = 500
     patience_count = patience
     min_loss = 1e9
     tolerance_init = 0.01
