@@ -259,16 +259,21 @@ def main(args):
         covariance_poi = inverse[0][0]
         constraint = tf.sqrt(covariance_poi)
         return constraint
-    loss_fullnll = get_constraint(nll, [mu] + nuisances)
     loss_statsonly = get_constraint(nll_statsonly, [mu])
+    logger.info("Mark 1")
+    loss_fullnll = get_constraint(nll, [mu] + nuisances)
+    logger.info("Mark 2")
 
+    
     # Add minimization ops
     def get_minimize_op(loss):
         optimizer = tf.train.AdamOptimizer()
         return optimizer.minimize(loss, var_list=w_vars)
 
     minimize_fullnll = get_minimize_op(loss_fullnll)
+    logger.info("Mark 3")
     minimize_statsonly = get_minimize_op(loss_statsonly)
+    logger.info("Mark 4")
 
     # Train
     config = tf.ConfigProto(intra_op_parallelism_threads=12, inter_op_parallelism_threads=12)
