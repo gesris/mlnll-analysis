@@ -181,9 +181,10 @@ def main(args):
     jpt_1_downshift_ph = tf.placeholder(tf.float64)
 
     nll = 0.0
+    nll_statsonly = 0.0
     bins = np.array(cfg.analysis_binning)
     mu = tf.constant(1.0, tf.float64)
-    n = tf.constant(0.0, tf.float64)
+    n_jes = tf.constant(0.0, tf.float64)
     nuisances = []
     zero = tf.constant(0, tf.float64)
     epsilon = tf.constant(1e-9, tf.float64)
@@ -224,9 +225,17 @@ def main(args):
         # JES Uncertainty
         sys = 0.0
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            Delta_up = tf.maximum(n, zero) * (procs_up[p] - procs[p])
-            Delta_down = tf.minimum(n, zero) * (procs[p] - procs_down[p])
+            Delta_up = tf.maximum(n_jes, zero) * (procs_up[p] - procs[p])
+            Delta_down = tf.minimum(n_jes, zero) * (procs[p] - procs_down[p])
             sys += Delta_up + Delta_down
+        
+        # BBB Uncertainty
+        bbb = tf.constant(0.0, tf.float64)
+        n = tf.constant(0.0, tf.float64)
+        for p in ['ztt', 'zl', 'w', 'tt', 'vv', 'qcd']:
+            bbb += procs[p]
+        sys += n * tf.sqrt(bbb)
+        nuisances.append(n)
 
         # Expectations
         obs = sig + bkg
@@ -234,9 +243,10 @@ def main(args):
 
         # Likelihood
         nll -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
+        nll_statsonly -= tfp.distributions.Poisson(tf.maximum(exp, epsilon)).log_prob(tf.maximum(obs, epsilon))
     
     # Nuisance constraints
-    nuisances.append(n)
+    nuisances.append(n_jes)
     for n in nuisances:
         nll -= tfp.distributions.Normal(
                 loc=tf.constant(0.0, dtype=tf.float64), scale=tf.constant(1.0, dtype=tf.float64)
@@ -250,7 +260,7 @@ def main(args):
         constraint = tf.sqrt(covariance_poi)
         return constraint
     loss_fullnll = get_constraint(nll, [mu] + nuisances)
-    loss_statsonly = get_constraint(nll, [mu])
+    loss_statsonly = get_constraint(nll_statsonly, [mu])
 
     # Add minimization ops
     def get_minimize_op(loss):
@@ -266,14 +276,14 @@ def main(args):
     session.run([tf.global_variables_initializer()])
     saver = tf.train.Saver(max_to_keep=1)
 
-    patience = 300
+    patience = 5000
     patience_count = patience
     min_loss = 1e9
     tolerance_init = 0.01
     tolerance_min = 0.001
     step = 0
     validation_steps = 20
-    warmup_steps = 0
+    warmup_steps = 100
 
     steps_list = []
     loss_train_list = []
