@@ -244,8 +244,8 @@ def main(args):
         bbb = tf.constant(0.0, tf.float64)
         n_bbb = tf.constant(0.0, tf.float64)
         for p in ['ggh', 'qqh', 'ztt', 'zl', 'w', 'tt', 'vv']:
-            bbb += procs_noweight[p]
-        sys += n_bbb * (tf.sqrt(bbb) * scale_bbb) 
+            bbb += tf.sqrt(procs_noweight[p])
+        sys += n_bbb * (bbb * scale_bbb) 
         nuisances.append(n_bbb)
 
 
